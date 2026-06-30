@@ -102,9 +102,9 @@ export default function StoryIndexPage() {
         {reports.map((r) => {
           const isSaved = readingList.isSaved(r.slug)
           return (
-            <div key={r.slug} className="relative group/card">
+            <article key={r.slug} className="relative group/card">
               <Link href={`/story/${r.slug}`}>
-                <Card className="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-0.5 flex flex-col group overflow-hidden">
+                <Card role="article" className="h-full transition-all duration-200 hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-0.5 flex flex-col group overflow-hidden">
                   {r.hero && (
                     <div className="aspect-[16/9] relative overflow-hidden">
                       <img
@@ -174,7 +174,7 @@ export default function StoryIndexPage() {
               >
                 <Bookmark className={`size-3.5 ${isSaved ? 'fill-primary text-primary' : ''}`} />
               </button>
-            </div>
+            </article>
           )
         })}
       </div>

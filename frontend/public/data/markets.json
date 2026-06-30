@@ -3,9 +3,9 @@
     {
       "symbol": "SPX",
       "name": "S&P 500",
-      "price": 7493,
-      "change": 52.87,
-      "changePercent": 0.7
+      "price": 7497,
+      "change": 56.11,
+      "changePercent": 0.8
     },
     {
       "symbol": "N225",
@@ -43,5 +43,5 @@
       "changePercent": -0.3
     }
   ],
-  "updatedAt": 1782842004013
+  "updatedAt": 1782843343139
 }

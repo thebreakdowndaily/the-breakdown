@@ -53,9 +53,9 @@ export default function HomePage() {
           <div className="flex items-start justify-between mb-6">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Featured Story</p>
-              <h1 className="text-3xl md:text-5xl font-bold font-heading leading-tight max-w-3xl">
+              <h2 className="text-3xl md:text-5xl font-bold font-heading leading-tight max-w-3xl">
                 {featured.title}
-              </h1>
+              </h2>
             </div>
             <Link href={`/story/${featured.slug}`}>
               <Badge variant="outline" className="text-xs cursor-pointer hover:bg-muted transition-colors">Read →</Badge>
@@ -134,9 +134,9 @@ export default function HomePage() {
             <h2 className="text-xl font-bold font-heading">Editor&#39;s Picks</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-            {EDITOR_PICKS.map(w => (
+              {EDITOR_PICKS.map(w => (
               <Link key={w.title} href={w.href}>
-                <Card className="h-full card-hover cursor-pointer">
+                <Card role="article" className="h-full card-hover cursor-pointer">
                   <CardHeader>
                     <CardTitle className="text-base">{w.title}</CardTitle>
                   </CardHeader>
@@ -163,7 +163,7 @@ export default function HomePage() {
               .slice(0, 6)
               .map((story) => (
                 <Link key={story.slug} href={`/story/${story.slug}`}>
-                  <Card className="h-full card-hover cursor-pointer">
+                  <Card role="article" className="h-full card-hover cursor-pointer">
                     <CardContent className="p-5">
                       <Badge className="mb-2 w-fit">{story.category}</Badge>
                       <h3 className="font-bold font-heading text-sm mb-1 line-clamp-2">{story.title}</h3>

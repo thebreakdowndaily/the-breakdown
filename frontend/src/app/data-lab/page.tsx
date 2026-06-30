@@ -43,7 +43,7 @@ export default function DataLabPage() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sections.map(s => (
           <Link key={s.href} href={s.href} className="group">
-            <Card className="h-full hover:border-foreground/20 transition-all hover:shadow-sm cursor-pointer hover:bg-muted/30">
+            <Card role="article" className="h-full hover:border-foreground/20 transition-all hover:shadow-sm cursor-pointer hover:bg-muted/30">
               <CardHeader className="pb-2 flex-row items-start gap-3 space-y-0">
                 <div className="mt-0.5 size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                   {s.icon}

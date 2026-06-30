@@ -51,6 +51,7 @@ export function KnowledgeGraph() {
                 key={e.id}
                 href={`/knowledge/${e.id}`}
                 className="group flex flex-col rounded-lg border p-3 card-hover cursor-pointer"
+                role="article"
               >
                 {/* Image */}
                 <div className="relative aspect-square rounded-md overflow-hidden bg-muted/30 mb-2.5">
