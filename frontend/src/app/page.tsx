@@ -11,8 +11,7 @@ import { AskBar } from '@/components/ai/ask-bar'
 import { IndiaDashboard } from '@/components/dashboard/india-dashboard'
 import { DataLabPreview } from '@/components/dashboard/data-lab-preview'
 import { ALL_STORIES } from '@/lib/content/generated/stories'
-
-const INDIA_METRICS = [] as never // replaced by <IndiaDashboard /> component
+import { FadeIn } from '@/components/ui/fade-in'
 
 const EDITOR_PICKS = [
   { title: 'The Fix', description: 'Evidence-based solutions to India&#39;s toughest problems', href: '/the-fix' },
@@ -85,28 +84,36 @@ export default function HomePage() {
       )}
 
       {/* Market Dashboard */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-medium text-muted-foreground">Market Dashboard</h2>
-          <span className="text-[11px] text-muted-foreground/60">Live indicators</span>
-        </div>
-        <QuickNumbers />
-      </section>
+      <FadeIn>
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-medium text-muted-foreground">Market Dashboard</h2>
+            <span className="text-[11px] text-muted-foreground/60">Live indicators</span>
+          </div>
+          <QuickNumbers />
+        </section>
+      </FadeIn>
 
       {/* Global Situation Room */}
-      <section className="mb-16">
-        <GlobalSituationRoom />
-      </section>
+      <FadeIn>
+        <section className="mb-16">
+          <GlobalSituationRoom />
+        </section>
+      </FadeIn>
 
       {/* India Dashboard */}
-      <section className="mb-16">
-        <IndiaDashboard />
-      </section>
+      <FadeIn delay={100}>
+        <section className="mb-16">
+          <IndiaDashboard />
+        </section>
+      </FadeIn>
 
       {/* Data Lab Preview */}
-      <section className="mb-16">
-        <DataLabPreview />
-      </section>
+      <FadeIn delay={200}>
+        <section className="mb-16">
+          <DataLabPreview />
+        </section>
+      </FadeIn>
 
       {/* Knowledge Graph */}
       <section className="mb-16">
@@ -114,54 +121,60 @@ export default function HomePage() {
       </section>
 
       {/* Timeline of the Day */}
-      <section className="mb-16">
-        <DashboardTimeline />
-      </section>
+      <FadeIn delay={100}>
+        <section className="mb-16">
+          <DashboardTimeline />
+        </section>
+      </FadeIn>
 
       {/* Editor's Picks */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold font-heading">Editor&#39;s Picks</h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          {EDITOR_PICKS.map(w => (
-            <Link key={w.title} href={w.href}>
-              <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
-                <CardHeader>
-                  <CardTitle className="text-base">{w.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{w.description}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Latest Stories */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold font-heading">Latest Stories</h2>
-          <Link href="/story" className="text-sm text-muted-foreground hover:text-foreground">View All Stories →</Link>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...ALL_STORIES]
-            .sort((a, b) => (b.publishedAt ? new Date(b.publishedAt).getTime() : 0) - (a.publishedAt ? new Date(a.publishedAt).getTime() : 0))
-            .slice(0, 6)
-            .map((story) => (
-              <Link key={story.slug} href={`/story/${story.slug}`}>
-                <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
-                  <CardContent className="p-5">
-                    <Badge className="mb-2 w-fit">{story.category}</Badge>
-                    <h3 className="font-bold font-heading text-sm mb-1 line-clamp-2">{story.title}</h3>
-                    <p className="text-xs text-muted-foreground line-clamp-2">{story.summary}</p>
+      <FadeIn delay={100}>
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold font-heading">Editor&#39;s Picks</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {EDITOR_PICKS.map(w => (
+              <Link key={w.title} href={w.href}>
+                <Card className="h-full card-hover cursor-pointer">
+                  <CardHeader>
+                    <CardTitle className="text-base">{w.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">{w.description}</p>
                   </CardContent>
                 </Card>
               </Link>
             ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      </FadeIn>
+
+      {/* Latest Stories */}
+      <FadeIn delay={200}>
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold font-heading">Latest Stories</h2>
+            <Link href="/story" className="text-sm text-muted-foreground hover:text-foreground">View All Stories →</Link>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...ALL_STORIES]
+              .sort((a, b) => (b.publishedAt ? new Date(b.publishedAt).getTime() : 0) - (a.publishedAt ? new Date(a.publishedAt).getTime() : 0))
+              .slice(0, 6)
+              .map((story) => (
+                <Link key={story.slug} href={`/story/${story.slug}`}>
+                  <Card className="h-full card-hover cursor-pointer">
+                    <CardContent className="p-5">
+                      <Badge className="mb-2 w-fit">{story.category}</Badge>
+                      <h3 className="font-bold font-heading text-sm mb-1 line-clamp-2">{story.title}</h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{story.summary}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+          </div>
+        </section>
+      </FadeIn>
 
       {/* Newsletter */}
       <section className="mb-16 max-w-md mx-auto">

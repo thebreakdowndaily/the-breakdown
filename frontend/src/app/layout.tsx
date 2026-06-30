@@ -6,6 +6,7 @@ import { TopBar } from '@/components/layout/top-bar'
 import { Footer } from '@/components/layout/footer'
 import { SWRegister } from '@/components/pwa/sw-register'
 import { ErrorBoundary } from '@/components/layout/error-boundary'
+import { FadeIn } from '@/components/ui/fade-in'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -104,7 +105,7 @@ export default function RootLayout({
           <TopBar />
           <SWRegister />
           <main id="main-content" className="flex-1 focus:outline-none" tabIndex={-1}>
-            <ErrorBoundary>{children}</ErrorBoundary>
+            <ErrorBoundary><FadeIn delay={50}>{children}</FadeIn></ErrorBoundary>
           </main>
           <Footer />
         </TooltipProvider>

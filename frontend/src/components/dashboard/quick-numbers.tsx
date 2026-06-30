@@ -93,7 +93,7 @@ export function QuickNumbers() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {allNumbers.map(n => (
-        <Card key={n.label}>
+        <Card key={n.label} className="card-hover">
           <CardContent className="p-4 text-center">
             <p className="text-xs text-muted-foreground uppercase tracking-wider">{n.label}</p>
             <p className="text-2xl font-bold font-heading mt-1 tabular-nums">

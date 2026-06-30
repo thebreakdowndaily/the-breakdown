@@ -22,7 +22,7 @@ export function DataLabPreview() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {SECTORS.map(s => (
           <Link key={s.name} href={s.href}>
-            <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer group">
+            <Card className="h-full card-hover cursor-pointer group">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xl">{s.icon}</span>

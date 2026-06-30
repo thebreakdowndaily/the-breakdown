@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { FadeIn } from '@/components/ui/fade-in'
 import { ENTITIES } from '@/lib/content/knowledge'
 
 const ENTITY_COLORS: Record<string, string> = {
@@ -31,8 +32,9 @@ export function KnowledgeGraph() {
         </div>
         <Link href="/knowledge" className="text-sm text-muted-foreground hover:text-foreground">Explore Knowledge Graph →</Link>
       </div>
-      <Card>
-        <CardContent className="p-6">
+      <FadeIn>
+        <Card>
+          <CardContent className="p-6">
           {/* Type filters / counter strip */}
           <div className="flex flex-wrap gap-2 mb-5">
             {Object.entries(grouped).map(([type, entities]) => (
@@ -48,7 +50,7 @@ export function KnowledgeGraph() {
               <Link
                 key={e.id}
                 href={`/knowledge/${e.id}`}
-                className="group flex flex-col rounded-lg border p-3 hover:bg-muted/50 transition-all hover:shadow-sm cursor-pointer"
+                className="group flex flex-col rounded-lg border p-3 card-hover cursor-pointer"
               >
                 {/* Image */}
                 <div className="relative aspect-square rounded-md overflow-hidden bg-muted/30 mb-2.5">
@@ -94,6 +96,7 @@ export function KnowledgeGraph() {
           </div>
         </CardContent>
       </Card>
+      </FadeIn>
     </section>
   )
 }

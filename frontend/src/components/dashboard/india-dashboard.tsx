@@ -144,7 +144,7 @@ export function IndiaDashboard() {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {INDIA_METRICS.map(m => (
-          <Card key={m.label} size="sm" className="relative overflow-hidden group hover:shadow-md transition-shadow">
+          <Card key={m.label} size="sm" className="relative overflow-hidden group card-hover">
             <CardHeader className="pb-1">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">

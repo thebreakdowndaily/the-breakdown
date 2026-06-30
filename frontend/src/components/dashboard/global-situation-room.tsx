@@ -143,7 +143,7 @@ export function GlobalSituationRoom() {
       {/* 2×2 Info Panels */}
       <div className="grid sm:grid-cols-2 gap-4">
         {/* Active Conflicts */}
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden card-hover">
           <div className="absolute inset-0 rounded-xl ring-1 ring-[var(--saffron)]/40 animate-pulse pointer-events-none" />
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
@@ -174,7 +174,7 @@ export function GlobalSituationRoom() {
         </Card>
 
         {/* Diplomatic Trackers */}
-        <Card>
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-blue-500" />
@@ -202,7 +202,7 @@ export function GlobalSituationRoom() {
         </Card>
 
         {/* Global Markets — Live Data */}
-        <Card>
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-green-500" />
@@ -248,7 +248,7 @@ export function GlobalSituationRoom() {
         </Card>
 
         {/* Weather / Climate */}
-        <Card>
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-amber-500" />
