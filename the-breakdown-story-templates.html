@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Story Template Design Pack</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#1a1a2e;--g:#e4a11d;--w:#fff;--gr:#888;--d:#0f0f1a;--cb:#16213e;--b:#2a2a4a}
+body{font-family:'Source Sans 3',sans-serif;background:var(--d);color:var(--w)}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,15,26,.98);border-bottom:1px solid var(--b);padding:0 2rem}
+.ni{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nl{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--w)}
+.nb{width:30px;height:30px;background:var(--c);border:2px solid var(--g);border-radius:0;display:flex;align-items:center;justify-content:center}
+.nt{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px}
+.nk{display:flex;gap:1.5rem;list-style:none}
+.nk a{color:var(--gr);text-decoration:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:color .3s}
+.nk a:hover{color:var(--g)}
+.hero{background:linear-gradient(135deg,var(--d),var(--c));padding:70px 2rem 50px;text-align:center;border-bottom:2px solid var(--g)}
+.hero h1{font-family:'Bebas Neue';font-size:clamp(36px,5vw,56px);letter-spacing:4px;margin-bottom:.5rem}
+.hero h1 span{color:var(--g)}
+.hero p{color:var(--gr);font-size:15px;max-width:500px;margin:0 auto}
+.hero .hmeta{display:flex;gap:1.5rem;justify-content:center;margin-top:1rem;font-size:12px;color:var(--gr)}
+section{padding:50px 2rem;border-bottom:1px solid var(--b)}
+.si{max-width:1300px;margin:0 auto}
+.sh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.5rem}
+.sh h2{font-family:'Bebas Neue';font-size:clamp(22px,3vw,32px);letter-spacing:2px}
+.sh h2 span{color:var(--g)}
+.sh p{font-size:12px;color:var(--gr)}
+.gl{width:40px;height:2px;background:var(--g);margin:0 0 1.5rem}
+/* Template categories */
+.cat-tabs{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.ctab{padding:8px 18px;background:var(--cb);border:1px solid var(--b);font-family:'Bebas Neue';font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .3s;color:var(--gr)}
+.ctab:hover,.ctab.a{border-color:var(--g);color:var(--g);background:rgba(228,161,29,.1)}
+/* Template Grid */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;margin-bottom:2rem}
+.tc{background:var(--cb);border:1px solid var(--b);border-radius:2px;overflow:hidden;transition:border-color .3s,transform .3s}
+.tc:hover{border-color:var(--g);transform:translateY(-3px)}
+.tc .phone-frame{aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;background:var(--d)}
+.tc .phone-frame .top-label{position:absolute;top:8px;left:10px;font-family:'Bebas Neue';font-size:7px;letter-spacing:2px;color:rgba(255,255,255,.1)}
+.tc .phone-frame .btm-mark{position:absolute;bottom:8px;right:10px;width:16px;height:16px;opacity:.08}
+.tc .phone-frame .btm-mark svg{width:16px;height:16px}
+.tc .tinfo{padding:.6rem .75rem;border-top:1px solid var(--b)}
+.tc .tinfo .tt{font-family:'Bebas Neue';font-size:12px;letter-spacing:.5px;color:var(--g);margin-bottom:.2rem}
+.tc .tinfo .td{font-size:10px;color:var(--gr);line-height:1.4}
+.tc .tinfo .tags{display:flex;gap:4px;margin-top:.4rem;flex-wrap:wrap}
+.tc .tinfo .tags span{font-size:8px;padding:2px 6px;background:var(--c);border-radius:2px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px}
+/* Story Content Classes */
+.story-title{font-family:'Bebas Neue';font-size:clamp(18px,2.8vw,26px);letter-spacing:2px;text-align:center;line-height:1.1}
+.story-title .gold{color:var(--g)}
+.story-sub{font-size:10px;color:var(--gr);text-align:center;line-height:1.4;margin-top:4px}
+.gold-line{width:24px;height:2px;background:var(--g);margin:6px 0}
+.story-cta{padding:6px 16px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.story-cta.link{background:var(--g);color:var(--c)}
+.story-cta.poll{border:1px solid var(--b);background:var(--cb);color:var(--gr)}
+.story-cta.countdown{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--gr)}
+.story-cta.question{background:var(--c);border:2px solid var(--g);color:var(--g)}
+.dl-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--c);border:1px solid var(--b);color:var(--gr);font-size:9px;cursor:pointer;transition:all .3s;border-radius:2px;font-family:'Source Sans 3',sans-serif;margin-top:6px}
+.dl-btn:hover{border-color:var(--g);color:var(--g);background:rgba(228,161,29,.08)}
+.dl-btn svg{width:12px;height:12px}
+.toolbar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;padding:.6rem 1rem;background:var(--cb);border:1px solid var(--b);border-radius:4px}
+.toolbar span{font-size:11px;color:var(--gr)}
+.dl-all{padding:6px 16px;background:var(--g);color:var(--c);border:none;font-family:'Bebas Neue';font-size:12px;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:opacity .3s}
+.dl-all:hover{opacity:.85}
+.dl-all:disabled{opacity:.4;cursor:wait}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--g);color:var(--c);padding:10px 24px;font-size:12px;font-weight:600;border-radius:4px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.story-badge{position:absolute;top:8px;right:10px;font-size:8px;color:var(--gr)}
+.stats-row{display:flex;gap:12px;margin:6px 0}
+.stats-row div{text-align:center}
+.stats-row .num{font-family:'Bebas Neue';font-size:16px;color:var(--w)}
+.stats-row .lbl{font-size:6px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px}
+.mock-slide{width:140px;height:180px;background:var(--c);border:1px solid var(--b);border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:4px 0;padding:8px}
+.mock-slide .ms-num{font-size:7px;color:var(--g);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.mock-slide .ms-title{font-family:'Bebas Neue';font-size:12px;color:var(--w);text-align:center;line-height:1.2}
+.mock-slide .ms-line{width:12px;height:1px;background:var(--g);margin:3px 0}
+.mock-slide .ms-sub{font-size:6px;color:var(--gr)}
+.story-icon{width:36px;height:36px;border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.story-icon svg{width:22px;height:22px}
+/* Footer */
+footer{padding:40px 2rem;text-align:center;border-top:1px solid var(--b)}
+footer p{color:var(--gr);font-size:12px}
+.fb{font-family:'Bebas Neue';font-size:18px;color:var(--g);letter-spacing:2px}
+@media(max-width:768px){.nk{display:none}.tg{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
+</style>
+</head>
+<body>
+
+<nav><div class="ni">
+<a href="#" class="nl"><div class="nb"><svg width="18" height="18" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div><span class="nt">THE BREAKDOWN</span></a>
+<ul class="nk">
+<li><a href="#announce">Announce</a></li>
+<li><a href="#engage">Engage</a></li>
+<li><a href="#promo">Promo</a></li>
+<li><a href="#community">Community</a></li>
+<li><a href="#brand">Brand</a></li>
+</ul>
+</div></nav>
+
+<div class="hero">
+<h1>STORY <span>TEMPLATE PACK</span></h1>
+<p>22 ready-to-use Instagram Story designs. Screenshot and post. Every template uses the correct split-B logo, brand colors, and typography.</p>
+<div class="hmeta">
+<span>📱 22 Templates</span>
+<span>🎨 5 Categories</span>
+<span>📐 1080×1920</span>
+<span>⚡ Copy-Paste</span>
+</div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div style="padding:20px 2rem 0;border-bottom:1px solid var(--b)">
+<div class="si">
+<div class="cat-tabs">
+<span class="ctab a" data-cat="all">All</span>
+<span class="ctab" data-cat="announce">📢 Announcements</span>
+<span class="ctab" data-cat="engage">💬 Engagement</span>
+<span class="ctab" data-cat="promo">📣 Promotions</span>
+<span class="ctab" data-cat="community">👥 Community</span>
+<span class="ctab" data-cat="brand">✨ Brand</span>
+</div>
+</div>
+</div>
+
+<!-- TOOLBAR -->
+<div style="padding:12px 2rem">
+<div class="si">
+<div class="toolbar">
+<span>📥 Download</span>
+<button class="dl-all" onclick="downloadAll()">⬇ Download All Visible</button>
+<span style="font-size:10px;color:var(--gr)">Downloads each template as 1080×1920 PNG</span>
+</div>
+</div>
+</div>
+
+<!-- ===== ANNOUNCEMENTS ===== -->
+<section id="announce"><div class="si">
+<div class="sh"><h2>📢 <span>Announcements</span></h2><p>New content, new posts, new videos — tell your audience</p></div>
+<div class="gl"></div>
+<div class="tg cat-group" data-cat="announce">
+
+<!-- Template A1: New Analysis Drop -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">12:00 PM</div>
+<div class="story-icon"><svg width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div>
+<div class="story-title">NEW<br><span class="gold">ANALYSIS</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">[Topic] — full breakdown now live</div>
+<div class="story-cta link">⬆ Read Now</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">New Analysis Drop</div><div class="td">Post whenever a new carousel goes live. Change [Topic] to the story title. "⬆ Read Now" prompts swipe-up.</div><div class="tags"><span>Carousel</span><span>Launch</span></div></div>
+</div>
+
+<!-- Template A2: Carousel Preview -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#0d0d1a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">12:30 PM</div>
+<div class="mock-slide" style="border-color:var(--g)">
+<div class="ms-num">Slide 1/10</div>
+<div class="ms-title">INDIA BANNED<br>TELEGRAM</div>
+<div class="ms-line"></div>
+<div class="ms-sub">10 things the headlines missed</div>
+</div>
+<div style="display:flex;gap:3px;margin:4px 0">
+<div style="width:20px;height:2px;background:var(--g)"></div>
+<div style="width:20px;height:2px;background:var(--b)"></div>
+<div style="width:20px;height:2px;background:var(--b)"></div>
+</div>
+<div class="story-sub">Swipe through the full breakdown</div>
+<div class="story-cta link">⬆ Swipe Up</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Carousel Preview</div><div class="td">Show Slide 1 as a thumbnail. Progress dots (1/3 gold). Drives traffic to the full carousel.</div><div class="tags"><span>Carousel</span><span>Preview</span></div></div>
+</div>
+
+<!-- Template A3: Reel Drop -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0a0a14,#1a0a0a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">6:00 PM</div>
+<div style="width:44px;height:44px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:4px">▶</div>
+<div class="story-title"><span class="gold">REEL</span> DROP</div>
+<div class="gold-line"></div>
+<div class="story-sub">[Topic] explained in 30 seconds</div>
+<div class="story-cta link" style="background:var(--g);color:var(--c);border:none">⬆ Watch Now</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Reel Drop</div><div class="td">Post when a new reel goes live. The play button icon signals video content. Red-toned gradient for urgency.</div><div class="tags"><span>Reel</span><span>Video</span></div></div>
+</div>
+
+<!-- Template A4: YouTube Upload -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">6:30 PM</div>
+<div class="story-title">ON <span class="gold">YOUTUBE</span></div>
+<div class="gold-line"></div>
+<div style="width:120px;height:68px;background:var(--c);border:1px solid #333;border-radius:2px;display:flex;align-items:center;justify-content:center;margin:4px 0;font-size:8px;color:var(--gr)">▶ [Video Title]</div>
+<div class="story-sub">Full breakdown with sources &amp; context</div>
+<div class="story-cta link">⬆ Watch Full Video</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">YouTube Upload</div><div class="td">Cross-promote YouTube videos. Thumbnail placeholder + "Full breakdown" text. Use this every Tue & Fri.</div><div class="tags"><span>YouTube</span><span>Cross-Promo</span></div></div>
+</div>
+
+<!-- Template A5: Newsletter Promo -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#0d1a0d)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Tue / Fri</div>
+<div class="story-title">📬 THE<br><span class="gold">NEWSLETTER</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Complex stories. Clear analysis.<br>In your inbox. Free.</div>
+<div class="story-cta link" style="background:var(--g);color:var(--c)">⬆ Subscribe</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Newsletter Signup</div><div class="td">Posted twice a week (Tue & Fri). Green-tinted gradient signals "subscribe growth." Link to newsletter signup.</div><div class="tags"><span>Newsletter</span><span>Email</span></div></div>
+</div>
+
+<!-- Template A6: Week Ahead -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Sunday</div>
+<div class="story-title">THIS <span class="gold">WEEK</span></div>
+<div class="gold-line"></div>
+<div style="font-size:9px;color:var(--gr);text-align:left;line-height:1.8"><span style="color:var(--g)">●</span> Tue: [Topic 1]<br><span style="color:var(--g)">●</span> Thu: [Topic 2] Reel<br><span style="color:var(--g)">●</span> Fri: [Topic 3]</div>
+<div class="story-cta countdown">📅 Follow for updates</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Week Ahead</div><div class="td">Posted Sunday. Previews the week's content. Builds anticipation. Followers know when to check.</div><div class="tags"><span>Schedule</span><span>Preview</span></div></div>
+</div>
+
+</div></div></section>
+
+<!-- ===== ENGAGEMENT ===== -->
+<section id="engage" style="background:rgba(22,33,62,.3)"><div class="si">
+<div class="sh"><h2>💬 <span>Engagement</span></h2><p>Polls, questions, sliders — drive conversation</p></div>
+<div class="gl"></div>
+<div class="tg cat-group" data-cat="engage">
+
+<!-- Template E1: Topic Poll -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">2:00 PM</div>
+<div class="story-icon"><svg width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div>
+<div class="story-title">What should we<br>cover <span class="gold">next</span>?</div>
+<div class="gold-line"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:4px 0;font-size:9px;color:var(--gr)">
+<span style="background:var(--cb);border:1px solid var(--b);padding:4px 10px;border-radius:12px">○ Topic A</span>
+<span style="background:var(--cb);border:1px solid var(--b);padding:4px 10px;border-radius:12px">○ Topic B</span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-size:9px;color:var(--gr)">
+<span style="background:var(--cb);border:1px solid var(--b);padding:4px 10px;border-radius:12px">○ Topic C</span>
+<span style="background:var(--cb);border:1px solid var(--b);padding:4px 10px;border-radius:12px">○ Topic D</span>
+</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Topic Poll</div><div class="td">Let audience choose the next topic. Use Instagram's native poll sticker. 2-4 options. Share results after 24h.</div><div class="tags"><span>Poll</span><span>Vote</span></div></div>
+</div>
+
+<!-- Template E2: Yes/No Poll -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(180deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">After posting</div>
+<div class="story-title">Should India<br>ban <span class="gold">Telegram</span>?</div>
+<div class="gold-line"></div>
+<div class="story-cta poll" style="position:static;transform:none;margin-top:4px;background:rgba(255,255,255,.05);border-radius:20px;padding:6px 20px;font-size:11px">
+<span style="color:var(--g);margin-right:12px">● Yes</span>
+<span style="color:var(--gr)">● No</span>
+</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Yes/No Poll</div><div class="td">Quick binary poll on a current story. High participation. Results drive next story.</div><div class="tags"><span>Poll</span><span>Quick</span></div></div>
+</div>
+
+<!-- Template E3: Emoji Slider -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">After posting</div>
+<div class="story-title">How worried<br>should India be?<br><span class="gold">😴 — 😰</span></div>
+<div class="gold-line"></div>
+<div style="display:flex;align-items:center;gap:4px;font-size:16px;margin:4px 0"><span>😴</span><span style="flex:1;height:4px;background:var(--b);border-radius:2px;position:relative"><span style="position:absolute;left:30%;width:4px;height:12px;background:var(--g);top:-4px;border-radius:2px"></span></span><span>😰</span></div>
+<div class="story-sub">Slide to vote</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Emoji Slider</div><div class="td">Instagram's native emoji slider sticker. Question + 😴 to 😰 (or any emoji pair). Share results in next story.</div><div class="tags"><span>Slider</span><span>Interactive</span></div></div>
+</div>
+
+<!-- Template E4: Question Box -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a2e1a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">8:00 PM</div>
+<div class="story-title">ASK US<br><span class="gold">ANYTHING</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Drop your questions below 👇</div>
+<div class="story-cta question" style="background:var(--c);border:2px solid var(--g);color:var(--g);padding:6px 20px;border-radius:20px;font-size:10px">💬 Ask a Question</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Question Box</div><div class="td">Use Instagram's native Questions sticker. Answer the best ones in next day's stories. Builds community.</div><div class="tags"><span>Q&A</span><span>Community</span></div></div>
+</div>
+
+<!-- Template E5: Quiz -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#2e1a0a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Quiz</div>
+<div class="story-title">QUICK <span class="gold">QUIZ</span></div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:9px">Which country has banned<br>Telegram the longest?</div>
+<div style="display:flex;flex-direction:column;gap:4px;margin:6px 0;font-size:8px;color:var(--gr)">
+<span style="background:var(--c);padding:4px 10px;border:1px solid var(--b);border-radius:2px">A. Russia</span>
+<span style="background:var(--c);padding:4px 10px;border:1px solid var(--b);border-radius:2px">B. Iran</span>
+<span style="background:var(--c);padding:4px 10px;border:1px solid var(--g);border-radius:2px;color:var(--g)">C. India</span>
+<span style="background:var(--c);padding:4px 10px;border:1px solid var(--b);border-radius:2px">D. Brazil</span>
+</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Quiz</div><div class="td">Multiple choice on a story fact. Reveal answer in next story. Drives story retention.</div><div class="tags"><span>Quiz</span><span>Education</span></div></div>
+</div>
+
+<!-- Template E6: This or That -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Fun</div>
+<div class="story-title"><span class="gold">THIS</span> or <span class="gold">THAT</span></div>
+<div class="gold-line"></div>
+<div style="display:flex;gap:10px;margin:6px 0">
+<div style="text-align:center;padding:6px 12px;background:var(--c);border:1px solid var(--g);border-radius:4px"><div style="font-size:9px;color:var(--g)">🇨🇳</div><div style="font-size:8px;color:var(--gr);margin-top:2px">China</div></div>
+<div style="font-size:14px;color:var(--gr);display:flex;align-items:center">VS</div>
+<div style="text-align:center;padding:6px 12px;background:var(--c);border:1px solid var(--b);border-radius:4px"><div style="font-size:9px;color:var(--g)">🇺🇸</div><div style="font-size:8px;color:var(--gr);margin-top:2px">USA</div></div>
+</div>
+<div class="story-sub">Who's a bigger trade partner for India?</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">This or That</div><div class="td">Binary choice between two options. Use Instagram's native poll sticker with custom options. High engagement format.</div><div class="tags"><span>Poll</span><span>Comparison</span></div></div>
+</div>
+
+</div></div></section>
+
+<!-- ===== PROMOTIONS ===== -->
+<section id="promo"><div class="si">
+<div class="sh"><h2>📣 <span>Promotions</span></h2><p>Cross-platform, milestones, and content highlights</p></div>
+<div class="gl"></div>
+<div class="tg cat-group" data-cat="promo">
+
+<!-- Template P1: Milestone -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#2e1a0a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Milestone</div>
+<div class="story-title"><span class="gold">100</span><br>FOLLOWERS</div>
+<div class="gold-line"></div>
+<div class="story-sub">Thank you. First 100 people<br>to join The Breakdown.</div>
+<div style="font-size:18px;margin:4px 0">🙏🔥</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Milestone Shoutout</div><div class="td">Celebrate follower milestones. Authentic gratitude builds loyalty. Use at 100, 500, 1K etc.</div><div class="tags"><span>Milestone</span><span>Growth</span></div></div>
+</div>
+
+<!-- Template P2: Pinned Post -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">New here?</div>
+<div class="story-title">📌 <span class="gold">PINNED</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Start here if you're new ↓<br><span style="color:var(--g);font-size:9px">[Post Title]</span></div>
+<div class="story-cta link">⬆ Read</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Pinned Post Share</div><div class="td">Direct new followers to your best content. Change the pinned post monthly. Use this as a "start here" welcome.</div><div class="tags"><span>Welcome</span><span>Best Of</span></div></div>
+</div>
+
+<!-- Template P3: Collab Announcement -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a2e2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Collab</div>
+<div class="story-title">🤝 <span class="gold">COLLAB</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Teaming up with<br><span style="color:var(--g);font-size:11px">@accountname</span></div>
+<div style="display:flex;gap:8px;margin:6px 0;font-size:10px;color:var(--gr)">
+<span style="background:var(--cb);border:1px solid var(--b);padding:4px 8px;border-radius:12px">Coming [day]</span>
+</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Collab Announcement</div><div class="td">Tease upcoming collaborations. Builds excitement and cross-promotion awareness.</div><div class="tags"><span>Collab</span><span>Cross-Promo</span></div></div>
+</div>
+
+<!-- Template P4: Link in Bio Reminder -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Always</div>
+<div style="font-size:28px;margin-bottom:4px">🔗</div>
+<div class="story-title">FIND ALL<br><span class="gold">LINKS</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">YouTube · Newsletter · X<br>All in one place 👇</div>
+<div class="story-cta link" style="background:var(--g);color:var(--c)">⬆ linktr.ee/thebreakdown</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Link in Bio</div><div class="td">Periodic reminder that all platforms are linked in bio. Use this once a week.</div><div class="tags"><span>Link</span><span>Bio</span></div></div>
+</div>
+
+<!-- Template P5: X / Twitter Promo -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Cross</div>
+<div class="story-title">FOLLOW ON <span class="gold">X</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Threads · Live updates ·<br>Real-time analysis</div>
+<div style="font-size:22px;margin:4px 0">𝕏</div>
+<div class="story-cta link">⬆ @thebreakdown</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">X / Twitter Promo</div><div class="td">Cross-platform growth. Remind Instagram followers to follow on X for daily threads and updates.</div><div class="tags"><span>X</span><span>Cross-Platform</span></div></div>
+</div>
+
+</div></div></section>
+
+<!-- ===== COMMUNITY ===== -->
+<section id="community" style="background:rgba(22,33,62,.3)"><div class="si">
+<div class="sh"><h2>👥 <span>Community</span></h2><p>Welcome, connect, and build relationships with your audience</p></div>
+<div class="gl"></div>
+<div class="tg cat-group" data-cat="community">
+
+<!-- Template C1: Welcome New -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#0d1a0d)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Daily</div>
+<div class="story-icon"><svg width="22" height="22" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div>
+<div class="story-title">WELCOME<br><span class="gold">NEW HERE?</span></div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:9px">We break down complex stories<br>into clear, unbiased analysis.</div>
+<div style="font-size:9px;color:var(--g);margin:4px 0">Geopolitics · Tech · Economy · Media</div>
+<div class="story-cta link">⬆ See Best Post</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Welcome New Followers</div><div class="td">Posted periodically. Explains who you are. Links to best content. Essential for growth phase.</div><div class="tags"><span>Welcome</span><span>Onboarding</span></div></div>
+</div>
+
+<!-- Template C2: Day Done -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">9:00 PM</div>
+<div class="story-title">DAY <span class="gold">1</span> / DONE</div>
+<div class="gold-line"></div>
+<div class="stats-row">
+<div><div class="num">2</div><div class="lbl">Posts</div></div>
+<div><div class="num">47</div><div class="lbl">Likes</div></div>
+<div><div class="num">18</div><div class="lbl">Followers</div></div>
+</div>
+<div class="story-sub" style="font-size:9px">See you tomorrow. 🌙</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">"Day Done" Recap</div><div class="td">Daily ritual. Shows day's stats. Makes followers feel part of the journey. Post every evening.</div><div class="tags"><span>Ritual</span><span>Recap</span></div></div>
+</div>
+
+<!-- Template C3: Share Their Take -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a2e1a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Community</div>
+<div class="story-title">YOUR <span class="gold">TAKE</span></div>
+<div class="gold-line"></div>
+<div style="background:var(--c);border-left:2px solid var(--g);padding:6px 10px;margin:4px 0;text-align:left;font-size:9px;color:var(--gr);line-height:1.4;max-width:160px">
+"India should focus on domestic alternatives instead of banning foreign apps."
+<br><span style="color:var(--g);font-size:7px">— @follower</span>
+</div>
+<div class="story-sub" style="font-size:9px">Agree? Disagree? Keep the conversation going.</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Share Their Take</div><div class="td">Repost a thoughtful comment or DM. Makes followers feel heard. Encourages more comments.</div><div class="tags"><span>UGC</span><span>Community</span></div></div>
+</div>
+
+<!-- Template C4: Behind the Scenes -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">BTS</div>
+<div class="story-title">BEHIND THE<br><span class="gold">SCENES</span></div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:9px">How we research each story.<br>Here's our workflow ↓</div>
+<div style="display:flex;gap:4px;margin:6px 0;font-size:16px">📰📊📝</div>
+<div class="story-cta countdown">Building trust</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Behind the Scenes</div><div class="td">Humanizes the brand. Show your process, reading list, workspace. Builds trust and connection.</div><div class="tags"><span>BTS</span><span>Trust</span></div></div>
+</div>
+
+<!-- Template C5: News Share + Take -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Breaking</div>
+<div style="width:160px;background:var(--c);border:1px solid var(--b);padding:6px 8px;margin-bottom:4px;border-radius:2px;font-size:7px;color:var(--gr);text-align:left;line-height:1.4">
+📰 <strong style="color:var(--w)">Headline:</strong> India blocks 18 Chinese apps...
+</div>
+<div class="story-title" style="font-size:16px">OUR <span class="gold">TAKE</span></div>
+<div class="story-sub" style="font-size:8px">Third round of bans in 18 months.<br>The pattern? Every time before elections.</div>
+<div class="story-cta link" style="font-size:8px;padding:4px 12px">⬆ Full Analysis</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">News Share + Take</div><div class="td">Share a news headline + your analysis in one line. Positions you as the go-to for context. Fast to produce.</div><div class="tags"><span>News</span><span>Analysis</span></div></div>
+</div>
+
+<!-- Template C6: Comment Repost -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">❤️</div>
+<div style="width:32px;height:32px;border-radius:50%;background:var(--cb);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;margin-bottom:4px">
+<svg width="16" height="16" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg>
+</div>
+<div class="story-title" style="font-size:16px">BEST OF<br><span class="gold">COMMENTS</span></div>
+<div class="gold-line"></div>
+<div style="background:var(--c);padding:6px 10px;border-radius:4px;margin:4px 0;font-size:8px;color:var(--gr);text-align:left;line-height:1.5">
+"Finally someone who explains geopolitics without taking sides. Been looking for this."
+</div>
+<div class="story-sub" style="font-size:8px">Thanks for being here 🙌</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Best of Comments</div><div class="td">Repost a great comment. Shows you're listening. Encourages others to comment for a chance to be featured.</div><div class="tags"><span>UGC</span><span>Community</span></div></div>
+</div>
+
+</div></div></section>
+
+<!-- ===== BRAND ===== -->
+<section id="brand"><div class="si">
+<div class="sh"><h2>✨ <span>Brand & Visual</span></h2><p>Teasers, reveals, and visual identity reinforcement</p></div>
+<div class="gl"></div>
+<div class="tg cat-group" data-cat="brand">
+
+<!-- Template B1: Pure Brand Reveal -->
+<div class="tc">
+<div class="phone-frame" style="background:radial-gradient(circle at center,#1a1a2e,#0f0f1a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Pre-Launch</div>
+<div class="story-icon" style="width:48px;height:48px;border-width:2.5px"><svg width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div>
+<div class="story-title" style="font-size:16px;letter-spacing:6px">THE<br><span class="gold">BREAKDOWN</span></div>
+<div class="gold-line"></div>
+<div class="story-sub">Complex stories. Clear analysis.</div>
+<div class="story-cta countdown">Launching soon</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Pure Brand Reveal</div><div class="td">Use at account creation and pre-launch. Minimal. Confident. Let the brand speak.</div><div class="tags"><span>Brand</span><span>Launch</span></div></div>
+</div>
+
+<!-- Template B2: Countdown -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">12h left</div>
+<div class="story-title">COMING <span class="gold">SOON</span></div>
+<div class="gold-line"></div>
+<div style="font-family:'Bebas Neue';font-size:32px;color:var(--w);letter-spacing:4px;margin:4px 0">12:00</div>
+<div class="story-sub">New breakdown dropping<br>tomorrow at 12 PM</div>
+<div class="story-cta countdown" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:6px 16px;border-radius:20px;font-size:9px">⏰ Set Reminder</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Countdown</div><div class="td">Use native Instagram countdown sticker. Big numbers + "Coming Soon." Builds anticipation for launches.</div><div class="tags"><span>Countdown</span><span>Anticipation</span></div></div>
+</div>
+
+<!-- Template B3: Quote Card -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#2e1a0a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Quote</div>
+<div style="font-size:28px;margin-bottom:2px;color:var(--g)">"</div>
+<div class="story-sub" style="font-size:10px;font-style:italic;line-height:1.5;max-width:160px">Power is not given. It is taken. The only question is who has the will to take it first.</div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:8px;color:var(--g)">— Context or attribution</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Quote Card</div><div class="td">Share a powerful quote related to current events. High shareability. Easy to produce.</div><div class="tags"><span>Quote</span><span>Shareable</span></div></div>
+</div>
+
+<!-- Template B4: Data Snapshot -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#0a1a0a)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">Data</div>
+<div style="font-family:'Bebas Neue';font-size:36px;color:var(--g);letter-spacing:2px;line-height:1">250M</div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:9px">Users affected by Telegram ban.<br>More than Russia, Iran, and Brazil combined.</div>
+<div style="font-size:7px;color:var(--gr);margin-top:4px">Source: [citation]</div>
+<div class="story-cta link" style="font-size:8px;padding:4px 12px">⬆ Full Breakdown</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Data Snapshot</div><div class="td">One stat, large format. Source citation. High save rate. Links to full analysis.</div><div class="tags"><span>Data</span><span>Stat</span></div></div>
+</div>
+
+<!-- Template B5: Teaser "Something Is Coming" -->
+<div class="tc">
+<div class="phone-frame" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e 50%,#0a0a14)">
+<div class="top-label">THE BREAKDOWN</div><div class="story-badge">8:00 PM</div>
+<div class="story-title">SOMETHING<br>IS <span class="gold">COMING</span></div>
+<div class="gold-line"></div>
+<div class="story-sub" style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gr)">Tomorrow · 12 PM</div>
+<div class="story-cta countdown" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:6px 20px;border-radius:20px;font-size:10px">⏰ 12h</div>
+<div class="btm-mark"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="rgba(255,255,255,.08)"/><rect x="16" y="4" width="12" height="14" rx="0" fill="rgba(228,161,29,.1)"/><rect x="16" y="22" width="12" height="14" rx="0" fill="rgba(255,255,255,.08)"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="tinfo"><div class="tt">Teaser</div><div class="td">Maximum intrigue. Minimum information. Used the night before launch. No CTA — just anticipation.</div><div class="tags"><span>Teaser</span><span>Launch</span></div></div>
+</div>
+
+</div></div></section>
+
+<!-- SPECS SECTION -->
+<section style="background:rgba(22,33,62,.3)"><div class="si">
+<div class="sh"><h2>📐 <span>Design Specs</span></h2><p>How to recreate these in Canva or any design tool</p></div>
+<div class="gl"></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Canvas Size</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6">1080×1920 pixels<br>9:16 aspect ratio<br>Set as custom size in Canva / Photoshop / Figma</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Typography</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6"><strong style="color:var(--w)">Titles:</strong> Bebas Neue, 32-48px, letter-spacing 2-4px<br><strong style="color:var(--w)">Body:</strong> Source Sans 3, 14-18px, weight 400<br><strong style="color:var(--w)">Labels:</strong> Source Sans 3, 10-12px, uppercase</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Colors</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6"><strong style="color:var(--w)">BG:</strong> #0f0f1a / #1a1a2e<br><strong style="color:var(--w)">Gold:</strong> #e4a11d<br><strong style="color:var(--w)">Text:</strong> #ffffff / #888888<br><strong style="color:var(--w)">Cards:</strong> #16213e</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Elements</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6">• Split-B logo (bottom-right, faded)<br>• Gold accent line (center or under title)<br>• "THE BREAKDOWN" top-left label<br>• 8-12px padding from edges</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Gradients</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6">Use subtle gradient overlays to differentiate categories:<br>• Standard: 135deg #0f0f1a → #1a1a2e<br>• Urgent: Add #1a0a0a (red tint)<br>• Growth: Add #0d1a0d (green tint)</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:4px">
+<h3 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Pro Tips</h3>
+<p style="font-size:11px;color:var(--gr);line-height:1.6">• Batch-create 1 week of stories in 30 min<br>• Save each template as a Canva preset<br>• Keep text above the "safe zone" (top/bottom 10%)<br>• Leave room for Instagram stickers (top 15%)</p>
+</div>
+</div>
+</div></section>
+
+<footer>
+<p class="fb">THE BREAKDOWN</p>
+<p>Complex stories. Clear analysis.</p>
+<p style="margin-top:.5rem;font-size:10px;color:var(--b)">Story Template Design Pack · 22 Templates · brand colors · split-B logo</p>
+</footer>
+
+<script>
+// Category filter
+document.querySelectorAll('.ctab').forEach(btn => {
+btn.addEventListener('click', function(){
+document.querySelectorAll('.ctab').forEach(b => b.classList.remove('a'));
+this.classList.add('a');
+var cat = this.dataset.cat;
+document.querySelectorAll('.cat-group').forEach(g => {
+g.style.display = cat === 'all' ? 'grid' : (g.dataset.cat === cat ? 'grid' : 'none');
+});
+});
+});
+
+// Add download button to every template
+document.querySelectorAll('.tc').forEach(function(card, index){
+var tinfo = card.querySelector('.tinfo');
+var btn = document.createElement('button');
+btn.className = 'dl-btn';
+btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PNG';
+btn.title = 'Download template as 1080x1920 PNG';
+btn.onclick = function(e){
+e.stopPropagation();
+downloadSingle(card.querySelector('.phone-frame'), 'the-breakdown-story-' + (index+1) + '.png');
+};
+tinfo.appendChild(btn);
+});
+
+function downloadSingle(element, filename){
+if(!element) return;
+showToast('Rendering image...');
+html2canvas(element, {
+width: 1080,
+height: 1920,
+scale: 1,
+backgroundColor: null,
+useCORS: true,
+logging: false
+}).then(function(canvas){
+var link = document.createElement('a');
+link.download = filename;
+link.href = canvas.toDataURL('image/png');
+link.click();
+showToast('✅ Downloaded: ' + filename);
+}).catch(function(err){
+showToast('❌ Error: ' + err.message);
+});
+}
+
+function downloadAll(){
+var visibleCards = document.querySelectorAll('.cat-group[style*="grid"] .tc, .cat-group:not([style]) .tc');
+if(visibleCards.length === 0){
+visibleCards = document.querySelectorAll('.tc');
+}
+var cards = Array.from(visibleCards);
+if(cards.length === 0){ showToast('No templates visible'); return; }
+var btn = document.querySelector('.dl-all');
+btn.disabled = true;
+btn.textContent = 'Downloading ' + cards.length + '...';
+var index = 0;
+function next(){
+if(index >= cards.length){
+btn.disabled = false;
+btn.textContent = '⬇ Download All Visible';
+showToast('✅ Downloaded ' + cards.length + ' templates');
+return;
+}
+var frame = cards[index].querySelector('.phone-frame');
+if(frame){
+showToast('Downloading ' + (index+1) + '/' + cards.length + '...');
+html2canvas(frame, {
+width: 1080, height: 1920, scale: 1,
+backgroundColor: null, useCORS: true, logging: false
+}).then(function(canvas){
+var link = document.createElement('a');
+link.download = 'the-breakdown-story-' + (index+1) + '.png';
+link.href = canvas.toDataURL('image/png');
+link.click();
+index++;
+setTimeout(next, 500);
+}).catch(function(){
+index++;
+setTimeout(next, 200);
+});
+} else {
+index++;
+setTimeout(next, 200);
+}
+}
+next();
+}
+
+function showToast(msg){
+var t = document.getElementById('toast');
+if(!t){
+t = document.createElement('div');
+t.id = 'toast';
+t.className = 'toast';
+document.body.appendChild(t);
+}
+t.textContent = msg;
+t.classList.add('show');
+clearTimeout(t._hide);
+t._hide = setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+</script>
+
+</body>
+</html>

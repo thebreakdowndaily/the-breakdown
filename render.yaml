@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: breakdown-backend
+    env: node
+    region: singapore
+    plan: free
+    rootDirectory: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/seed.js && node dist/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://thebreakdown.in

@@ -1,0 +1,71 @@
+<svg viewBox="0 0 760 500" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+  <rect width="760" height="500" fill="#0A0A0A"/>
+  <text x="380" y="28" font-family="Bebas Neue,sans-serif" font-size="18" fill="#FF6F00" text-anchor="middle" letter-spacing="1">HOW A ROAD GETS BUILT — AND WHERE IT BREAKS</text>
+
+  <!-- Box: Taxpayer Money -->
+  <rect x="290" y="50" width="180" height="40" rx="4" fill="#1a1a1a" stroke="#FF6F00" stroke-width="1.5"/>
+  <text x="380" y="75" font-family="JetBrains Mono,monospace" font-size="11" fill="#FF6F00" text-anchor="middle">TAXPAYER MONEY</text>
+  <line x1="380" y1="90" x2="380" y2="110" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Box: MoRTH / NHAI -->
+  <rect x="290" y="110" width="180" height="40" rx="4" fill="#1a1a1a" stroke="#888" stroke-width="1"/>
+  <text x="380" y="135" font-family="JetBrains Mono,monospace" font-size="11" fill="#ccc" text-anchor="middle">MoRTH / NHAI</text>
+  <line x1="380" y1="150" x2="380" y2="170" stroke="#555" stroke-width="1.5"/>
+
+  <!-- Fork: Contract Types -->
+  <rect x="100" y="175" width="160" height="36" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  <text x="180" y="197" font-family="JetBrains Mono,monospace" font-size="10" fill="#aaa" text-anchor="middle">EPC (48-50% of NH)</text>
+
+  <rect x="300" y="175" width="160" height="36" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  <text x="380" y="197" font-family="JetBrains Mono,monospace" font-size="10" fill="#aaa" text-anchor="middle">HAM (~50% of NH)</text>
+
+  <rect x="510" y="175" width="160" height="36" rx="4" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  <text x="590" y="197" font-family="JetBrains Mono,monospace" font-size="10" fill="#aaa" text-anchor="middle">BOT / PBMC</text>
+
+  <!-- Lines from MoRTH to contract types -->
+  <line x1="290" y1="150" x2="180" y2="175" stroke="#555" stroke-width="1"/>
+  <line x1="380" y1="150" x2="380" y2="175" stroke="#555" stroke-width="1"/>
+  <line x1="470" y1="150" x2="590" y2="175" stroke="#555" stroke-width="1"/>
+
+  <!-- Box: L1 Contractor -->
+  <rect x="230" y="240" width="300" height="40" rx="4" fill="#1a1a1a" stroke="#FF4500" stroke-width="2"/>
+  <text x="380" y="257" font-family="JetBrains Mono,monospace" font-size="11" fill="#FF4500" text-anchor="middle">L1 CONTRACTOR (LOWEST BIDDER)</text>
+  <text x="380" y="272" font-family="JetBrains Mono,monospace" font-size="8" fill="#888" text-anchor="middle">🚩 Cuts corners to maintain margins</text>
+
+  <!-- Lines from contract types to L1 -->
+  <line x1="180" y1="211" x2="320" y2="240" stroke="#555" stroke-width="1"/>
+  <line x1="380" y1="211" x2="380" y2="240" stroke="#555" stroke-width="1"/>
+  <line x1="590" y1="211" x2="440" y2="240" stroke="#555" stroke-width="1"/>
+
+  <!-- Box: Sub-contractors -->
+  <rect x="230" y="295" width="300" height="40" rx="4" fill="#1a1a1a" stroke="#FF4500" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="380" y="312" font-family="JetBrains Mono,monospace" font-size="10" fill="#FF4500" text-anchor="middle">MULTI-LAYERED SUB-CONTRACTING</text>
+  <text x="380" y="327" font-family="JetBrains Mono,monospace" font-size="8" fill="#888" text-anchor="middle">🚩 Profit-without-responsibility model</text>
+  <line x1="380" y1="280" x2="380" y2="295" stroke="#555" stroke-width="1"/>
+
+  <!-- Box: Poor Quality -->
+  <rect x="230" y="350" width="300" height="40" rx="4" fill="#1a1a1a" stroke="#FF4500" stroke-width="2"/>
+  <text x="380" y="367" font-family="JetBrains Mono,monospace" font-size="11" fill="#FF4500" text-anchor="middle">SUB-STANDARD CONSTRUCTION</text>
+  <text x="380" y="382" font-family="JetBrains Mono,monospace" font-size="8" fill="#888" text-anchor="middle">🚩 Inferior materials, poor drainage, incomplete compaction</text>
+  <line x1="380" y1="335" x2="380" y2="350" stroke="#555" stroke-width="1"/>
+
+  <!-- Box: DLP ends -->
+  <rect x="230" y="405" width="300" height="40" rx="4" fill="#1a1a1a" stroke="#FF4500" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="380" y="422" font-family="JetBrains Mono,monospace" font-size="10" fill="#FF4500" text-anchor="middle">DEFECT LIABILITY EXPIRES (5 YEARS)</text>
+  <text x="380" y="437" font-family="JetBrains Mono,monospace" font-size="8" fill="#888" text-anchor="middle">🚩 Road fails after DLP, contractor escapes penalty</text>
+  <line x1="380" y1="390" x2="380" y2="405" stroke="#555" stroke-width="1"/>
+
+  <!-- Box: Potholes -->
+  <rect x="230" y="455" width="300" height="36" rx="6" fill="#4a0000" stroke="#FF0000" stroke-width="2"/>
+  <text x="380" y="477" font-family="JetBrains Mono,monospace" font-size="13" fill="#FF4444" text-anchor="middle" font-weight="bold">☠ 2,385 DEATHS (2024)</text>
+
+  <!-- Right side: Where it breaks annotations -->
+  <rect x="10" y="245" width="110" height="28" rx="4" fill="rgba(255,69,0,0.15)"/>
+  <text x="65" y="263" font-family="JetBrains Mono,monospace" font-size="8" fill="#FF4500" text-anchor="middle">BREAK 1: L1</text>
+  <rect x="10" y="300" width="110" height="28" rx="4" fill="rgba(255,69,0,0.15)"/>
+  <text x="65" y="318" font-family="JetBrains Mono,monospace" font-size="8" fill="#FF4500" text-anchor="middle">BREAK 2: SUB-CONTRACT</text>
+  <rect x="10" y="355" width="110" height="28" rx="4" fill="rgba(255,69,0,0.15)"/>
+  <text x="65" y="373" font-family="JetBrains Mono,monospace" font-size="8" fill="#FF4500" text-anchor="middle">BREAK 3: QUALITY</text>
+  <rect x="10" y="410" width="110" height="28" rx="4" fill="rgba(255,69,0,0.15)"/>
+  <text x="65" y="428" font-family="JetBrains Mono,monospace" font-size="8" fill="#FF4500" text-anchor="middle">BREAK 4: DLP GAP</text>
+</svg>

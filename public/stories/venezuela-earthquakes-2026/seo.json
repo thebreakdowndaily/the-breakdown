@@ -1,0 +1,41 @@
+{
+  "title": "Venezuela Earthquakes: Toll Reaches 235 as 46,000 Remain Missing | The Breakdown",
+  "description": "Twin 7.2 and 7.5 earthquakes struck Venezuela 39 seconds apart. At least 235 dead, 4,300 injured, 46,000 missing. USGS predicts toll could exceed 10,000 in worst disaster in modern Venezuelan history.",
+  "canonical": "https://thebreakdown.in/story/venezuela-earthquakes-2026",
+  "og": {
+    "title": "Venezuela Earthquakes: Toll Reaches 235 as 46,000 Remain Missing",
+    "description": "Twin 7.2 and 7.5 earthquakes struck Venezuela 39 seconds apart. At least 235 dead, 4,300 injured, 46,000 missing. USGS predicts toll could exceed 10,000.",
+    "type": "article",
+    "url": "https://thebreakdown.in/story/venezuela-earthquakes-2026",
+    "image": "https://thebreakdown.in/og-image.png",
+    "site_name": "The Breakdown"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@thebreakdownin",
+    "title": "Venezuela Earthquakes: Toll Reaches 235, 46,000 Missing",
+    "description": "Twin 7.2 and 7.5 earthquakes struck Venezuela 39 seconds apart. At least 235 dead, 4,300 injured, 46,000 missing."
+  },
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": "Venezuela Earthquakes: Toll Reaches 235 as 46,000 Remain Missing After Twin 7.2 and 7.5 Tremors",
+    "description": "Twin earthquakes of 7.2 and 7.5 magnitude struck Venezuela 39 seconds apart, killing at least 235. With 4,300 injured and 46,000 missing, USGS predicts the toll could exceed 10,000.",
+    "articleSection": "Geopolitics",
+    "keywords": "Venezuela, earthquake, Caracas, La Guaira, natural-disaster, seismic, international-aid, humanitarian-crisis, Boconó-Fault",
+    "datePublished": "2026-06-25T10:00:00Z",
+    "dateModified": "2026-06-26T12:00:00Z",
+    "author": {
+      "@type": "Organization",
+      "name": "The Breakdown"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Breakdown",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://thebreakdown.in/og-image.png"
+      }
+    }
+  }
+}

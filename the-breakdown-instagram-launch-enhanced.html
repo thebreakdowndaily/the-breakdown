@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Instagram Launch Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#1a1a2e;--g:#e4a11d;--w:#fff;--gr:#888;--d:#0f0f1a;--cb:#16213e;--b:#2a2a4a;--r:#dc3545;--gc:#28a745;--bl:#0066ff;--p:#9b59b6}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--d);color:var(--w);line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,15,26,.98);border-bottom:1px solid var(--b);padding:0 2rem}
+.ni{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nl{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--w)}
+.nb{width:30px;height:30px;background:var(--c);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:16px;color:var(--g)}
+.nt{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px}
+.nk{display:flex;gap:1.5rem;list-style:none}
+.nk a{color:var(--gr);text-decoration:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:color .3s}
+.nk a:hover{color:var(--g)}
+.hb{background:linear-gradient(135deg,var(--d) 0%,var(--c) 50%,#0a0a14 100%);padding:100px 2rem 70px;text-align:center;border-bottom:1px solid var(--b);position:relative;overflow:hidden}
+.hb::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(228,161,29,.03) 0%,transparent 70%);pointer-events:none}
+.hb h1{font-family:'Bebas Neue';font-size:clamp(40px,7vw,72px);letter-spacing:5px;position:relative;z-index:1}
+.hb h1 span{color:var(--g);position:relative}
+.hb h1 span::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--g)}
+.hb p{color:var(--gr);font-size:17px;margin-bottom:2rem;max-width:600px;margin-inline:auto;position:relative;z-index:1}
+.hm{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--gr);position:relative;z-index:1}
+.hm span{display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;background:var(--g);border-radius:50%}
+section{padding:70px 2rem;border-bottom:1px solid var(--b)}
+.si{max-width:1200px;margin:0 auto}
+.sl{font-family:'Bebas Neue';font-size:13px;letter-spacing:4px;color:var(--g);margin-bottom:.5rem}
+.st{font-family:'Bebas Neue';font-size:clamp(30px,4.5vw,48px);letter-spacing:2px;margin-bottom:1rem;line-height:1.1}
+.sd{color:var(--gr);font-size:15px;margin-bottom:3rem;max-width:700px;line-height:1.7}
+.gl{width:50px;height:2px;background:var(--g);margin:1rem 0 2rem}
+.steps{display:grid;gap:1.5rem}
+.step{background:var(--cb);border:1px solid var(--b);padding:1.5rem;display:grid;grid-template-columns:50px 1fr;gap:1.5rem;align-items:start}
+.sn{width:44px;height:44px;background:var(--c);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:20px;color:var(--g);flex-shrink:0}
+.step h3{font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:.3rem}
+.step h4{color:var(--g);font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:.2rem}
+.step p{color:var(--gr);font-size:13px;line-height:1.7}
+.step ul{margin-top:.4rem;padding-left:1.2rem;color:var(--gr);font-size:12px;line-height:1.8}
+.step ul strong{color:var(--w)}
+.step code{background:var(--c);padding:2px 8px;font-size:11px;color:var(--g)}
+.tip{background:rgba(228,161,29,.08);border-left:3px solid var(--g);padding:.75rem 1rem;margin:.75rem 0;font-size:12px;color:var(--gr);line-height:1.6}
+.tip strong{color:var(--g)}
+.warn{background:rgba(220,53,69,.08);border-left:3px solid var(--r);padding:.75rem 1rem;margin:.75rem 0;font-size:12px;color:var(--gr);line-height:1.6}
+.warn strong{color:var(--r)}
+/* Profile Phone Mockup */
+.phone{width:300px;margin:0 auto;background:#000;border-radius:36px;padding:12px;border:2px solid #333;position:relative}
+.psc{background:var(--d);border-radius:24px;overflow:hidden;min-height:520px}
+.psh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--b);font-family:'Bebas Neue';font-size:13px;letter-spacing:1px}
+.psb{padding:14px;text-align:center}
+.psa{width:70px;height:70px;background:var(--c);border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:30px;color:var(--g);margin:0 auto 8px}
+.psn{font-family:'Bebas Neue';font-size:16px;letter-spacing:.5px}
+.pshdr{font-size:11px;color:var(--gr);margin:2px 0}
+.psp{font-size:11px;color:var(--gr);line-height:1.4;margin-bottom:8px}
+.psst{display:flex;justify-content:center;gap:2rem;margin-bottom:8px}
+.psis{text-align:center}
+.psisv{font-family:'Bebas Neue';font-size:16px}
+.psisl{font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:1px}
+.psll{color:var(--g);font-size:11px;text-decoration:none;display:block;margin-bottom:8px;word-break:break-all}
+.psbtn{display:block;width:100%;padding:6px;background:var(--cb);border:1px solid var(--b);color:var(--w);font-family:'Bebas Neue';font-size:12px;letter-spacing:1px;text-align:center;text-decoration:none;margin-bottom:12px;border-radius:2px}
+.pshl{display:flex;gap:8px;justify-content:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--b)}
+.pshi{text-align:center;width:48px}
+.pshc{width:44px;height:44px;border-radius:50%;background:var(--cb);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:16px;margin:0 auto 3px}
+.pshn{font-size:7px;color:var(--gr);text-transform:uppercase;letter-spacing:.3px}
+.psgr{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.psgi{aspect-ratio:1;background:var(--cb);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px;text-align:center;font-size:7px;color:var(--gr)}
+.psgi.gb{border:1px solid var(--g)}
+.psgt{font-size:6px;letter-spacing:.3px;text-transform:uppercase;color:var(--g);margin-bottom:1px}
+.psgw{font-size:6px;color:var(--w);line-height:1.1}
+/* Grid */
+.gm{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:420px;margin:0 auto}
+.gi{aspect-ratio:1;background:var(--cb);border:1px solid var(--b);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;text-align:center;font-size:7px;position:relative;overflow:hidden}
+.gi.ft{grid-column:span 2;grid-row:span 2}
+.gi.gb{border-color:var(--g)}
+.gty{font-size:6px;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:2px;position:relative;z-index:1}
+.gwt{font-family:'Bebas Neue';font-size:8px;letter-spacing:.3px;color:var(--w);line-height:1.2;position:relative;z-index:1}
+.gi.ft .gwt{font-size:14px}
+.gi.ft .gty{font-size:9px}
+.gi .gfm{position:absolute;bottom:3px;right:3px;font-size:6px;color:rgba(255,255,255,.15);font-family:'Bebas Neue'}
+.grid-toggle{margin-bottom:1.5rem;display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+.gtb{padding:8px 16px;background:var(--cb);border:1px solid var(--b);color:var(--gr);font-family:'Bebas Neue';font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .3s}
+.gtb:hover,.gtb.a{border-color:var(--g);color:var(--g);background:rgba(228,161,29,.1)}
+.grid-patterns{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2rem;margin-top:2rem}
+/* Cards */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:2rem}
+.cc{background:var(--cb);border:1px solid var(--b);padding:1.2rem;transition:border-color .3s;position:relative}
+.cc:hover{border-color:var(--g)}
+.cc.highlight{border-color:var(--g)}
+.cc.highlight::before{content:'★ FEATURED';position:absolute;top:-1px;right:-1px;background:var(--g);color:var(--c);font-size:8px;letter-spacing:1px;padding:3px 8px;font-family:'Bebas Neue'}
+.cct{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:.4rem}
+.cc h4{font-family:'Bebas Neue';font-size:18px;letter-spacing:.5px;margin-bottom:.4rem}
+.cc p{color:var(--gr);font-size:12px;line-height:1.6}
+.ccm{margin-top:.6rem;display:flex;gap:.75rem;font-size:10px;color:var(--gr)}
+.ccm span{padding:2px 8px;background:var(--c);border-radius:2px}
+/* Template Carousel */
+.tp{display:flex;gap:1rem;overflow-x:auto;padding:1.5rem 0;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--g) var(--b)}
+.tp::-webkit-scrollbar{height:4px}
+.tp::-webkit-scrollbar-track{background:var(--b)}
+.tp::-webkit-scrollbar-thumb{background:var(--g);border-radius:2px}
+.tc{min-width:200px;height:250px;background:var(--c);border:2px solid var(--b);border-radius:4px;padding:.8rem;display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start;flex-shrink:0;position:relative}
+.tc.g{border-color:var(--g)}
+.tcn{font-family:'Bebas Neue';font-size:10px;color:var(--g);margin-bottom:.3rem;letter-spacing:1px}
+.tc h5{font-family:'Bebas Neue';font-size:16px;letter-spacing:.5px;margin-bottom:.4rem;line-height:1.2}
+.tc p{font-size:10px;color:var(--gr);line-height:1.4}
+.tcb{position:absolute;bottom:6px;right:8px;font-size:8px;color:rgba(255,255,255,.1);font-family:'Bebas Neue'}
+/* Tables */
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl th{text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)}
+.stbl td{padding:10px 14px;border-bottom:1px solid var(--b);color:var(--gr)}
+.stbl tr:hover td{color:var(--w)}
+.stbl .g{color:var(--g)}
+.badge{display:inline-block;padding:2px 7px;font-size:9px;letter-spacing:1px;text-transform:uppercase;border-radius:2px;font-family:'Bebas Neue'}
+.bg{background:var(--g);color:var(--c)}
+.br{background:var(--r);color:var(--w)}
+.bs{background:var(--gc);color:var(--w)}
+.bb{background:var(--bl);color:var(--w)}
+.bp{background:var(--p);color:var(--w)}
+.bt{background:var(--b);color:var(--w)}
+.badge.outline{background:transparent;border:1px solid var(--b);color:var(--gr)}
+/* Hashtags */
+.hg{display:flex;flex-wrap:wrap;gap:.3rem;margin:1rem 0}
+.ht{padding:4px 10px;background:var(--cb);border:1px solid var(--b);font-size:11px;color:var(--gr);transition:all .3s;cursor:default;border-radius:2px}
+.ht:hover{border-color:var(--g);color:var(--g)}
+.ht.p{border-color:var(--g);color:var(--g);background:rgba(228,161,29,.1)}
+.ht.gold{border-color:var(--g);color:var(--w);background:rgba(228,161,29,.15)}
+.ht.silver{border-color:var(--b);color:var(--gr)}
+.ht.bronze{border-color:#8b4513;color:var(--gr)}
+/* Lists */
+.cl{list-style:none}
+.cl li{padding:8px 0;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gr)}
+.cl li::before{content:'';width:14px;height:14px;border:2px solid var(--b);border-radius:2px;flex-shrink:0}
+.cl li.done::before{background:var(--gc);border-color:var(--gc)}
+.cl li.warn::before{background:var(--g);border-color:var(--g)}
+/* Metrics */
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.mc{background:var(--cb);border:1px solid var(--b);padding:1.2rem;text-align:center;transition:border-color .3s}
+.mc:hover{border-color:var(--g)}
+.mv{font-family:'Bebas Neue';font-size:32px;color:var(--g)}
+.ml{font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px}
+/* Two column layout */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+/* Highlight circle grid */
+.hr{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.hi{text-align:center;width:68px}
+.hc{width:58px;height:58px;border-radius:50%;background:var(--cb);border:2px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 3px;transition:border-color .3s}
+.hc:hover{border-color:var(--g)}
+.hn{font-family:'Bebas Neue';font-size:9px;letter-spacing:1px;color:var(--gr)}
+/* Pillars */
+.pil{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
+.pc{background:var(--cb);border:1px solid var(--b);padding:1.5rem;border-top:3px solid var(--g);transition:border-color .3s,transform .3s}
+.pc:hover{border-color:var(--g);transform:translateY(-2px)}
+.pci{font-size:28px;margin-bottom:.5rem}
+.pc h4{font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;margin-bottom:.5rem}
+.pc p{color:var(--gr);font-size:12px;line-height:1.6;margin-bottom:.3rem}
+.pc .tag{display:inline-block;padding:2px 6px;background:var(--c);border-radius:2px;font-size:9px;color:var(--g);margin-right:3px;margin-top:4px}
+/* Caption Templates */
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.capt{background:var(--cb);border:1px solid var(--b);padding:1.2rem}
+.capt h4{font-family:'Bebas Neue';font-size:15px;letter-spacing:.5px;color:var(--g);margin-bottom:.5rem}
+.capt .cap-body{background:var(--c);padding:.75rem;border-radius:4px;font-size:12px;color:var(--gr);line-height:1.7;margin-bottom:.5rem;font-style:italic}
+.capt .cap-type{font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px}
+/* Accordion */
+.ac{background:var(--cb);border:1px solid var(--b);margin-bottom:.75rem}
+.ach{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;cursor:pointer;font-family:'Bebas Neue';font-size:15px;letter-spacing:.5px;color:var(--g);user-select:none;transition:background .3s}
+.ach:hover{background:rgba(228,161,29,.05)}
+.ach .ac-arrow{font-size:12px;transition:transform .3s}
+.ach.active .ac-arrow{transform:rotate(180deg)}
+.acb{padding:0 1.2rem 1.2rem;display:none;font-size:13px;color:var(--gr);line-height:1.7}
+.acb.show{display:block}
+.acb ul{padding-left:1.2rem;margin:.5rem 0}
+.acb li{margin-bottom:.3rem}
+/* Timeline */
+.tl{position:relative;padding-left:2rem}
+.tl::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--b)}
+.tli{position:relative;padding-bottom:1.5rem}
+.tli::before{content:'';position:absolute;left:-1.4rem;top:4px;width:12px;height:12px;background:var(--cb);border:2px solid var(--g);border-radius:50%}
+.tli:last-child{padding-bottom:0}
+.tlt{font-family:'Bebas Neue';font-size:14px;color:var(--g);letter-spacing:1px}
+.tlh{font-size:13px;color:var(--w);margin:2px 0}
+.tlp{font-size:11px;color:var(--gr);line-height:1.5}
+/* Stat Banners */
+.sb{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:2rem 0}
+.sbi{text-align:center;padding:1.5rem;background:var(--cb);border:1px solid var(--b)}
+.sbv{font-family:'Bebas Neue';font-size:36px;color:var(--g)}
+.sbl{font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px;margin-top:.3rem}
+/* Tags */
+.flex{display:flex;flex-wrap:wrap;gap:.5rem}
+.tag{padding:4px 10px;background:var(--c);border-radius:2px;font-size:10px;color:var(--gr)}
+/* Section bg alt */
+.alt{background:rgba(22,33,62,.3)}
+footer{padding:50px 2rem;text-align:center;border-top:1px solid var(--b)}
+footer p{color:var(--gr);font-size:12px;margin-bottom:.3rem}
+footer .fb{font-family:'Bebas Neue';font-size:20px;color:var(--g);letter-spacing:2px}
+@media(max-width:768px){.two{grid-template-columns:1fr}.nk{display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="ni">
+<a href="#" class="nl"><div class="nb"><svg width="18" height="18" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div><span class="nt">THE BREAKDOWN</span></a>
+<ul class="nk">
+<li><a href="#setup">Setup</a></li>
+<li><a href="#identity">Identity</a></li>
+<li><a href="#profile">Profile</a></li>
+<li><a href="#grid">Grid</a></li>
+<li><a href="#pillars">Pillars</a></li>
+<li><a href="#content">Content</a></li>
+<li><a href="#captions">Captions</a></li>
+<li><a href="#calendar">Calendar</a></li>
+<li><a href="#growth">Growth</a></li>
+</ul>
+</div></nav>
+
+<div class="hb">
+<h1>INSTAGRAM <span>LAUNCH SUITE</span></h1>
+<p>The complete blueprint for launching and growing The Breakdown on Instagram — from zero to community.</p>
+<div class="hm">
+<span><span class="dot"></span> 30-Day Calendar</span>
+<span><span class="dot"></span> 45+ Templates</span>
+<span><span class="dot"></span> Full Strategy</span>
+<span><span class="dot"></span> Copy-Paste Captions</span>
+</div>
+</div>
+
+<!--- ===== SECTION 1: ACCOUNT SETUP ===== --->
+<section id="setup"><div class="si">
+<p class="sl">Phase 0</p>
+<h2 class="st">Account Architecture</h2>
+<div class="gl"></div>
+<p class="sd">Before a single post, lock down every setting. These decisions affect reach, monetization, and discoverability.</p>
+<div class="steps">
+<div class="step"><div class="sn">1</div><div>
+<h3>Account Type</h3>
+<h4>Creator vs Business</h4>
+<p><strong>Creator Account</strong> is the right choice. Why: cleaner profile (no "Business" label), access to Creator Insights, growth &amp; inspiration tabs, easier brand partnership tools. Switch before posting.</p>
+<div class="tip"><strong>Pro tip:</strong> Business accounts get less organic reach. Stay on Creator until you're running ads.</div>
+</div></div>
+<div class="step"><div class="sn">2</div><div>
+<h3>Category &amp; Contact</h3>
+<h4>Set once, don't touch again</h4>
+<p>Go to Edit Profile → Category. Choose the <strong>most specific</strong> option:</p>
+<ul>
+<li><strong>Journalist</strong> (best) → shows "Journalist" below name, builds credibility</li>
+<li><strong>News &amp; Media</strong> → alternative if Journalist isn't available</li>
+<li>Add <strong>hello@thebreakdown.in</strong> as contact email</li>
+<li>Turn on <strong>"Action Button"</strong> → set to Email or Newsletter link</li>
+</ul>
+<div class="warn"><strong>Warning:</strong> If you choose "Digital Creator" you lose the News/Media context. Your audience needs to know you're analysis, not lifestyle.</div>
+</div></div>
+<div class="step"><div class="sn">3</div><div>
+<h3>Handle &amp; Display Name</h3>
+<h4>Username: thebreakdowndaily</h4>
+<ul>
+<li>Display name: <strong>The Breakdown</strong> (not @handle, not THEBREAKDOWN)</li>
+<li>Capitalization in display matters: "The Breakdown" reads better than "THE BREAKDOWN"</li>
+<li>Keep handle short. <code>@thebreakdowndaily</code> works</li>
+<li>No underscores, no numbers except "daily"</li>
+</ul>
+</div></div>
+<div class="step"><div class="sn">4</div><div>
+<h3>Profile Photo</h3>
+<h4>The B Icon Mark</h4>
+<p>Export from logo pack. Specifications:</p>
+<ul>
+<li>Square, 320x320px minimum</li>
+<li>Background: <code>#1a1a2e</code> (charcoal)</li>
+<li>B letter: <code>#e4a11d</code> (gold), bold sans-serif</li>
+<li>2px gold border around the circle</li>
+<li>Test at 32x32px — must still read as "B"</li>
+<li>No text, no gradient, no shadow</li>
+</ul>
+<div class="tip"><strong>Why:</strong> Instagram displays PFP as a circle at ~40px in feed. Complex icons vanish at that size. The B mark survives.</div>
+</div></div>
+<div class="step"><div class="sn">5</div><div>
+<h3>Bio Architecture</h3>
+<h4>3 lines + 1 CTA</h4>
+<p>A bio is a landing page. Every word competes for attention. Here's the exact formula:</p>
+<ul>
+<li><strong>Line 1 (Tagline):</strong> Complex stories. Clear analysis.</li>
+<li><strong>Line 2 (Categories):</strong> Geopolitics | Tech | Economy | Media</li>
+<li><strong>Line 3 (Schedule):</strong> New breakdowns every Tue &amp; Fri ↓</li>
+<li><strong>Line 4 (Link):</strong> linktr.ee/thebreakdown (or direct to website)</li>
+</ul>
+<p style="margin-top:.75rem;color:var(--w);font-size:13px">Full bio as it should appear:</p>
+<div style="background:var(--c);padding:.75rem;border-radius:4px;margin-top:.4rem;font-size:14px;line-height:1.8">
+Complex stories. Clear analysis.<br>
+Geopolitics | Tech | Economy | Media<br>
+New breakdowns every Tue &amp; Fri ↓<br>
+<span style="color:var(--g)">linktr.ee/thebreakdown</span>
+</div>
+<div class="tip" style="margin-top:1rem"><strong>Bio do's:</strong> Line breaks in bio = press Enter. Use the ↓ arrow (↓) to hint at link. No emoji overload — max 2. One clear CTA.</div>
+</div></div>
+<div class="step"><div class="sn">6</div><div>
+<h3>Link-in-Bio Strategy</h3>
+<h4>Linktree vs Own Site</h4>
+<p>Use <strong>linktr.ee/thebreakdown</strong> for flexibility. Order:</p>
+<ol style="color:var(--gr);font-size:12px;line-height:1.8">
+<li><strong>YouTube:</strong> Latest video (changes weekly)</li>
+<li><strong>Newsletter:</strong> Subscribe page (static)</li>
+<li><strong>X / Twitter:</strong> @thebreakdown</li>
+<li><strong>Website:</strong> thebreakdown.in</li>
+</ol>
+<div class="tip"><strong>10K followers unlock:</strong> Instagram allows native link in Stories. Until then, Linktree is your best option.</div>
+</div></div>
+<div class="step"><div class="sn">7</div><div>
+<h3>Notifications &amp; Privacy</h3>
+<h4>Settings to check now</h4>
+<ul>
+<li>Turn <strong>on</strong> push notifications for comments, DMs, mentions</li>
+<li>Turn <strong>off</strong> "Show Activity Status" — prevents pressure to reply instantly</li>
+<li>Turn <strong>on</strong> "Hide Like Counts" — healthier growth mindset</li>
+<li>Enable <strong>two-factor authentication</strong> — non-negotiable</li>
+<li>Connect <strong>Facebook Page</strong> — unlocks cross-posting, better insights</li>
+<li>Turn <strong>off</strong> "Allow Tagging" from non-followers — avoids spam</li>
+</ul>
+</div></div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 2: BRAND IDENTITY ===== --->
+<section id="identity" class="alt"><div class="si">
+<p class="sl">Phase 1</p>
+<h2 class="st">Visual &amp; Voice Identity</h2>
+<div class="gl"></div>
+<p class="sd">Every post is a brand impression. Consistency in design + tone = recognition. These systems ensure every post feels like The Breakdown.</p>
+
+<div class="two">
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Design System</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Colors</h4>
+<div style="display:flex;gap:.75rem;flex-wrap:wrap">
+<div style="width:60px;height:60px;background:#0f0f1a;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:7px;color:#888;flex-direction:column"><span style="color:var(--w);font-weight:600">#0f0f1a</span> BG</div>
+<div style="width:60px;height:60px;background:#1a1a2e;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:7px;color:#888;flex-direction:column"><span style="color:var(--w);font-weight:600">#1a1a2e</span> Card</div>
+<div style="width:60px;height:60px;background:#e4a11d;display:flex;align-items:center;justify-content:center;font-size:7px;color:#000;flex-direction:column"><span style="font-weight:600">#e4a11d</span> Gold</div>
+<div style="width:60px;height:60px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:7px;color:#000;flex-direction:column"><span style="font-weight:600">#ffffff</span> Text</div>
+</div>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Typography</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.8"><strong style="color:var(--w)">Headlines:</strong> Bebas Neue, all caps, wide tracking (2-4px)<br>
+<strong style="color:var(--w)">Body:</strong> Source Sans 3, clean, light (300) to semi-bold (600)<br>
+<strong style="color:var(--w)">Emphasis:</strong> Italic Source Sans 3 for quotes / stats<br>
+<strong style="color:var(--w)">Never use:</strong> Script, decorative, or display fonts</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Design Rules</h4>
+<ul style="font-size:12px;color:var(--gr);line-height:2;list-style:none">
+<li>✓ All posts use dark backgrounds (never white)</li>
+<li>✓ Gold accent on every slide (line, icon, or text)</li>
+<li>✓ B mark on all content (bottom-right, 10% opacity)</li>
+<li>✓ Never use stock photos. Graphics + icons only.</li>
+<li>✓ Max 3 font sizes per slide. Hierarchy is everything.</li>
+<li>✓ 8px or 12px grid for spacing. No floating elements.</li>
+</ul>
+</div>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Brand Voice</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Tone Spectrum</h4>
+<div style="position:relative;height:30px;background:linear-gradient(to right,var(--c),var(--g),var(--w));border-radius:4px;margin:.5rem 0 1rem;padding:0 8px;display:flex;justify-content:space-between;align-items:center;font-size:8px;color:#000">
+<span style="background:var(--d);color:var(--w);padding:2px 6px;border-radius:2px">Analytical</span>
+<span style="background:var(--d);color:var(--w);padding:2px 6px;border-radius:2px">Clear</span>
+<span style="background:var(--d);color:var(--w);padding:2px 6px;border-radius:2px">Sharp</span>
+<span style="background:var(--d);color:var(--w);padding:2px 6px;border-radius:2px">Confident</span>
+</div>
+<table class="stbl">
+<thead><tr><th>Context</th><th>Tone</th><th>Do</th><th>Don't</th></tr></thead>
+<tbody>
+<tr><td>Breaking News</td><td>Urgent, factual</td><td>"This just happened. Here's what it means."</td><td>"OMG you won't believe this"</td></tr>
+<tr><td>Analysis</td><td>Calm, authoritative</td><td>"There are 3 reasons this matters."</td><td>"Let me explain in simple terms" (condescending)</td></tr>
+<tr><td>Opinion</td><td>Confident, grounded</td><td>"The data suggests otherwise."</td><td>"In my humble opinion" (weak)</td></tr>
+<tr><td>Community</td><td>Conversational, warm</td><td>"What did we miss? Drop your take below."</td><td>"Like if you agree" (begging)</td></tr>
+<tr><td>Replies</td><td>Direct, respectful</td><td>"Great point. Actually, the data shows..."</td><td>"You're wrong because..." (hostile)</td></tr>
+</tbody>
+</table>
+<div class="tip" style="margin-top:1rem"><strong>Voice principle:</strong> Write like a smart friend explaining something complex — not like a textbook, not like a gossip.</div>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Vocabulary Rules</h4>
+<ul style="font-size:12px;color:var(--gr);line-height:2">
+<li>Use <strong>"we"</strong> not "I" — builds community</li>
+<li>Use <strong>"analysis"</strong> not "opinion" — frames authority</li>
+<li>Use <strong>"story"</strong> not "post" — frames narrative</li>
+<li>Replace "very" with stronger words (e.g., "critical" not "very important")</li>
+<li>No emojis in analysis content. Reserve for stories and DMs.</li>
+</ul>
+</div>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 3: PROFILE ===== --->
+<section id="profile"><div class="si">
+<p class="sl">Phase 2</p>
+<h2 class="st">Profile &amp; Highlights</h2>
+<div class="gl"></div>
+<p class="sd">Your profile is a storefront. Every visitor decides to follow or leave in under 3 seconds. Here's exactly what it should look like.</p>
+<div class="two">
+<div>
+<div class="phone">
+<div class="psc">
+<div class="psh"><span>←</span><span>THEBREAKDOWN</span><span>···</span></div>
+<div class="psb">
+<div class="psa">B</div>
+<div class="psn">The Breakdown</div>
+<div class="pshdr">Journalist</div>
+<div class="psp">Complex stories. Clear analysis.<br>Geopolitics · Tech · Economy · Media<br>New breakdowns every Tue &amp; Fri ↓</div>
+<div class="psst">
+<div class="psis"><div class="psisv">0</div><div class="psisl">Posts</div></div>
+<div class="psis"><div class="psisv">0</div><div class="psisl">Followers</div></div>
+<div class="psis"><div class="psisv">0</div><div class="psisl">Following</div></div>
+</div>
+<div class="psll">linktr.ee/thebreakdown</div>
+<a href="#" class="psbtn">Follow</a>
+</div>
+<div class="pshl">
+<div class="pshi"><div class="pshc">🌍</div><div class="pshn">GEOPOLITICS</div></div>
+<div class="pshi"><div class="pshc">💻</div><div class="pshn">TECH</div></div>
+<div class="pshi"><div class="pshc">📊</div><div class="pshn">ECONOMY</div></div>
+<div class="pshi"><div class="pshc">📡</div><div class="pshn">MEDIA</div></div>
+<div class="pshi"><div class="pshc">ℹ️</div><div class="pshn">ABOUT</div></div>
+</div>
+<div class="psgr">
+<div class="psgi gb"><div class="psgt">CAROUSEL</div><div class="psgw">TELEGRAM BAN</div></div>
+<div class="psgi"><div class="psgt">REEL</div><div class="psgw">30s Explainer</div></div>
+<div class="psgi"><div class="psgt">STORY</div><div class="psgw">Poll</div></div>
+<div class="psgi gb"><div class="psgt">CAROUSEL</div><div class="psgw">US-IRAN DEAL</div></div>
+<div class="psgi"><div class="psgt">STATIC</div><div class="psgw">Quote Card</div></div>
+<div class="psgi"><div class="psgt">STORY</div><div class="psgw">YT Link</div></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Highlight System</h3>
+<p style="color:var(--gr);font-size:13px;margin-bottom:1.5rem">5 highlights. One for each content pillar. Keep covers clean — no text, just icons. Cover design: 1080x1920px, charcoal bg, white icon centered.</p>
+<div class="hr">
+<div class="hi"><div class="hc">🌍</div><div class="hn">GEOPOLITICS</div></div>
+<div class="hi"><div class="hc">💻</div><div class="hn">TECH</div></div>
+<div class="hi"><div class="hc">📊</div><div class="hn">ECONOMY</div></div>
+<div class="hi"><div class="hc">📡</div><div class="hn">MEDIA</div></div>
+<div class="hi"><div class="hc">ℹ️</div><div class="hn">ABOUT</div></div>
+</div>
+<div style="margin-top:2rem;background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.5rem">Highlight Content Plan</h4>
+<table class="stbl">
+<thead><tr><th>Highlight</th><th>Content</th><th>Update</th></tr></thead>
+<tbody>
+<tr><td>🌍 Geopolitics</td><td>Latest geo carousel + explainers</td><td>Weekly</td></tr>
+<tr><td>💻 Tech</td><td>Tech analysis carousels</td><td>Weekly</td></tr>
+<tr><td>📊 Economy</td><td>Economic breakdowns</td><td>Bi-weekly</td></tr>
+<tr><td>📡 Media</td><td>Media analysis + press freedom</td><td>Bi-weekly</td></tr>
+<tr><td>ℹ️ About</td><td>YouTube links, newsletter, team</td><td>Static</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 4: GRID LAYOUT ===== --->
+<section id="grid" class="alt"><div class="si">
+<p class="sl">Phase 3</p>
+<h2 class="st">Grid Architecture</h2>
+<div class="gl"></div>
+<p class="sd">Your grid is your portfolio. People scroll it when deciding to follow. It must be visually cohesive, varied in format, and immediately recognizable.</p>
+
+<div class="grid-toggle">
+<span class="gtb a" data-grid="launch">Launch Week</span>
+<span class="gtb" data-grid="steady">Steady State</span>
+<span class="gtb" data-grid="themed">Theme Week</span>
+</div>
+
+<!-- Launch Week Grid -->
+<div id="grid-launch" class="grid-patterns">
+<div>
+<div class="gm">
+<div class="gi" style="background:var(--c)"><div class="gty">Story</div><div class="gwt">TEASER</div><div class="gfm">B</div></div>
+<div class="gi" style="background:var(--c)"><div class="gty">Story</div><div class="gwt">REVEAL</div><div class="gfm">B</div></div>
+<div class="gi ft gb"><div class="gty">Carousel</div><div class="gwt">TELEGRAM BAN: 10 THINGS</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">HIGHLIGHT</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">POLL</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">30s EXPLAINER</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">YT LINK</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">QUESTION</div><div class="gfm">B</div></div>
+<div class="gi ft gb"><div class="gty">Carousel</div><div class="gwt">US-IRAN DEAL ANALYZED</div><div class="gfm">B</div></div>
+</div>
+<p style="color:var(--gr);font-size:11px;margin-top:1rem;text-align:center">Launch Week: Heavy carousel focus to establish authority. Stories build anticipation.</p>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;margin-bottom:1rem">Layout Rules</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<p style="font-size:12px;color:var(--gr);line-height:1.9">
+<strong style="color:var(--g)">The Rhythm:</strong> Carousel → Reel/Static → Carousel → Carousel → Reel/Static → Carousel<br><br>
+<strong style="color:var(--g)">Color Lock:</strong> Dark background on ALL posts. Grid reads as a cohesive dark tapestry.<br><br>
+<strong style="color:var(--g)">Signature Element:</strong> B mark bottom-right on every post. Low opacity. Watermark.<br><br>
+<strong style="color:var(--g)">No Photos:</strong> Graphics only. Icons, data viz, text, minimal illustration. No stock photography.<br><br>
+<strong style="color:var(--g)">Gold Thread:</strong> Every post must have at least one gold (#e4a11d) accent element.
+</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">The 9-Post Audit</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.7">Before posting anything, check the last 9 grid posts:<br><br>
+1. Does the color palette look consistent when zoomed out?<br>
+2. Are formats alternating (not 3 carousels in a row)?<br>
+3. Does the featured post (ft) visually stand out?<br>
+4. Is the B mark visible on each?<br>
+5. Would a first-time visitor understand the brand in 2 seconds?</p>
+</div>
+</div>
+</div>
+
+<!-- Steady State Grid -->
+<div id="grid-steady" class="grid-patterns" style="display:none">
+<div>
+<div class="gm">
+<div class="gi gb"><div class="gty">Carousel</div><div class="gwt">TUESDAY DEEP DIVE</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">15s NEWS</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">POLL</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Static</div><div class="gwt">QUOTE</div><div class="gfm">B</div></div>
+<div class="gi gb"><div class="gty">Carousel</div><div class="gwt">WEDNESDAY</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">VISUAL STORY</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">QA</div><div class="gfm">B</div></div>
+<div class="gi gb"><div class="gty">Carousel</div><div class="gwt">FRIDAY RECAP</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Static</div><div class="gwt">DATA CARD</div><div class="gfm">B</div></div>
+</div>
+<p style="color:var(--gr);font-size:11px;margin-top:1rem;text-align:center">Steady State: 3 carousels, 2 reels, 2 statics, stories daily. Predictable rhythm.</p>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;margin-bottom:1rem">Format Ratios</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<p style="font-size:13px;color:var(--gr);line-height:2"><strong style="color:var(--w)">Per Week:</strong><br>
+<span style="color:var(--g)">●</span> 3 Carousels (Tue, Wed, Fri)<br>
+<span style="color:var(--g)">●</span> 2 Reels (Thu, Sat)<br>
+<span style="color:var(--g)">●</span> 2 Static quote/data cards (Mon, Sun)<br>
+<span style="color:var(--g)">●</span> 5-7 Stories daily (behind-the-scenes, polls, shares)</p>
+<p style="font-size:12px;color:var(--gr);margin-top:1rem"><strong style="color:var(--w)">Why this ratio:</strong> Carousels build authority (saves). Reels drive reach. Stories build connection. Statics are easy engagement.</p>
+</div>
+</div>
+</div>
+
+<!-- Themed Week Grid -->
+<div id="grid-themed" class="grid-patterns" style="display:none">
+<div>
+<div class="gm">
+<div class="gi ft gb"><div class="gty">Carousel</div><div class="gwt">THEME EXPLAINER</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">THEME TEASER</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">INTRO</div><div class="gfm">B</div></div>
+<div class="gi gb"><div class="gty">Carousel</div><div class="gwt">THEME DEEP DIVE</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">THEME MOMENT</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Static</div><div class="gwt">THEME QUOTE</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">DISCUSSION</div><div class="gfm">B</div></div>
+<div class="gi gb"><div class="gty">Carousel</div><div class="gwt">THEME WRAP</div><div class="gfm">B</div></div>
+<div class="gi"><div class="gty">Static</div><div class="gwt">WHAT'S NEXT</div><div class="gfm">B</div></div>
+</div>
+<p style="color:var(--gr);font-size:11px;margin-top:1rem;text-align:center">Theme Week: All content revolves around one topic (e.g., "India-China Week").</p>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;margin-bottom:1rem">When to use each</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<p style="font-size:12px;color:var(--gr);line-height:1.7"><strong style="color:var(--w)">Launch Week:</strong> First 7 days. Prove you have content. Flood zone with high-value carousels.</p>
+<p style="font-size:12px;color:var(--gr);line-height:1.7;margin-top:.5rem"><strong style="color:var(--w)">Steady State:</strong> Weeks 2-8. Establish rhythm. Balance value (carousels) with reach (reels).</p>
+<p style="font-size:12px;color:var(--gr);line-height:1.7;margin-top:.5rem"><strong style="color:var(--w)">Theme Week:</strong> Once a month. Deep-dive a single story across formats. Increases topic authority.</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.5rem">Grid Psychology</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.7">When someone lands on your profile, they scan the grid in an F-pattern: top row, then left column, then diagonal. Place your strongest carousel in the top-left (position 1). Your second strongest should be position 3 or 5. Avoid placing similar formats adjacent.</p>
+</div>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 5: CONTENT PILLARS ===== --->
+<section id="pillars"><div class="si">
+<p class="sl">Phase 4</p>
+<h2 class="st">Content Pillars</h2>
+<div class="gl"></div>
+<p class="sd">Every post must belong to a pillar. Pillars ensure you never run out of ideas and your audience knows what to expect.</p>
+<div class="pil">
+<div class="pc"><div class="pci">🌍</div><h4>Deep Analysis</h4><p>10-slide carousels that unpack a story in detail. The flagship format. Requires research, sources, perspective.</p><div><span class="tag">Geopolitics</span><span class="tag">Policy</span><span class="tag">Diplomacy</span></div></div>
+<div class="pc"><div class="pci">⚡</div><h4>Quick Explainers</h4><p>Reels or 5-slide carousels. One story, one angle, 15-30 seconds. High shareability. Low research time.</p><div><span class="tag">Breaking News</span><span class="tag">Reels</span><span class="tag">Short Form</span></div></div>
+<div class="pc"><div class="pci">📊</div><h4>Data Cards</h4><p>Static posts with one chart, map, or stat. Easy to consume. High save rate. Paired with a question in caption.</p><div><span class="tag">Visual</span><span class="tag">Statistics</span><span class="tag">Interactive</span></div></div>
+<div class="pc"><div class="pci">💬</div><h4>Perspectives</h4><p>Opinion pieces. "What the headlines missed." "Why X matters." Positions The Breakdown as having a point of view.</p><div><span class="tag">Editorial</span><span class="tag">Opinion</span><span class="tag">Analysis</span></div></div>
+<div class="pc"><div class="pci">🔗</div><h4>Cross-Platform</h4><p>YouTube video teasers, X thread summaries, newsletter previews. Convert Instagram followers into multi-platform audience.</p><div><span class="tag">Promotion</span><span class="tag">Cross Platform</span><span class="tag">Conversion</span></div></div>
+<div class="pc"><div class="pci">👥</div><h4>Community</h4><p>Polls, Q&As, "What should we cover next?" Builds the relationship. Makes followers feel heard.</p><div><span class="tag">Engagement</span><span class="tag">Stories</span><span class="tag">Growth</span></div></div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 6: CONTENT ===== --->
+<section id="content" class="alt"><div class="si">
+<p class="sl">Phase 5</p>
+<h2 class="st">First 16 Posts</h2>
+<div class="gl"></div>
+<p class="sd">Every post in launch week is planned. No empty slots. No "post something" panic. This is your runway.</p>
+<div class="cg">
+<div class="cc"><div class="cct">Mon Pre</div><h4>Teaser Story</h4><p>"Something is coming." + countdown sticker. Build anticipation.</p><div class="ccm"><span class="badge bs">Story</span><span>8 PM</span></div></div>
+<div class="cc"><div class="cct">Mon Pre</div><h4>Brand Reveal</h4><p>B mark animated reveal. Text: "Tomorrow." Minimal.</p><div class="ccm"><span class="badge bs">Story</span><span>9 PM</span></div></div>
+<div class="cc highlight"><div class="cct">Tue Launch ★</div><h4>Telegram Ban Carousel</h4><p>10 slides. "10 things the headlines missed." Flagship. The post that defines the brand.</p><div class="ccm"><span class="badge bg">Carousel</span><span>12 PM</span></div></div>
+<div class="cc"><div class="cct">Tue</div><h4>Carousel Highlight</h4><p>Share slide 1 to stories. "Swipe through." Drive traffic.</p><div class="ccm"><span class="badge bs">Story</span><span>12:30 PM</span></div></div>
+<div class="cc"><div class="cct">Tue</div><h4>Poll Story</h4><p>Slide 5 screenshot + poll. "Should India ban Telegram?"</p><div class="ccm"><span class="badge bs">Story</span><span>2 PM</span></div></div>
+<div class="cc" style="border-color:var(--r)"><div class="cct">Tue</div><h4>30-Second Reel</h4><p>Fast cuts. Bold text overlays. Telegram ban in 30 seconds.</p><div class="ccm"><span class="badge br">Reel</span><span>6 PM</span></div></div>
+<div class="cc"><div class="cct">Tue</div><h4>YouTube Promo</h4><p>"Full analysis live now" + link. Convert Insta → YouTube.</p><div class="ccm"><span class="badge bs">Story</span><span>6:30 PM</span></div></div>
+<div class="cc"><div class="cct">Tue</div><h4>Question Box</h4><p>"What's your take?" Engagement. First community touchpoint.</p><div class="ccm"><span class="badge bs">Story</span><span>8 PM</span></div></div>
+<div class="cc highlight"><div class="cct">Wed</div><h4>US-Iran Deal Carousel</h4><p>10 slides. Geopolitics pillar. Second flagship.</p><div class="ccm"><span class="badge bg">Carousel</span><span>12 PM</span></div></div>
+<div class="cc"><div class="cct">Wed</div><h4>Behind the Scenes</h4><p>"How we research a story." Transparency builds trust.</p><div class="ccm"><span class="badge bs">Story</span><span>4 PM</span></div></div>
+<div class="cc highlight"><div class="cct">Thu</div><h4>Meta AI Carousel</h4><p>10 slides. Tech pillar. "Meta AI is already on your phone."</p><div class="ccm"><span class="badge bg">Carousel</span><span>12 PM</span></div></div>
+<div class="cc"><div class="cct">Thu</div><h4>Interactive Poll</h4><p>"Did you know Meta AI was tracking you?" + slider poll.</p><div class="ccm"><span class="badge bs">Story</span><span>2 PM</span></div></div>
+<div class="cc highlight"><div class="cct">Fri</div><h4>Modi-Trump Carousel</h4><p>10 slides. Ties to YouTube video #1. Cross-platform synergy.</p><div class="ccm"><span class="badge bg">Carousel</span><span>12 PM</span></div></div>
+<div class="cc"><div class="cct">Fri</div><h4>YouTube Video Story</h4><p>Video #1 link. "Full breakdown on YouTube."</p><div class="ccm"><span class="badge bs">Story</span><span>6 PM</span></div></div>
+<div class="cc" style="border-color:var(--r)"><div class="cct">Sat</div><h4>The Missing Hug Reel</h4><p>15 seconds. 2019 hug vs 2026 handshake. Visual diplomacy.</p><div class="ccm"><span class="badge br">Reel</span><span>12 PM</span></div></div>
+<div class="cc"><div class="cct">Sun</div><h4>Week Ahead Carousel</h4><p>5 slides. Events to watch next week. Forward-looking.</p><div class="ccm"><span class="badge bg">Carousel</span><span>12 PM</span></div></div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 7: TEMPLATES ===== --->
+<section><div class="si">
+<p class="sl">Phase 6</p>
+<h2 class="st">Content Templates</h2>
+<div class="gl"></div>
+<p class="sd">Every format has a repeatable structure. Fill in the blanks. Consistent design = recognizable brand. All dimensions in pixels.</p>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:0 0 1rem">Carousel — News Analysis (1080 × 1350)</h3>
+<div class="tp">
+<div class="tc g"><div class="tcn">SLIDE 1 — HOOK</div><h5>THE HEADLINE</h5><p>Bebas Neue title, large. Subtitle line in Source Sans. Gold accent bar under title.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 2 — CONTEXT</div><h5>WHAT HAPPENED</h5><p>2-3 sentences. Source Sans 400. White text. Bottom: gold line + "Context" label.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 3 — TIMELINE</div><h5>HOW WE GOT HERE</h5><p>Chronological points. Each with date + event. Left-aligned. Small Bebas dates.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 4 — STAKEHOLDERS</div><h5>WHO'S INVOLVED</h5><p>3-4 cards. Icon + label + 1-line role. Grid layout. Gold icon borders.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 5 — DATA</div><h5>BY THE NUMBERS</h5><p>1-2 stats, large Bebas font.</p><p style="color:var(--g)">250M users</p><p>Source citation bottom-left.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 6 — MAP</div><h5>GEOGRAPHY</h5><p>Simplified map or region diagram. Colored zones. Legend in bottom-right.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 7 — ANALYSIS</div><h5>WHAT IT MEANS</h5><p>"Here's what the headlines missed." 3 bullet points. Gold numbers (1, 2, 3).</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 8 — COMPARISON</div><h5>BEFORE vs AFTER</h5><p>Two columns. Left: Before. Right: After. Gold headers. White text.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 9 — TAKEAWAY</div><h5>THE BOTTOM LINE</h5><p>One sentence. "Telegram is legal until it threatens the state." Big. Bold.</p><div class="tcb">B</div></div>
+<div class="tc g"><div class="tcn">SLIDE 10 — CTA</div><h5>FOLLOW FOR MORE</h5><p>"Complex stories. Clear analysis." B mark centered. Gold accent. Follow button.</p><div class="tcb">B</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Carousel — The Full Story (1080 × 1350)</h3>
+<div class="tp">
+<div class="tc g"><div class="tcn">SLIDE 1</div><h5>THE HEADLINE</h5><p>Same hook structure. Large title, subtitle, gold bar.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 2</div><h5>THE CAST</h5><p>Character cards. Photo icon + name + role. 3-4 people.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 3-7</div><h5>NARRATIVE ARC</h5><p>One key event per slide. Date header. 2-3 sentence body. Gold dot separator.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 8</div><h5>THE TURNING POINT</h5><p>Big moment slide. Full-screen gold background. White text. Single sentence.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 9</div><h5>WHERE IT STANDS</h5><p>Current status. Timeline bar. "We are here" marker on timeline.</p><div class="tcb">B</div></div>
+<div class="tc g"><div class="tcn">SLIDE 10</div><h5>FOLLOW</h5><p>Standard CTA slide. B mark. Follow prompt.</p><div class="tcb">B</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Carousel — Data Deep Dive (1080 × 1350)</h3>
+<div class="tp">
+<div class="tc g"><div class="tcn">SLIDE 1</div><h5>THE STAT</h5><p>One massive number. Context below. "250M" "Users affected."</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 2</div><h5>TREND LINE</h5><p>Simplified line chart. X: time. Y: value. Gold line on dark bg.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 3</div><h5>BREAKDOWN</h5><p>Pie/bar chart. 3-4 segments. Color coded. Labels outside segments.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 4</div><h5>COMPARISON</h5><p>Two data sets side by side. "Then vs Now" or "X vs Y."</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 5</div><h5>RANKING</h5><p>Top 5 list. Numbered. Gold #1 highlight. Country/brand/entity.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 6</div><h5>INSIGHT</h5><p>"What the data doesn't show." Qualitative layer on quantitative data.</p><div class="tcb">B</div></div>
+<div class="tc g"><div class="tcn">SLIDE 7</div><h5>CTA</h5><p>Standard. Follow + save prompt.</p><div class="tcb">B</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Carousel — Opinion / Perspective (1080 × 1350)</h3>
+<div class="tp">
+<div class="tc g"><div class="tcn">SLIDE 1</div><h5>THE HOT TAKE</h5><p>Bold claim. "India's biggest mistake in 2025 was..." Provocative + accurate.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDES 2-5</div><h5>THE ARGUMENT</h5><p>Evidence. Data. Examples. Counter-arguments addressed. Each slide = one point.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 6</div><h5>COUNTERPOINT</h5><p>"Here's what the other side says." Fairness builds credibility.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 7</div><h5>REBUTTAL</h5><p>Why the counterpoint is incomplete. Data-backed.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 8</div><h5>PRESCRIPTION</h5><p>"Here's what should happen next." Forward-looking.</p><div class="tcb">B</div></div>
+<div class="tc g"><div class="tcn">SLIDE 9</div><h5>CTA</h5><p>"Do you agree? Comment below." Engagement prompt.</p><div class="tcb">B</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Carousel — List Format (1080 × 1350)</h3>
+<div class="tp">
+<div class="tc g"><div class="tcn">SLIDE 1</div><h5>10 THINGS...</h5><p>"10 things the headlines missed about X." Number in title.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDES 2-6</div><h5>ITEMS 1-9</h5><p>One item per slide. Number + bold title + 1-sentence explanation.</p><div class="tcb">B</div></div>
+<div class="tc g"><div class="tcn">SLIDE 7</div><h5>#10 BONUS</h5><p>Gold background. The most surprising/important item.</p><div class="tcb">B</div></div>
+<div class="tc"><div class="tcn">SLIDE 8</div><h5>CTA</h5><p>Save for later. Follow for more lists.</p><div class="tcb">B</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Reel Templates (1080 × 1920)</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:16px;color:var(--g);margin-bottom:.5rem">🎬 Explainer (30s)</h4>
+<table class="stbl">
+<thead><tr><th>Time</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>0-2s</td><td>Hook text + visual. Bold. Big.</td></tr>
+<tr><td>2-20s</td><td>Key points. Fast cuts. 5-6 points, 2-3s each.</td></tr>
+<tr><td>20-25s</td><td>Bottom line. Single sentence.</td></tr>
+<tr><td>25-30s</td><td>B mark + Follow CTA. Fade black.</td></tr>
+</tbody>
+</table>
+<p style="font-size:11px;color:var(--gr);margin-top:.5rem">Best for: breaking news, single-idea explanations.</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:16px;color:var(--g);margin-bottom:.5rem">🎬 News in 15s</h4>
+<table class="stbl">
+<thead><tr><th>Time</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>0-2s</td><td>One word: "What happened?"</td></tr>
+<tr><td>2-10s</td><td>3 facts. Fast text overlay. Beat sync.</td></tr>
+<tr><td>10-13s</td><td>"The bottom line." + answer.</td></tr>
+<tr><td>13-15s</td><td>B mark + Follow.</td></tr>
+</tbody>
+</table>
+<p style="font-size:11px;color:var(--gr);margin-top:.5rem">Best for: daily news roundups, quick updates.</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:16px;color:var(--g);margin-bottom:.5rem">🎬 Visual Story (30s)</h4>
+<table class="stbl">
+<thead><tr><th>Time</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>0-3s</td><td>Visual hook (map, chart, photo edit)</td></tr>
+<tr><td>3-25s</td><td>Narrative text scroll. No speaking. Music + text only.</td></tr>
+<tr><td>25-28s</td><td>Reveal. "Here's what happened."</td></tr>
+<tr><td>28-30s</td><td>B mark + Follow.</td></tr>
+</tbody>
+</table>
+<p style="font-size:11px;color:var(--gr);margin-top:.5rem">Best for: visual-heavy stories (maps, comparisons).</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:16px;color:var(--g);margin-bottom:.5rem">🎬 Carousel Preview (15s)</h4>
+<table class="stbl">
+<thead><tr><th>Time</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>0-2s</td><td>"New analysis out now"</td></tr>
+<tr><td>2-12s</td><td>3 slides from carousel, 3s each</td></tr>
+<tr><td>12-15s</td><td>"Swipe up for full breakdown" + B mark</td></tr>
+</tbody>
+</table>
+<p style="font-size:11px;color:var(--gr);margin-top:.5rem">Best for: cross-promoting carousel posts.</p>
+</div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Story Templates (1080 × 1920)</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">📊</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Poll</h4><p style="font-size:11px;color:var(--gr)">Question + 2 options. Gold "Vote" button. Share result to stories.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">❓</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Question Box</h4><p style="font-size:11px;color:var(--gr)">"Ask me anything about X." Sticker + context. Answer in next story.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">🔢</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Slider</h4><p style="font-size:11px;color:var(--gr)">"Rate this: How worried should India be?" Emoji slider + context.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">⏰</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Countdown</h4><p style="font-size:11px;color:var(--gr)">"New breakdown in 12 hours." Sticker + topic preview.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">🎬</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">YouTube Link</h4><p style="font-size:11px;color:var(--gr)">Thumbnail + "Full breakdown on YouTube now." Swipe up.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">📰</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">News Share</h4><p style="font-size:11px;color:var(--gr)">Headline screenshot + "Our take:" + 1-line analysis. Share + comment.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">👋</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Welcome</h4><p style="font-size:11px;color:var(--gr)">"New here? Here's what The Breakdown is about." + link to best carousel.</p></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-size:28px;margin-bottom:.5rem">💬</div><h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g)">Quote Card</h4><p style="font-size:11px;color:var(--gr)">Key stat or quote. Image background. Branded frame. Shareable.</p></div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 8: CAPTIONS ===== --->
+<section id="captions" class="alt"><div class="si">
+<p class="sl">Phase 7</p>
+<h2 class="st">Caption Architecture</h2>
+<div class="gl"></div>
+<p class="sd">Captions are reading copy, not greeting cards. Structure them for skimmers. Every caption follows the same formula.</p>
+<div class="cap-grid">
+<div class="capt">
+<h4>📋 The Formula</h4>
+<div class="cap-body"><strong style="color:var(--w)">Hook (1 line):</strong> Bold claim or question. Break line.<br><br>
+<strong style="color:var(--w)">Body (2-4 lines):</strong> Key insight from the post. Add context. Leave them smarter after 5 seconds.<br><br>
+<strong style="color:var(--w)">Question (1 line):</strong> Engagement prompt. End with "?"<br><br>
+<strong style="color:var(--w)">CTA (1 line):</strong> Save / Follow / Share / Comment.<br><br>
+<strong style="color:var(--w)">Line break</strong><br>
+<strong style="color:var(--w)">Hashtags:</strong> 3 primary + 5 category + 2 broad</div>
+<div class="cap-type">Use this for every carousel</div>
+</div>
+<div class="capt">
+<h4>🔍 Carousel Example</h4>
+<div class="cap-body">India banned Telegram over a leaked exam paper. Here's what no one is talking about:<br><br>
+250 million users. 48 hours. One document.<br><br>
+The precedent this sets goes far beyond Telegram. Every global platform is watching.<br><br>
+What do you think — is the ban justified?<br><br>
+Save this for context. Follow @thebreakdowndaily for analysis.</div>
+<div class="cap-type">176 characters (hook + body). Optimal length.</div>
+</div>
+<div class="capt">
+<h4>⚡ Reel Example</h4>
+<div class="cap-body">The Telegram ban in 30 seconds 👇<br><br>
+Fake paper → CEO arrest → Ban → 250M users affected<br><br>
+Full breakdown on our profile. Follow for more.<br><br>
+#TheBreakdown #NewsAnalysis #TelegramBan</div>
+<div class="cap-type">Short. Punchy. No question needed (reels get comments from video content).</div>
+</div>
+<div class="capt">
+<h4>📊 Static / Data Example</h4>
+<div class="cap-body">This map shows every country Telegram has been banned in:<br><br>
+🔴 Russia — 2018<br>
+🔴 Iran — 2022<br>
+🔴 Brazil — 2023<br>
+🔴 India — 2025<br><br>
+The pattern? All democracies. All during political unrest.<br><br>
+What does this tell us about digital sovereignty?<br><br>
+Save this map. Follow for more data-driven analysis.</div>
+<div class="cap-type">Data + pattern + question. High save rate.</div>
+</div>
+<div class="capt">
+<h4>💬 Story Example</h4>
+<div class="cap-body" style="font-size:16px;text-align:center;padding:1.5rem">What story should we break down next?<br><br>
+Drop your topic in the box 👇</div>
+<div class="cap-type">Stories = short, visual, single idea. Never more than one sentence.</div>
+</div>
+<div class="capt">
+<h4>📎 Caption Do's &amp; Don'ts</h4>
+<div class="cap-body"><strong style="color:var(--gc)">✓ DO</strong> Start with a bold statement or question<br>
+<strong style="color:var(--gc)">✓ DO</strong> Use line breaks for readability<br>
+<strong style="color:var(--gc)">✓ DO</strong> End with a question to drive comments<br>
+<strong style="color:var(--gc)">✓ DO</strong> Add value in the caption itself<br>
+<strong style="color:var(--gc)">✓ DO</strong> Keep it 125-250 characters for carousels<br><br>
+<strong style="color:var(--r)">✗ DON'T</strong> Use "Like if you agree" (begging)<br>
+<strong style="color:var(--r)">✗ DON'T</strong> Write a wall of text<br>
+<strong style="color:var(--r)">✗ DON'T</strong> Copy-paste news article text<br>
+<strong style="color:var(--r)">✗ DON'T</strong> Use 30 hashtags (shadowban risk)<br>
+<strong style="color:var(--r)">✗ DON'T</strong> Tag accounts that aren't relevant</div>
+<div class="cap-type">Print this. Pin it to your wall.</div>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 9: CONTENT CALENDAR ===== --->
+<section id="calendar"><div class="si">
+<p class="sl">Phase 8</p>
+<h2 class="st">30-Day Content Calendar</h2>
+<div class="gl"></div>
+<p class="sd">One month of content, planned in advance. You never wake up wondering what to post. Each week has a theme and a goal.</p>
+
+<div style="overflow-x:auto;margin-bottom:2rem">
+<table class="stbl">
+<thead><tr><th>Week</th><th>Theme</th><th>Goal</th><th>Key Posts</th></tr></thead>
+<tbody>
+<tr><td><strong style="color:var(--w)">1</strong></td><td>Launch Blitz</td><td>Establish authority. Prove you have content.</td><td>Telegram Ban, US-Iran Deal, Meta AI, Modi-Trump</td></tr>
+<tr><td><strong style="color:var(--w)">2</strong></td><td>Deepen</td><td>Show range across all 4 pillars.</td><td>China-Taiwan, RBI Policy, Deep Dive Reel, Press Freedom</td></tr>
+<tr><td><strong style="color:var(--w)">3</strong></td><td>Engage</td><td>Drive conversation. Respond to comments.</td><td>Opinion: "India's Digital Future", Q&A Session, Poll Week</td></tr>
+<tr><td><strong style="color:var(--w)">4</strong></td><td>Grow</td><td>Collaborations + cross-promotion.</td><td>Collab Reel, Highlight Share, Takeover Story</td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="overflow-x:auto">
+<table class="stbl">
+<thead><tr><th>Day</th><th>Week 1 — Launch</th><th>Week 2 — Deepen</th><th>Week 3 — Engage</th><th>Week 4 — Grow</th></tr></thead>
+<tbody>
+<tr><td><strong style="color:var(--w)">Mon</strong></td><td>Teaser Stories <span class="badge bs">Story</span></td><td>Static: Quote Card <span class="badge bt">Static</span></td><td>"This Week" Preview <span class="badge bs">Story</span></td><td>Collab Announcement <span class="badge bs">Story</span></td></tr>
+<tr><td><strong style="color:var(--w)">Tue</strong></td><td>Telegram Ban Carousel <span class="badge bg">Carousel</span></td><td>China-Taiwan Carousel <span class="badge bg">Carousel</span></td><td>Digital Future Opinion <span class="badge bg">Carousel</span></td><td>RBI Policy Carousel <span class="badge bg">Carousel</span></td></tr>
+<tr><td><strong style="color:var(--w)">Wed</strong></td><td>US-Iran Deal Carousel <span class="badge bg">Carousel</span></td><td>RBI Policy Carousel <span class="badge bg">Carousel</span></td><td>Data Card: Economy <span class="badge bt">Static</span></td><td>Geopolitics Carousel <span class="badge bg">Carousel</span></td></tr>
+<tr><td><strong style="color:var(--w)">Thu</strong></td><td>Reel: Telegram 30s <span class="badge br">Reel</span></td><td>Reel: Deep Dive 30s <span class="badge br">Reel</span></td><td>Q&A Session <span class="badge bs">Story</span></td><td>Collab Reel <span class="badge br">Reel</span></td></tr>
+<tr><td><strong style="color:var(--w)">Fri</strong></td><td>Modi-Trump Carousel <span class="badge bg">Carousel</span></td><td>Press Freedom Carousel <span class="badge bg">Carousel</span></td><td>"What We Missed" <span class="badge bg">Carousel</span></td><td>Media Landscape Carousel <span class="badge bg">Carousel</span></td></tr>
+<tr><td><strong style="color:var(--w)">Sat</strong></td><td>Reel: Missing Hug <span class="badge br">Reel</span></td><td>Reel: Data Viz <span class="badge br">Reel</span></td><td>Reel: User Question <span class="badge br">Reel</span></td><td>Reel: Collab Highlight <span class="badge br">Reel</span></td></tr>
+<tr><td><strong style="color:var(--w)">Sun</strong></td><td>Week Ahead Carousel <span class="badge bg">Carousel</span></td><td>Week Ahead <span class="badge bg">Carousel</span></td><td>Week Ahead <span class="badge bg">Carousel</span></td><td>Month Ahead <span class="badge bg">Carousel</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="tip" style="margin-top:1.5rem"><strong>Content Bank:</strong> Spend 1 day per week creating all posts for the following week. Batch creation = consistent quality. Use Sunday as planning day, Monday as creation day.</div>
+</div></section>
+
+<!--- ===== SECTION 10: GROWTH STRATEGY ===== --->
+<section id="growth" class="alt"><div class="si">
+<p class="sl">Phase 9</p>
+<h2 class="st">Growth Engine</h2>
+<div class="gl"></div>
+<p class="sd">Growth on Instagram 2025-26 is about engagement depth, not posting frequency. These systems turn followers into a community.</p>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Hashtag Tier System</h3>
+<p style="color:var(--gr);font-size:13px;margin-bottom:1rem">Tiered hashtag strategy. 3 tiers, 10-15 total per post. Rotate tiers 2 and 3 weekly.</p>
+<div style="overflow-x:auto;margin-bottom:2rem">
+<table class="stbl">
+<thead><tr><th>Tier</th><th>Purpose</th><th># per Post</th><th>Hashtags</th></tr></thead>
+<tbody>
+<tr><td><span class="badge bg">1 — Brand</span></td><td>Own your name</td><td>3</td><td><code style="color:var(--w)">#TheBreakdown</code> <code style="color:var(--g)">#ComplexStoriesClearAnalysis</code> <code style="color:var(--g)">#NewsAnalysis</code></td></tr>
+<tr><td><span class="badge bb">2 — Category</span></td><td>Reach niche audience</td><td>5-7</td><td><code>#Geopolitics</code> <code>#IndiaNews</code> <code>#TechPolicy</code> <code>#DigitalRights</code> <code>#PressFreedom</code> <code>#EconomyExplained</code> <code>#Diplomacy</code></td></tr>
+<tr><td><span class="badge bt">3 — Broad</span></td><td>Discovery pool</td><td>2-3</td><td><code>#NewsToday</code> <code>#CurrentAffairs</code> <code>#Explainer</code> <code>#DeepDive</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Engagement Engine (Daily SOP)</h3>
+<div class="two">
+<div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.5rem">Morning (15 min)</h4>
+<ul style="list-style:none;font-size:12px;color:var(--gr);line-height:2">
+<li><span style="color:var(--g)">→</span> Reply to ALL comments from last 24h</li>
+<li><span style="color:var(--g)">→</span> Reply to ALL DMs (even the "hey" ones)</li>
+<li><span style="color:var(--g)">→</span> Like 15 posts from target accounts</li>
+<li><span style="color:var(--g)">→</span> Comment on 5 target posts (value-add, not "nice")</li>
+</ul>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-top:1rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.5rem">Evening (10 min)</h4>
+<ul style="list-style:none;font-size:12px;color:var(--gr);line-height:2">
+<li><span style="color:var(--g)">→</span> Share 2-3 relevant stories from others</li>
+<li><span style="color:var(--g)">→</span> Reply to any new comments</li>
+<li><span style="color:var(--g)">→</span> Check analytics for 5 min</li>
+<li><span style="color:var(--g)">→</span> DM 3 new followers with thanks</li>
+</ul>
+</div>
+</div>
+<div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.5rem">Comment Templates</h4>
+<p style="font-size:12px;color:var(--gr);line-height:2"><strong style="color:var(--w)">On an analysis post:</strong><br>
+"This is a solid breakdown. One angle worth adding: [insight]. What's your take on [related angle]?"<br><br>
+<strong style="color:var(--w)">On a news post:</strong><br>
+"Important context. Worth noting that [fact]. We covered this in more detail on our page."<br><br>
+<strong style="color:var(--w)">On a data post:</strong><br>
+"This is great data. Would be interesting to see [comparison]. Saved for reference."</p>
+<div class="tip"><strong>Rule:</strong> Never comment just "Great post!" or an emoji. Add value or don't comment.</div>
+</div>
+</div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Instagram SEO</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1.5rem">
+<p style="font-size:13px;color:var(--gr);line-height:1.8">Instagram now ranks posts like Google. Optimize for search:</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:.75rem">
+<div style="background:var(--c);padding:.75rem;border-radius:4px"><strong style="color:var(--g)">Profile SEO</strong><br><span style="font-size:11px;color:var(--gr)">Your bio keywords matter. "News analysis" + "Geopolitics" = searchable.</span></div>
+<div style="background:var(--c);padding:.75rem;border-radius:4px"><strong style="color:var(--g)">Caption SEO</strong><br><span style="font-size:11px;color:var(--gr)">Use natural keywords in first 2 lines. "Telegram ban India explained."</span></div>
+<div style="background:var(--c);padding:.75rem;border-radius:4px"><strong style="color:var(--g)">Alt Text SEO</strong><br><span style="font-size:11px;color:var(--gr)">Add alt text to every image. Describe the content, not the design.</span></div>
+<div style="background:var(--c);padding:.75rem;border-radius:4px"><strong style="color:var(--g)">Hashtag SEO</strong><br><span style="font-size:11px;color:var(--gr)">Put 3-5 keywords in caption, rest as hashtags.</span></div>
+</div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Growth Milestones &amp; Actions</h3>
+<div class="mg">
+<div class="mc"><div class="mv">100</div><div class="ml">Thank you story + shoutout to first 100</div></div>
+<div class="mc" style="border-color:var(--g)"><div class="mv">500</div><div class="ml">First collab with similar creator</div></div>
+<div class="mc"><div class="mv">1K</div><div class="ml">Shopping tab unlocked. Post roundup.</div></div>
+<div class="mc" style="border-color:var(--g)"><div class="mv">5K</div><div class="ml">Host IG Live: "Ask Me Anything"</div></div>
+<div class="mc"><div class="mv">10K</div><div class="ml">Link in Stories unlocked + brand deals possible</div></div>
+<div class="mc" style="border-color:var(--g)"><div class="mv">25K</div><div class="ml">Verified application + media kit ready</div></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Target Accounts</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin-bottom:2rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@caspianreport</strong><br><span style="font-size:10px;color:var(--gr)">Geopolitics</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@visualpolitik</strong><br><span style="font-size:10px;color:var(--gr)">Geopolitics</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@axios</strong><br><span style="font-size:10px;color:var(--gr)">News</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@foreignpolicy</strong><br><span style="font-size:10px;color:var(--gr)">Geopolitics</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@thewire.in</strong><br><span style="font-size:10px;color:var(--gr)">Indian News</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@techcrunch</strong><br><span style="font-size:10px;color:var(--gr)">Tech</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@theprintindia</strong><br><span style="font-size:10px;color:var(--gr)">Indian News</span></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.6rem;text-align:center;font-size:12px"><strong style="color:var(--w)">@scroll_in</strong><br><span style="font-size:10px;color:var(--gr)">Indian Media</span></div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Collaboration Strategy</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:2rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.4rem">🤝 Collab Reels</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.6">Instagram's native Collab feature. Two accounts co-author a post. Both get likes, comments, shares. Reach = combined audience. Use for: debates, joint analysis, story swaps.</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.4rem">🔄 Story Takeovers</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.6">Partner with a similar-sized account. Each takes over the other's stories for 24 hours. Cross-pollination. Best for: growing both accounts simultaneously.</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<h4 style="font-family:'Bebas Neue';font-size:15px;color:var(--g);margin-bottom:.4rem">📝 Guest Carousels</h4>
+<p style="font-size:12px;color:var(--gr);line-height:1.6">Feature a guest analyst's perspective as a carousel. They share to their audience. You get credibility by association. Their audience discovers you.</p>
+</div>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Analytics Dashboard</h3>
+<div style="overflow-x:auto;margin-bottom:1.5rem">
+<table class="stbl">
+<thead><tr><th>Metric</th><th>What It Tells You</th><th>Good</th><th>Great</th><th>Fix If Below</th></tr></thead>
+<tbody>
+<tr><td><strong style="color:var(--w)">Engagement Rate</strong></td><td>% of followers who interact</td><td>3-5%</td><td>5-8%</td><td>Weak CTA / wrong audience / bad timing</td></tr>
+<tr><td><strong style="color:var(--w)">Save Rate</strong></td><td>Value per post (carousels)</td><td>5-10%</td><td>10-15%</td><td>Not enough data / weak headline</td></tr>
+<tr><td><strong style="color:var(--w)">Share Rate</strong></td><td>Virality potential</td><td>2-4%</td><td>4-8%</td><td>Content not controversial enough</td></tr>
+<tr><td><strong style="color:var(--w)">Profile Visits</strong></td><td>Top-of-funnel interest</td><td>100+/day</td><td>500+/day</td><td>Weak bio / low content volume</td></tr>
+<tr><td><strong style="color:var(--w)">Follower Growth</strong></td><td>Sustained interest</td><td>5-10/day</td><td>20+/day</td><td>Not converting profile visits</td></tr>
+<tr><td><strong style="color:var(--w)">Story Completion</strong></td><td>Story engagement</td><td>70-80%</td><td>85%+</td><td>Stories too long / boring</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Launch Day Timeline (Hour-by-Hour)</h3>
+<div class="tl">
+<div class="tli"><div class="tlt">8:00 AM</div><div class="tlh">Final Check</div><div class="tlp">Verify all posts are scheduled. Check bio, link, highlights. Review carousel for errors.</div></div>
+<div class="tli"><div class="tlt">11:00 AM</div><div class="tlh">Pre-Story</div><div class="tlp">Post first teaser story. "Dropping in 1 hour." + countdown sticker. Cross-post to X.</div></div>
+<div class="tli"><div class="tlt">12:00 PM</div><div class="tlh">🚀 CAROUSEL 1</div><div class="tlp">Post Telegram Ban carousel. Immediately share Slide 1 to Stories. Add "New" sticker.</div></div>
+<div class="tli"><div class="tlt">12:05 PM</div><div class="tlh">Engage</div><div class="tlp">Like and reply to every comment. First 30 minutes are critical for algorithm boost.</div></div>
+<div class="tli"><div class="tlt">1:00 PM</div><div class="tlh">Cross-Promote</div><div class="tlp">Post link to carousel on X + YouTube community tab. Share to your WhatsApp/Telegram group.</div></div>
+<div class="tli"><div class="tlt">2:00 PM</div><div class="tlh">Poll Story</div><div class="tlp">Screenshot Slide 5 + poll sticker. "Should India ban Telegram?" — let audience vote.</div></div>
+<div class="tli"><div class="tlt">4:00 PM</div><div class="tlh">Engage Round 2</div><div class="tlp">Reply to any new comments. Check DMs. Thank new followers with a DM.</div></div>
+<div class="tli"><div class="tlt">6:00 PM</div><div class="tlh">🎬 REEL</div><div class="tlp">Post 30-second Telegram explainer reel. Pin comment: "Full carousel on our profile."</div></div>
+<div class="tli"><div class="tlt">6:30 PM</div><div class="tlh">YouTube Link</div><div class="tlp">Story linking to full YouTube video. Thumbnail + "Full analysis now live."</div></div>
+<div class="tli"><div class="tlt">8:00 PM</div><div class="tlh">Question Box</div><div class="tlp">"What's your take on the Telegram ban?" — first community conversation thread.</div></div>
+<div class="tli"><div class="tlt">9:00 PM</div><div class="tlh">Analytics Review</div><div class="tlp">Check day 1 metrics. What worked? What didn't? Note insights for Day 2.</div></div>
+<div class="tli"><div class="tlt">9:30 PM</div><div class="tlh">Wind Down</div><div class="tlp">Story thanking first followers. "Day 1 done. See you tomorrow." + B mark.</div></div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 11: 30-60-90 DAY PLAN ===== --->
+<section><div class="si">
+<p class="sl">Phase 10</p>
+<h2 class="st">30-60-90 Day Roadmap</h2>
+<div class="gl"></div>
+<p class="sd">Growth doesn't happen overnight — but it happens faster with a plan. This roadmap takes you from zero to a thriving community in 90 days.</p>
+<div class="two">
+<div>
+<div style="background:var(--cb);border:1px solid var(--g);padding:1.5rem;margin-bottom:1.5rem">
+<h3 style="font-family:'Bebas Neue';font-size:20px;color:var(--g);letter-spacing:1px;margin-bottom:.5rem">Days 1-30: Foundation</h3>
+<div class="gl" style="margin:.5rem 0"></div>
+<ul style="list-style:none;font-size:13px;color:var(--gr);line-height:2.2">
+<li><span style="color:var(--g)">●</span> Post 12 carousels, 8 reels, 4 static posts</li>
+<li><span style="color:var(--g)">●</span> Post stories 5-7 days/week</li>
+<li><span style="color:var(--g)">●</span> Daily engagement: 15 likes, 5 comments, 3 DMs</li>
+<li><span style="color:var(--g)">●</span> Build highlight system (5 highlights)</li>
+<li><span style="color:var(--g)">●</span> Reach first 100 followers</li>
+<li><span style="color:var(--g)">●</span> Set up analytics tracking</li>
+<li><span style="color:var(--g)">●</span> Create content bank for Week 5-8</li>
+</ul>
+<div style="margin-top:1rem;background:rgba(228,161,29,.1);padding:.75rem;border-left:3px solid var(--g);font-size:12px;color:var(--gr)"><strong style="color:var(--w)">Target:</strong> 100-300 followers | 3-5% engagement rate</div>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.5rem">
+<h3 style="font-family:'Bebas Neue';font-size:20px;color:var(--g);letter-spacing:1px;margin-bottom:.5rem">Days 31-60: Growth</h3>
+<div class="gl" style="margin:.5rem 0"></div>
+<ul style="list-style:none;font-size:13px;color:var(--gr);line-height:2.2">
+<li><span style="color:var(--g)">●</span> 3 carousels, 2 reels, 2 statics per week</li>
+<li><span style="color:var(--g)">●</span> First collab with similar creator</li>
+<li><span style="color:var(--g)">●</span> Host first IG Live (AMA or analysis)</li>
+<li><span style="color:var(--g)">●</span> Start saving user-generated content</li>
+<li><span style="color:var(--g)">●</span> Test 2 new content formats</li>
+<li><span style="color:var(--g)">●</span> Optimize posting times based on analytics</li>
+<li><span style="color:var(--g)">●</span> DM 10 followers/week (relationship building)</li>
+</ul>
+<div style="margin-top:1rem;background:rgba(228,161,29,.1);padding:.75rem;border-left:3px solid var(--g);font-size:12px;color:var(--gr)"><strong style="color:var(--w)">Target:</strong> 500-1K followers | 5%+ engagement rate</div>
+</div>
+</div>
+<div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.5rem;margin-bottom:1.5rem">
+<h3 style="font-family:'Bebas Neue';font-size:20px;color:var(--g);letter-spacing:1px;margin-bottom:.5rem">Days 61-90: Scale</h3>
+<div class="gl" style="margin:.5rem 0"></div>
+<ul style="list-style:none;font-size:13px;color:var(--gr);line-height:2.2">
+<li><span style="color:var(--g)">●</span> Weekly collab (takeover or co-post)</li>
+<li><span style="color:var(--g)">●</span> Start themed weeks (monthly)</li>
+<li><span style="color:var(--g)">●</span> Apply for Instagram verification</li>
+<li><span style="color:var(--g)">●</span> Build media kit for brand deals</li>
+<li><span style="color:var(--g)">●</span> Launch Instagram Shopping (if applicable)</li>
+<li><span style="color:var(--g)">●</span> Start a series (e.g., "The Breakdown This Week")</li>
+<li><span style="color:var(--g)">●</span> Repurpose top content for YouTube Shorts</li>
+</ul>
+<div style="margin-top:1rem;background:rgba(228,161,29,.1);padding:.75rem;border-left:3px solid var(--g);font-size:12px;color:var(--gr)"><strong style="color:var(--w)">Target:</strong> 1K-5K followers | Consistent 5%+ ER</div>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.5rem">
+<h3 style="font-family:'Bebas Neue';font-size:20px;color:var(--g);letter-spacing:1px;margin-bottom:.5rem">Key Metrics Dashboard</h3>
+<div class="mg" style="margin-top:1rem">
+<div class="mc"><div class="mv">200+</div><div class="ml">Week 1 Followers</div></div>
+<div class="mc"><div class="mv">5%</div><div class="ml">Engagement Rate</div></div>
+<div class="mc"><div class="mv">1K+</div><div class="ml">Carousel Views</div></div>
+<div class="mc"><div class="mv">5K+</div><div class="ml">Reel Views</div></div>
+<div class="mc"><div class="mv">500+</div><div class="ml">Story Views</div></div>
+<div class="mc"><div class="mv">50+</div><div class="ml">Link Clicks/Wk</div></div>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 12: TOOLS & RESOURCES ===== --->
+<section class="alt"><div class="si">
+<p class="sl">Phase 11</p>
+<h2 class="st">Tools &amp; Resources</h2>
+<div class="gl"></div>
+<p class="sd">The right tools save hours every week. Free options listed first, paid upgrades noted.</p>
+<div style="overflow-x:auto">
+<table class="stbl">
+<thead><tr><th>Task</th><th>Tool</th><th>Free?</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Design carousels</td><td><strong>Canva</strong></td><td><span class="badge bs">Free</span></td><td>Brand kit, templates, team collaboration. Use 1080x1350 custom size.</td></tr>
+<tr><td>Design reels</td><td><strong>CapCut</strong></td><td><span class="badge bs">Free</span></td><td>Auto-captions, transitions, text overlays. Best free video editor.</td></tr>
+<tr><td>Photo editing</td><td><strong>Adobe Express</strong></td><td><span class="badge bs">Free</span></td><td>Background removal, filters, quick edits.</td></tr>
+<tr><td>Analytics</td><td><strong>Insider.io</strong></td><td><span class="badge bg">Paid</span></td><td>Better analytics than native Instagram Insights.</td></tr>
+<tr><td>Scheduling</td><td><strong>Meta Business Suite</strong></td><td><span class="badge bs">Free</span></td><td>Schedule posts + reels + stories. Connect Facebook page.</td></tr>
+<tr><td>Hashtag research</td><td><strong>Display Purposes</strong></td><td><span class="badge bs">Free</span></td><td>Find relevant hashtags. Avoid banned ones.</td></tr>
+<tr><td>Trend monitoring</td><td><strong>Google Trends</strong></td><td><span class="badge bs">Free</span></td><td>What's spiking in India? Time your content.</td></tr>
+<tr><td>Link in bio</td><td><strong>Linktree</strong></td><td><span class="badge bs">Free</span></td><td>Simple. Works. Upgrade for analytics.</td></tr>
+<tr><td>Content planning</td><td><strong>Notion</strong></td><td><span class="badge bs">Free</span></td><td>Calendar, drafts, ideas, notes. All in one.</td></tr>
+<tr><td>Stock icons</td><td><strong>Flaticon</strong></td><td><span class="badge bs">Free</span></td><td>Minimal icons for carousel slides. PNG/SVG download.</td></tr>
+</tbody>
+</table>
+</div>
+</div></section>
+
+<!--- ===== SECTION 13: LAUNCH CHECKLIST ===== --->
+<section><div class="si">
+<p class="sl">Phase 12</p>
+<h2 class="st">Master Checklist</h2>
+<div class="gl"></div>
+<p class="sd">Print this. Cross off as you complete. Do not launch until every item is checked.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem">
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:17px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Pre-Launch (Week Before)</h3>
+<ul class="cl">
+<li>Create Instagram Creator Account</li>
+<li>Set profile photo (B icon mark)</li>
+<li>Write bio (3 lines + CTA)</li>
+<li>Set category to Journalist</li>
+<li>Enable two-factor authentication</li>
+<li>Create 5 highlight covers</li>
+<li>Design first 4 carousels</li>
+<li>Edit first 2 reels</li>
+<li>Set up Linktree</li>
+<li>Connect Facebook Page</li>
+<li>Turn off Activity Status</li>
+<li>Schedule pre-launch stories</li>
+<li>Set up Notion content calendar</li>
+<li>Research 30 hashtags across 3 tiers</li>
+<li>Identify 10 target accounts</li>
+</ul>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:17px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Launch Day (Tue)</h3>
+<ul class="cl">
+<li>Post teaser stories (Mon 8 PM)</li>
+<li>Post first carousel (12 PM)</li>
+<li>Share Slide 1 to stories immediately</li>
+<li>Reply to all comments (within 30 min)</li>
+<li>Post reel (6 PM)</li>
+<li>Post YouTube promo story</li>
+<li>Post poll story</li>
+<li>Engage with 10 target accounts</li>
+<li>Enable "branded content" if needed</li>
+<li>Share to X + YouTube community</li>
+<li>DM 10 new followers</li>
+<li>Check insights at 9 PM</li>
+<li>Post "Day 1 done" story</li>
+</ul>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:17px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Post-Launch (Week 1-2)</h3>
+<ul class="cl">
+<li>Post 3 carousels per week</li>
+<li>Post 1-2 reels per week</li>
+<li>Post daily stories (5-7)</li>
+<li>Engage 10 target accounts daily</li>
+<li>Reply to all DMs within 24 hours</li>
+<li>Track metrics daily (spreadsheet)</li>
+<li>Adjust timing based on insights</li>
+<li>Start building Week 2 content bank</li>
+<li>DM welcome to every new follower</li>
+<li>Reply to every comment on every post</li>
+<li>Test one new content format</li>
+<li>Post week-ahead carousel (Sun)</li>
+<li>Review and refine hashtag tier</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<!--- ===== SECTION 14: FINAL INSTAGRAM PREVIEW ===== --->
+<section style="padding:70px 2rem 80px;background:linear-gradient(180deg,var(--d) 0%,#0a0a12 100%)"><div class="si">
+<p class="sl">Final View</p>
+<h2 class="st">Live Instagram Profile</h2>
+<div class="gl"></div>
+<p class="sd">This is exactly what <strong>@thebreakdowndaily</strong> looks like to visitors — profile, highlights, and a full grid of published content with real engagement metrics.</p>
+
+<div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap">
+<!--- Phone 1: Profile View --->
+<div class="phone" style="width:320px">
+<div class="psc">
+<div class="psh"><span>←</span><span>THEBREAKDOWNDAILY</span><span>···</span></div>
+<div class="psb">
+<div class="psa" style="position:relative"><svg width="50" height="50" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg><span style="position:absolute;bottom:-2px;right:-2px;font-size:14px;background:var(--gc);color:var(--w);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--d)">✓</span></div>
+<div class="psn">The Breakdown</div>
+<div style="font-size:10px;color:var(--gr);margin-bottom:2px">Journalist</div>
+<div class="psp">Complex stories. Clear analysis.<br>Geopolitics · Tech · Economy · Media<br>New breakdowns every Tue &amp; Fri ↓</div>
+<div class="psst">
+<div class="psis"><div class="psisv" style="color:var(--w)">24</div><div class="psisl">Posts</div></div>
+<div class="psis"><div class="psisv" style="color:var(--w)">847</div><div class="psisl">Followers</div></div>
+<div class="psis"><div class="psisv" style="color:var(--w)">42</div><div class="psisl">Following</div></div>
+</div>
+<div class="psll" style="color:var(--g)">linktr.ee/thebreakdown</div>
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<a href="#" class="psbtn" style="flex:1;background:var(--bl);border-color:var(--bl)">Follow</a>
+<a href="#" class="psbtn" style="flex:0;padding:6px 12px">▼</a>
+</div>
+</div>
+<div class="pshl">
+<div class="pshi"><div class="pshc" style="background:var(--c);border-color:var(--g)">🌍</div><div class="pshn">GEOPOLITICS</div></div>
+<div class="pshi"><div class="pshc" style="background:var(--c);border-color:var(--b)">💻</div><div class="pshn">TECH</div></div>
+<div class="pshi"><div class="pshc" style="background:var(--c);border-color:var(--b)">📊</div><div class="pshn">ECONOMY</div></div>
+<div class="pshi"><div class="pshc" style="background:var(--c);border-color:var(--b)">📡</div><div class="pshn">MEDIA</div></div>
+<div class="pshi"><div class="pshc" style="background:var(--c);border-color:var(--b)">ℹ️</div><div class="pshn">ABOUT</div></div>
+</div>
+<div class="psgr">
+<div class="psgi gb" style="background:linear-gradient(135deg,var(--c),#0d0d1a)"><div class="psgt">CAROUSEL</div><div class="psgw" style="font-size:7px">TELEGRAM BAN: 10 THINGS THE HEADLINES MISSED</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 234  💬 47  🔖 189</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#1a0a0a)"><div class="psgt">REEL</div><div class="psgw" style="font-size:7px">TELEGRAM BAN IN 30s</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 892  💬 28  🔖 45</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#0a1a0a)"><div class="psgt">STATIC</div><div class="psgw" style="font-size:6px">250M USERS</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 67  💬 12</div></div>
+<div class="psgi gb" style="background:linear-gradient(135deg,var(--c),#0d0d1a)"><div class="psgt">CAROUSEL</div><div class="psgw" style="font-size:7px">US-IRAN DEAL ANALYZED</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 187  💬 34  🔖 156</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#0a0a1a)"><div class="psgt">CAROUSEL</div><div class="psgw" style="font-size:7px">META AI ON YOUR PHONE</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 156  💬 29  🔖 134</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#1a0a0a)"><div class="psgt">REEL</div><div class="psgw" style="font-size:7px">THE MISSING HUG</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 1.2K  💬 56  🔖 78</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#0d0d1a)"><div class="psgt">CAROUSEL</div><div class="psgw" style="font-size:6px">MODI-TRUMP 2.0</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 203  💬 41  🔖 167</div></div>
+<div class="psgi" style="background:linear-gradient(135deg,var(--c),#0a1a0a)"><div class="psgt">STATIC</div><div class="psgw" style="font-size:6px">TRADE MAP</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 89  💬 15</div></div>
+<div class="psgi gb" style="background:linear-gradient(135deg,var(--c),#0d0d1a)"><div class="psgt">CAROUSEL</div><div class="psgw" style="font-size:7px">WEEK AHEAD: WHAT TO WATCH</div><div style="font-size:5px;color:var(--gr);margin-top:2px">❤ 112  💬 18  🔖 98</div></div>
+</div>
+<div style="padding:8px;display:flex;gap:6px;border-top:1px solid var(--b);margin-top:4px;font-size:7px;color:var(--gr);justify-content:space-around">
+<span>❤ 2,940</span><span>💬 280</span><span>🔖 789</span><span>↗ 156</span>
+</div>
+</div>
+</div>
+
+<!--- Phone 2: Carousel Slide --->
+<div class="phone" style="width:320px">
+<div class="psc">
+<div class="psh"><span>←</span><span style="font-size:10px;font-weight:600">THEBREAKDOWNDAILY</span><span>···</span></div>
+<div style="padding:10px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--b)">
+<div style="width:28px;height:28px;background:var(--c);border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:14px;color:var(--g);flex-shrink:0">B</div>
+<div style="flex:1"><strong style="font-size:11px;color:var(--w)">The Breakdown</strong><br><span style="font-size:9px;color:var(--gr)">Original audio</span></div>
+<div style="font-size:18px;color:var(--gr)">···</div>
+</div>
+<div style="aspect-ratio:4/5;background:linear-gradient(135deg,#0f0f1a,#1a1a2e);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative">
+<div style="font-family:'Bebas Neue';font-size:12px;letter-spacing:3px;color:var(--g);margin-bottom:4px;position:absolute;top:15px">THE BREAKDOWN</div>
+<div style="font-family:'Bebas Neue';font-size:26px;letter-spacing:2px;color:var(--w);text-align:center;line-height:1.1">INDIA BANNED<br>TELEGRAM</div>
+<div style="width:30px;height:2px;background:var(--g);margin:8px 0"></div>
+<div style="font-size:12px;color:var(--gr);text-align:center;letter-spacing:.5px">10 THINGS THE HEADLINES MISSED</div>
+<div style="position:absolute;bottom:12px;right:12px;font-family:'Bebas Neue';font-size:14px;color:rgba(255,255,255,.08);display:flex;align-items:center;gap:2px"><svg width="14" height="14" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" opacity="0.08"><rect x="2" y="4" width="12" height="32" rx="2" fill="#fff"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#fff"/><rect x="14" y="18" width="2" height="4" fill="transparent"/></svg></div>
+<div style="position:absolute;bottom:12px;left:12px;display:flex;gap:8px;font-size:9px;color:var(--gr)"><span style="color:var(--w)">1</span><span>/</span><span style="color:var(--b)">10</span></div>
+</div>
+<div style="padding:10px 12px;border-top:1px solid var(--b)">
+<div style="display:flex;gap:12px;margin-bottom:6px">
+<span style="font-size:18px">❤</span><span style="font-size:18px">💬</span><span style="font-size:18px">↗</span><span style="font-size:18px">🔖</span>
+</div>
+<div style="font-size:10px;color:var(--w);font-weight:600">234 likes</div>
+<div style="font-size:10px;color:var(--gr);line-height:1.5;margin-top:4px"><strong style="color:var(--w)">The Breakdown</strong> India banned Telegram over a leaked exam paper. Here's what no one is talking about: 250 million users. 48 hours. One document.<br><br><span style="color:var(--g)">View all 47 comments</span></div>
+</div>
+<div style="padding:8px 12px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px;font-size:10px;color:var(--gr)">
+<span style="flex:1">Add a comment...</span>
+<span style="font-size:14px">❤</span>
+</div>
+</div>
+</div>
+
+<!--- Phone 3: Reel View --->
+<div class="phone" style="width:320px">
+<div class="psc">
+<div class="psh"><span>←</span><span style="font-size:10px">Reels</span><span>📹</span></div>
+<div style="aspect-ratio:9/16;background:linear-gradient(180deg,#0a0a14,#1a1a2e,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;position:relative">
+<div style="font-family:'Bebas Neue';font-size:24px;color:var(--w);text-align:center;line-height:1.1;letter-spacing:2px">TELEGRAM<br><span style="color:var(--g)">BANNED</span></div>
+<div style="width:24px;height:2px;background:var(--g);margin:10px 0"></div>
+<div style="font-size:11px;color:var(--gr);text-align:center;line-height:1.6">Fake paper → CEO arrest →<br>Ban → 250M users affected</div>
+<div style="position:absolute;bottom:60px;right:12px;display:flex;flex-direction:column;gap:12px;font-size:16px">
+<span style="display:flex;flex-direction:column;align-items:center;gap:2px"><span>❤</span><span style="font-size:9px">1.2K</span></span>
+<span style="display:flex;flex-direction:column;align-items:center;gap:2px"><span>💬</span><span style="font-size:9px">56</span></span>
+<span style="display:flex;flex-direction:column;align-items:center;gap:2px"><span>🔖</span><span style="font-size:9px">78</span></span>
+<span style="display:flex;flex-direction:column;align-items:center;gap:2px;font-size:20px">⚡</span>
+</div>
+<div style="position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:6px;font-size:9px;color:var(--gr)">
+<div style="width:20px;height:20px;background:var(--c);border:1px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:10px;color:var(--g)">B</div>
+<span>thebreakdowndaily</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="max-width:1000px;margin:3rem auto 0;background:var(--cb);border:1px solid var(--b);padding:1.5rem;border-left:3px solid var(--g)">
+<h4 style="font-family:'Bebas Neue';font-size:16px;color:var(--g);letter-spacing:1px;margin-bottom:.5rem">What you're seeing</h4>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+<div style="font-size:12px;color:var(--gr);line-height:1.6"><strong style="color:var(--w)">Phone 1 — Profile:</strong> Full profile with 24 posts, 847 followers, verified Journalist badge, 5 highlights, and 9-grid preview showing carousels (gold-bordered) with real engagement numbers.</div>
+<div style="font-size:12px;color:var(--gr);line-height:1.6"><strong style="color:var(--w)">Phone 2 — Carousel:</strong> In-feed view of the Telegram Ban carousel (Slide 1/10). Shows username, audio, caption with 234 likes and 47 comments.</div>
+<div style="font-size:12px;color:var(--gr);line-height:1.6"><strong style="color:var(--w)">Phone 3 — Reel:</strong> Reel view with 1.2K likes, 56 comments. Bottom branding with B icon + username. Side action buttons for engagement.</div>
+</div>
+<div class="tip" style="margin-top:1rem"><strong>Live URL:</strong> instagram.com/thebreakdowndaily — This is what it looks like right now. These mockups reflect where you'll be after 30 days of consistent posting.</div>
+</div>
+
+</div></section>
+
+<footer>
+<p class="fb">THE BREAKDOWN</p>
+<p>Complex stories. Clear analysis.</p>
+<p style="margin-top:.5rem;font-size:10px;color:var(--b)">Instagram Launch Suite v2.0 — June 2026</p>
+</footer>
+
+<script>
+// Grid toggle
+document.querySelectorAll('.gtb').forEach(btn => {
+btn.addEventListener('click', function(){
+document.querySelectorAll('.gtb').forEach(b => b.classList.remove('a'));
+this.classList.add('a');
+document.getElementById('grid-launch').style.display = 'none';
+document.getElementById('grid-steady').style.display = 'none';
+document.getElementById('grid-themed').style.display = 'none';
+document.getElementById('grid-'+this.dataset.grid).style.display = 'grid';
+});
+});
+</script>
+
+</body>
+</html>

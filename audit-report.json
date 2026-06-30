@@ -1,0 +1,362 @@
+{
+  "audit_metadata": {
+    "date": "2026-06-26",
+    "auditor": "The Breakdown Quality Audit System",
+    "standards_reference": "editorial-operating-system.md v1.0",
+    "css_reference": "editorial.css v4",
+    "template_reference": "cloudflare-deploy/story.html"
+  },
+  "stories": [
+    {
+      "slug": "anthropic-mythos-ai-2026",
+      "title": "Anthropic Mythos AI: The Model That Could Hack Anything — Now in Safe Mode",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 7,
+        "neutrality": 8,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 3,
+        "visual_quality": 7,
+        "storytelling": 8,
+        "originality": 7,
+        "trustworthiness": 6
+      },
+      "overall": 6.8,
+      "high_priority_fixes": [
+        "No OG meta tags, Twitter cards, or meta description in HTML — only a META comment block. Add <meta property=\"og:title\">, <meta name=\"description\">, <meta name=\"twitter:card\"> tags to the <head>.",
+        "Does not link editorial.css v4 — uses inline <style> with duplicate custom CSS, increasing page weight by ~3KB and bypassing the design system.",
+        "Uses v2/v3 class names: .stats-bar, .pull-quote, .timeline, .timeline-item, .date, .event, .sources-box, .bottom-line, .chart-container instead of v4 equivalents (.stat-grid, .story-quote, .story-timeline, .story-timeline-item, .tl-date, .tl-title, .story-sources, .story-chart, .story-chart-caption).",
+        "No confidence badges or evidence cards — claims like '10,000+ vulnerabilities' lack disclosed confidence levels.",
+        "Hero image uses custom .hero-image class with inline background-image (which gets stripped by template transformContent) instead of .story-hero-media > img pattern.",
+        "No .article-body wrapper — content is raw HTML that won't receive editorial.css body styling.",
+        "Uses .stat-number directly on <div> elements instead of the v4 pattern .stat-card .stat-number (stat-number is only valid as a child of .stat-card in v4).",
+        "No .story-sources class — uses .sources-box which is a v2/v3 class."
+      ],
+      "medium_priority_fixes": [
+        "Uses 'Bebas Neue' font family in inline CSS but never imports it via @font-face or Google Fonts — will fall back to system sans-serif.",
+        "Uses .bottom-line which has no v4 equivalent — should use .story-callout.key-insight or .evidence-card instead.",
+        "Uses .model-grid and .model-card custom classes — consider using .story-comparison v4 pattern for side-by-side comparisons.",
+        "No byline avatar or author credit beyond 'The Breakdown' — consider adding named journalist credit per editorial OS standards.",
+        "No Reading Estimate or Intel Summary section (provided by template in JS mode, but missing from standalone view).",
+        "Related links use custom .related-links class instead of .story-related / .story-related-card pattern.",
+        "Timeline items lack .tl-detail class — use .tl-detail for detail text instead of just .event (which maps to .tl-title)."
+      ]
+    },
+    {
+      "slug": "canada-social-media-ban-under-16",
+      "title": "Canada Bill C-34: The Safe Social Media Act — Under-16 Ban and AI Chatbot Regulation",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 7,
+        "neutrality": 8,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 2,
+        "visual_quality": 5,
+        "storytelling": 7,
+        "originality": 6,
+        "trustworthiness": 6
+      },
+      "overall": 6.3,
+      "high_priority_fixes": [
+        "No OG meta tags, Twitter cards, meta description, or any <meta> tags at all — no META comment block either. SEO score is critically low.",
+        "No hero image — story opens with a stats-bar. Add a .story-hero-media > img hero image per v4 pattern.",
+        "Does not link editorial.css v4 — uses inline <style> with ~1.8KB of custom CSS duplicating design system styles.",
+        "Uses v2/v3 class names: .stats-bar, .pull-quote, .chart-container, .sources-box, .bottom-line instead of v4 equivalents.",
+        "No confidence badges or evidence cards — claims about '5M teen accounts deactivated' lack disclosed confidence level.",
+        "No .article-body wrapper — content is raw HTML without editorial.css body styling.",
+        "Uses .stat-number directly on <div> elements instead of v4 .stat-card .stat-number pattern.",
+        "No .story-sources class — uses .sources-box which is a v2/v3 class."
+      ],
+      "medium_priority_fixes": [
+        "No section divider or section-number classes — consider using .section-divider / .section-number for major sections.",
+        "No timeline component — the global context section would benefit from a .story-timeline.",
+        "No byline, author credit, or publication date visible in the standalone HTML.",
+        "Uses inline SVG-like images hosted on Supabase (.chart-container img) which could break if storage URL changes.",
+        "Uses .bottom-line which has no v4 equivalent — should use .story-callout.key-insight.",
+        "No intel-summary section with 'What happened / Why it matters' panel.",
+        "No sticky nav or table of contents — story is 102 lines but lacks navigational aids."
+      ]
+    },
+    {
+      "slug": "china-lineshine-supercomputer-top500-2026",
+      "title": "China's LineShine Supercomputer Retakes World #1 — Built Without Any Foreign Chips",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 7,
+        "neutrality": 7,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 3,
+        "visual_quality": 8,
+        "storytelling": 8,
+        "originality": 8,
+        "trustworthiness": 6
+      },
+      "overall": 6.9,
+      "high_priority_fixes": [
+        "No OG meta tags or Twitter cards in HTML — only a META comment block. Add actual <meta property=\"og:...\"> tags.",
+        "Does not link editorial.css v4 — uses inline <style> with ~2.5KB of custom CSS duplicating design system styles.",
+        "Uses v2/v3 class names: .stats-bar, .pull-quote, .timeline, .timeline-item, .date, .event, .sources-box, .bottom-line, .chart-container, .related-links instead of v4 equivalents.",
+        "Hero image uses custom .hero-image class with inline background (stripped by template transformContent) instead of .story-hero-media > img pattern.",
+        "No confidence badges or evidence cards — spec claims like 'Co-designed with Huawei (unconfirmed)' need explicit confidence disclosure.",
+        "No .article-body wrapper — content is raw HTML without editorial.css body styling.",
+        "Uses .stat-number directly on <div> elements instead of v4 .stat-card .stat-number pattern.",
+        "No .story-sources, .story-chart, or .story-chart-caption v4 classes — uses v2/v3 equivalents."
+      ],
+      "medium_priority_fixes": [
+        "Uses 'Bebas Neue' font in inline CSS without importing it — will fall back to system sans-serif.",
+        "Uses .spec-grid and .spec-item custom classes — consider using .stat-grid pattern instead.",
+        "Uses .data-table custom class — should use .story-table-wrap for v4 data tables.",
+        "Related links use custom .related-links instead of .story-related / .story-related-card.",
+        "No byline avatar or detailed author credit.",
+        "Timeline items lack .tl-detail — the event text should use .tl-detail as a child of .story-timeline-item.",
+        "Note at line 92: 'Co-designed with Huawei (unconfirmed)' — good transparency but should use a confidence badge.",
+        "No intel-summary or sticky nav for standalone viewing."
+      ]
+    },
+    {
+      "slug": "doval-wang-india-china-lac-normalisation-june-2026",
+      "title": "The Long Thaw: India and China Inch Toward Normalisation",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 6,
+        "neutrality": 8,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 1,
+        "visual_quality": 8,
+        "storytelling": 8,
+        "originality": 7,
+        "trustworthiness": 5
+      },
+      "overall": 6.5,
+      "high_priority_fixes": [
+        "No OG meta tags, Twitter cards, meta description, or any <meta> tags at all — critical SEO failure.",
+        "No formal sources section — sources are only noted inline in SVG captions or as 'Source: MEA press releases, Xinhua, research briefs'. Must add a proper .story-sources / ol > li list with numbered sources per editorial OS standards.",
+        "Does not link editorial.css v4 — uses inline <style> with ~3KB of custom CSS duplicating design system styles.",
+        "No hero image using .story-hero-media > img pattern — uses custom .hero-image-wrapper with <img> tag (gets stripped by template transformContent).",
+        "Uses fully custom HTML structure (.content-wrapper, .story-headline, .story-body, .winners-losers, .wl-card, .highlight-box, etc.) with no v4 class equivalents for most components.",
+        "No .article-body wrapper — content lacks editorial.css body styling.",
+        "No confidence badges or evidence cards — claims about trade deficit, troop numbers lack disclosed confidence levels.",
+        "Anonymous expert quotes at lines 223-231 — 'on condition of anonymity' needs Editor-in-Chief justification per editorial OS §4.5.",
+        "Uses CSS custom properties (--gold) in inline <style> that may conflict with :root tokens from editorial.css."
+      ],
+      "medium_priority_fixes": [
+        "No byline or author credit — uses '.byline THE BREAKDOWN | June 24, 2026' as text, not structured HTML.",
+        "Stat cards use .num / .label instead of .stat-number / .stat-label per v4 pattern.",
+        "Uses custom .stat-grid that mimics v4 name but has different styling than .stat-grid from editorial.css.",
+        "Uses .bottom-line which has no v4 equivalent — should use .story-callout.key-insight.",
+        "No timeline component — uses SVG-based timeline in chart-container which is excellent but not semantic; consider adding a .story-timeline for accessibility.",
+        "No intel-summary or sticky nav for standalone viewing.",
+        "Winners/Losers cards use custom .wl-card — consider .story-comparison v4 pattern.",
+        "Expert quote boxes use custom .expert-quote — consider .evidence-card or .story-quote patterns."
+      ]
+    },
+    {
+      "slug": "drone-threat-intelligence-reset-jk-northeast-2026",
+      "title": "Drone Threat Triggers Intelligence Reset Across J&K and Northeast India",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 7,
+        "neutrality": 7,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 1,
+        "visual_quality": 8,
+        "storytelling": 8,
+        "originality": 8,
+        "trustworthiness": 6
+      },
+      "overall": 6.7,
+      "high_priority_fixes": [
+        "No OG meta tags, Twitter cards, meta description, or any <meta> tags — critical SEO failure.",
+        "Does not link editorial.css v4 — uses inline <style> with ~3.5KB of custom CSS duplicating design system styles.",
+        "Hero image uses custom .hero-image-wrapper with <img> tag (gets stripped by template transformContent) instead of .story-hero-media > img pattern.",
+        "Uses v2/v3 class names: .pull-quote, .chart-container, .sources-box, .bottom-line instead of v4 equivalents.",
+        "No .article-body wrapper — content lacks editorial.css body styling.",
+        "No confidence badges or evidence cards — claims like 'Rs 1,200 crore allocated' need source confidence disclosure.",
+        "Custom timeline .timeline-box / .event does not map to any v4 class — use .story-timeline / .story-timeline-item.",
+        "No .story-sources class — uses .sources-box which is a v2/v3 class."
+      ],
+      "medium_priority_fixes": [
+        "Stat cards use .num / .label / .sub instead of .stat-number / .stat-label / .stat-context per v4 pattern.",
+        "Custom .pillar-grid / .pillar-card classes — consider using .stat-grid or .story-comparison patterns.",
+        "Uses custom data-table styling rather than .story-table-wrap.",
+        "No byline, author credit, or publication date in a structured format.",
+        "No intel-summary or sticky nav for standalone viewing.",
+        "Uses .bottom-line which has no v4 equivalent — should use .story-callout.key-insight.",
+        "No .story-quote class — uses .pull-quote which maps to .story-quote via transformContent.",
+        "Sources list references 'MHA reports' and 'NIA chargesheet' without URLs or access dates — editorial OS §4.3 requires full source documentation."
+      ]
+    },
+    {
+      "slug": "el-nino-2026",
+      "title": "Super El Niño 2026: What the Forecasts Show and Why It Could Be Historic",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 8,
+        "neutrality": 7,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 1,
+        "visual_quality": 7,
+        "storytelling": 8,
+        "originality": 7,
+        "trustworthiness": 7
+      },
+      "overall": 6.7,
+      "high_priority_fixes": [
+        "No OG meta tags, Twitter cards, meta description, or any <meta> tags — critical SEO failure.",
+        "Does not link editorial.css v4 — uses inline <style> with ~2.8KB of custom CSS duplicating design system styles.",
+        "Hero image uses custom .hero-image-wrapper with <img> tag (gets stripped by template transformContent) instead of .story-hero-media > img pattern.",
+        "Uses v2/v3 class names: .stats-bar, .pull-quote, .data-table, .timeline, .timeline-item, .date, .event, .sources-box, .bottom-line, .chart-container, .related-links instead of v4 equivalents.",
+        "No .article-body wrapper — content is raw HTML without editorial.css body styling.",
+        "No confidence badges or evidence cards — probabilistic forecasts (63% chance, 90% likelihood) need explicit confidence labels.",
+        "Uses .stat-number directly on <div> elements instead of v4 .stat-card .stat-number pattern.",
+        "No .story-sources class — uses .sources-box which is a v2/v3 class."
+      ],
+      "medium_priority_fixes": [
+        "Uses custom .impact-grid / .impact-card classes — consider v4 .stat-grid / .stat-card with contextual styling.",
+        "Uses custom .region-tag classes — consider using a standardized tag/badge component from the design system.",
+        "Uses custom .warning-box — should use .story-callout.warning per v4 pattern (see editorial.css lines 206-208).",
+        "No byline or author credit in structured format.",
+        "No intel-summary or sticky nav for standalone viewing.",
+        "Related links use custom .related-links instead of .story-related / .story-related-card.",
+        "Timeline items lack .tl-detail — event descriptions should use .tl-detail as child of .story-timeline-item.",
+        "Uses .bottom-line which has no v4 equivalent — should use .story-callout.key-insight.",
+        "Historical cost data ($5.7T) from Science (2023) should be in an evidence-card with proper citation badge."
+      ]
+    },
+    {
+      "slug": "europe-heatwave-2026",
+      "title": "Europe Heatwave 2026 — France Hottest Day Ever, UK Breaches June Record, 40 Drownings",
+      "scores": {
+        "accuracy": 7,
+        "evidence": 7,
+        "neutrality": 7,
+        "clarity": 8,
+        "readability": 7,
+        "seo": 3,
+        "visual_quality": 7,
+        "storytelling": 8,
+        "originality": 6,
+        "trustworthiness": 6
+      },
+      "overall": 6.6,
+      "high_priority_fixes": [
+        "No OG meta tags or Twitter cards in HTML — only a META comment block. Add actual <meta property=\"og:...\"> tags.",
+        "Does not link editorial.css v4 — uses inline <style> with ~2.2KB of custom CSS duplicating design system styles.",
+        "Hero image uses custom .hero-image class with inline background (stripped by template transformContent) instead of .story-hero-media > img pattern.",
+        "Uses v2/v3 class names: .stats-bar, .pull-quote, .timeline, .timeline-item, .date, .event, .sources-box, .bottom-line, .chart-container, .related-links instead of v4 equivalents.",
+        "No .article-body wrapper — content is raw HTML without editorial.css body styling.",
+        "No confidence badges or evidence cards — temperature records and attribution data need confidence disclosure.",
+        "Uses .stat-number directly on <div> elements instead of v4 .stat-card .stat-number pattern.",
+        "No .story-sources class — uses .sources-box which is a v2/v3 class."
+      ],
+      "medium_priority_fixes": [
+        "Uses custom .country-box classes for per-country stats — consider using .story-callout or .evidence-card patterns.",
+        "No byline avatar or structured author credit.",
+        "No intel-summary or sticky nav for standalone viewing.",
+        "Related links point to unrelated stories (AI Governance, US-Iran Peace) rather than climate-related content.",
+        "Timeline items use custom styling with red indicators (.E85050) — timeline should use .story-timeline-item with appropriate coloring.",
+        "Uses .bottom-line with red border (border:1px solid #E85050) — should use .story-callout.warning or appropriate variant.",
+        "Climameter attribution chart uses custom SVG instead of .story-chart pattern (though SVGs render fine, naming matters for transformContent).",
+        "No Reading Estimate or word count metadata in standalone view."
+      ]
+    }
+  ],
+  "cross_cutting_issues": [
+    {
+      "severity": "CRITICAL",
+      "issue": "No story links to editorial.css v4 — all 7 stories use inline <style> blocks with duplicate CSS, bypassing the design system entirely.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Remove all inline <style> blocks and use only classes from editorial.css v4. The design system provides .stat-grid, .story-quote, .story-timeline, .story-sources, .story-chart, .story-callout, .evidence-card, .story-comparison, etc."
+    },
+    {
+      "severity": "CRITICAL",
+      "issue": "No actual OG meta tags or Twitter cards in any story HTML — 4 stories have zero meta tags at all, 3 have only META comment blocks (not rendered HTML).",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Add <meta property=\"og:title\">, <meta property=\"og:description\">, <meta property=\"og:image\">, <meta property=\"og:type\" content=\"article\">, <meta name=\"twitter:card\" content=\"summary_large_image\"> to every story."
+    },
+    {
+      "severity": "HIGH",
+      "issue": "No story uses the v4 hero image pattern (.story-hero-media > img) — they use custom implementations that are stripped by the JS template's transformContent function.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "If standalone: use <div class=\"story-hero\"><div class=\"story-hero-media\"><img src=\"...\" alt=\"\"></div><div class=\"story-hero-gradient\"></div><div class=\"story-hero-shimmer\"></div><div class=\"story-hero-content\">...</div></div>. If template-based: remove inline hero markup entirely (template strips it anyway)."
+    },
+    {
+      "severity": "HIGH",
+      "issue": "No story uses confidence badges (.confidence-high, .confidence-medium, .confidence-low) or evidence cards (.evidence-card) — violating editorial OS §3.2 Stage 5 which requires every claim to have a confidence level.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Add .evidence-card with .confidence-badge for key claims. Use .confidence-high (green) for well-sourced claims, .confidence-medium (amber) for moderate confidence, .confidence-low (red) for limited evidence."
+    },
+    {
+      "severity": "HIGH",
+      "issue": "No story wraps content in .article-body — all output raw HTML that won't receive editorial.css body text styling (paragraphs, links, headings).",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Wrap story content in <div class=\"story-reading\"><div class=\"article-body\">...</div></div>."
+    },
+    {
+      "severity": "HIGH",
+      "issue": "All stories use .stat-number as a top-level class on <div> elements instead of the v4 pattern where .stat-number is a child of .stat-card.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Use <div class=\"stat-card\"><div class=\"stat-number\">...</div><div class=\"stat-label\">...</div></div> with parent .stat-grid."
+    },
+    {
+      "severity": "HIGH",
+      "issue": "All stories with sources use .sources-box instead of .story-sources v4 class.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Replace .sources-box with .story-sources class. Keep the ol > li structure as-is (it matches v4 pattern)."
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "Timeline implementations use .timeline-item / .date / .event classes which map via transformContent to .story-timeline-item / .tl-date / .tl-title, but none use .tl-detail for description text.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "china-lineshine-supercomputer-top500-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Add .tl-detail class to the event description paragraph in each timeline item: <div class=\"story-timeline-item\"><div class=\"tl-date\">...</div><div class=\"tl-title\">...</div><div class=\"tl-detail\">...</div></div>."
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "Multiple stories use 'Bebas Neue' font family in inline CSS without importing it via @font-face or <link> — will silently fall back to system sans-serif.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "china-lineshine-supercomputer-top500-2026", "europe-heatwave-2026"],
+      "recommendation": "Add Google Fonts link for Bebas Neue in <head>, or replace with v4 heading font stack (Cormorant Garamond) from editorial.css."
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "No story includes AI disclosure per editorial OS §5.4 — stories should state whether AI was used in research or drafting.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Add an AI Disclosure section at the bottom of each story per OS §5.4 template."
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "No story includes a composite confidence score (CCS) per editorial OS §3.2 Stage 7 — which requires percentage of claims rated High or Medium.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Add '## Methodology & Sources' section with Composite Confidence Score, primary/secondary source counts, and last updated date per OS §3.2."
+    },
+    {
+      "severity": "MEDIUM",
+      "issue": "doval-wang story uses anonymous sources ('on condition of anonymity') without Editor-in-Chief disclosure or justification for anonymity per editorial OS §4.5.",
+      "affected_stories": ["doval-wang-india-china-lac-normalisation-june-2026"],
+      "recommendation": "Add justification for anonymous sourcing per OS §4.5: explain why anonymity is needed without identifying the source."
+    },
+    {
+      "severity": "LOW",
+      "issue": "Multiple stories use .bottom-line which has no v4 equivalent class in editorial.css — should use .story-callout.key-insight.",
+      "affected_stories": ["anthropic-mythos-ai-2026", "canada-social-media-ban-under-16", "china-lineshine-supercomputer-top500-2026", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026", "europe-heatwave-2026"],
+      "recommendation": "Replace .bottom-line with <div class=\"story-callout key-insight\"><h4>The Bottom Line</h4><p>...</p></div>."
+    },
+    {
+      "severity": "LOW",
+      "issue": "No story includes the intel-summary component (What happened / Why it matters / Key takeaway) for standalone readers.",
+      "affected_stories": ["canada-social-media-ban-under-16", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026"],
+      "recommendation": "Add <div class=\"intel-summary\"><div class=\"intel-summary-inner\">...</div></div> after the hero section for standalone builds."
+    },
+    {
+      "severity": "LOW",
+      "issue": "No story has a canonical URL tag or JSON-LD structured data (NewsArticle schema) for search engines.",
+      "affected_stories": ["canada-social-media-ban-under-16", "doval-wang-india-china-lac-normalisation-june-2026", "drone-threat-intelligence-reset-jk-northeast-2026", "el-nino-2026"],
+      "recommendation": "Add <link rel=\"canonical\" href=\"...\"> and <script type=\"application/ld+json\"> with NewsArticle schema."
+    }
+  ]
+}

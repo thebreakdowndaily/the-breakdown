@@ -1,0 +1,68 @@
+{
+  "section": "footer",
+  "label": "Footer Section",
+  "description": "Edit the footer content — tagline, link sections, social links, and copyright.",
+  "fields": [
+    {
+      "key": "footer-tagline",
+      "label": "Footer Tagline",
+      "type": "textarea",
+      "value": "Complex stories. Clear analysis. A news analysis platform built for people who want to understand the world, not just watch it.",
+      "hint": "Brand description displayed in the footer"
+    },
+    {
+      "key": "links",
+      "label": "Footer Link Sections",
+      "type": "json",
+      "value": [
+        {
+          "section": "Content",
+          "items": [
+            {"label": "YouTube Videos", "url": "https://youtube.com/@thebreakdownin"},
+            {"label": "X (Twitter)", "url": "https://x.com/thebreakdownin"},
+            {"label": "Instagram", "url": "https://instagram.com/thebreakdownin"},
+            {"label": "Newsletter", "url": "#newsletter"}
+          ]
+        },
+        {
+          "section": "Topics",
+          "items": [
+            {"label": "Intelligence", "url": "/intelligence"},
+            {"label": "AI & Technology", "url": "/ai-technology"},
+            {"label": "Data Lab", "url": "/data-lab"},
+            {"label": "Policy Lab", "url": "/policy-lab"}
+          ]
+        },
+        {
+          "section": "Trust",
+          "items": [
+            {"label": "About Us", "url": "/about"},
+            {"label": "Accountability", "url": "/accountability"},
+            {"label": "Search", "url": "/search"},
+            {"label": "RSS Feed", "url": "/feed.xml"}
+          ]
+        }
+      ],
+      "hint": "Column-based link sections in the footer"
+    },
+    {
+      "key": "footer-copyright",
+      "label": "Copyright Text",
+      "type": "text",
+      "value": "© 2026 The Breakdown. All rights reserved.",
+      "hint": "Copyright notice in the footer bottom bar"
+    },
+    {
+      "key": "footer-social",
+      "label": "Social Links",
+      "type": "json",
+      "value": [
+        {"platform": "YouTube", "url": "https://youtube.com/@thebreakdownin", "icon": "▶️"},
+        {"platform": "X", "url": "https://x.com/thebreakdownin", "icon": "𝕏"},
+        {"platform": "LinkedIn", "url": "https://linkedin.com/company/thebreakdownin", "icon": "💼"},
+        {"platform": "Instagram", "url": "https://instagram.com/thebreakdownin", "icon": "📸"}
+      ],
+      "hint": "Social media links displayed in the footer"
+    }
+  ]
+}

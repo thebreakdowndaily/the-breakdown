@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deploy The Breakdown</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',sans-serif;background:#0f0f1a;color:#fff;line-height:1.6;padding:40px 20px}
+.container{max-width:800px;margin:0 auto}
+h1{font-family:'Bebas Neue';font-size:48px;letter-spacing:4px;text-align:center;margin-bottom:.5rem}
+h1 span{color:#e4a11d}
+.subtitle{text-align:center;color:#888;margin-bottom:3rem}
+.step{background:#16213e;border:1px solid #2a2a4a;padding:2rem;margin-bottom:1.5rem;border-left:3px solid #e4a11d}
+.step-num{font-family:'Bebas Neue';font-size:14px;color:#e4a11d;letter-spacing:2px;margin-bottom:.5rem}
+.step h2{font-family:'Bebas Neue';font-size:28px;letter-spacing:1px;margin-bottom:1rem}
+.step p{color:#888;font-size:15px;margin-bottom:1rem}
+.step ol,.step ul{padding-left:1.5rem;color:#888;font-size:14px;line-height:2}
+.step li{margin-bottom:.25rem}
+.step code{background:#1a1a2e;padding:2px 8px;color:#e4a11d;font-size:13px}
+.btn{display:inline-block;background:#e4a11d;color:#1a1a2e;padding:12px 28px;font-family:'Bebas Neue';font-size:16px;letter-spacing:2px;text-decoration:none;margin-top:1rem;cursor:pointer;border:none}
+.btn:hover{opacity:.9}
+.warning{background:#1a1a2e;border:1px solid #e4a11d;padding:1.5rem;margin:2rem 0}
+.warning h3{font-family:'Bebas Neue';font-size:18px;color:#e4a11d;margin-bottom:.5rem}
+.warning p{color:#888;font-size:14px}
+.files{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:2rem 0}
+.file{background:#1a1a2e;border:1px solid #2a2a4a;padding:1rem;text-align:center}
+.file-name{font-family:'Bebas Neue';font-size:14px;color:#e4a11d;margin-bottom:.25rem}
+.file-desc{font-size:12px;color:#888}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>DEPLOY <span>THE BREAKDOWN</span></h1>
+<p class="subtitle">Step-by-step guide to launch thebreakdown.in</p>
+
+<div class="warning">
+<h3>Before You Start</h3>
+<p>Make sure you have:</p>
+<ul>
+<li>GoDaddy account with thebreakdown.in domain</li>
+<li>Email access (for Netlify verification)</li>
+<li>This folder: <code>C:\newsjack-content\deploy\</code></li>
+</ul>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 1</div>
+<h2>Create Netlify Account</h2>
+<ol>
+<li>Go to <strong>app.netlify.com</strong></li>
+<li>Click <strong>"Sign up"</strong></li>
+<li>Use your email (no GitHub needed)</li>
+<li>Verify your email address</li>
+</ol>
+<a href="https://app.netlify.com/signup" class="btn" target="_blank">Open Netlify</a>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 2</div>
+<h2>Deploy Website</h2>
+<ol>
+<li>After login, click <strong>"Add new site"</strong> → <strong>"Deploy manually"</strong></li>
+<li>Open the <code>deploy</code> folder on your computer</li>
+<li>Drag the <strong>entire folder</strong> into Netlify</li>
+<li>Wait for upload to complete</li>
+<li>Netlify will give you a URL like <code>xyz123.netlify.app</code></li>
+<li><strong>Copy this URL</strong> — you'll need it for DNS</li>
+</ol>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 3</div>
+<h2>Connect Custom Domain</h2>
+<ol>
+<li>In Netlify dashboard → <strong>Site settings</strong> → <strong>Domain management</strong></li>
+<li>Click <strong>"Add custom domain"</strong></li>
+<li>Type: <code>thebreakdown.in</code></li>
+<li>Click <strong>"Verify"</strong> → <strong>"Add domain"</strong></li>
+</ol>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 4</div>
+<h2>GoDaddy DNS Setup</h2>
+<ol>
+<li>Log in to <strong>godaddy.com</strong> → My Products</li>
+<li>Find <code>thebreakdown.in</code> → Click <strong>"DNS"</strong></li>
+<li><strong>Delete</strong> any existing A or CNAME records</li>
+<li><strong>Add</strong> these two records:</li>
+</ol>
+<div style="background:#1a1a2e;padding:1rem;margin:1rem 0;font-family:monospace;font-size:13px;color:#e4a11d">
+Type: A &nbsp;&nbsp;&nbsp; Name: @ &nbsp;&nbsp;&nbsp; Value: 75.2.60.5 &nbsp;&nbsp;&nbsp; TTL: 600<br>
+Type: CNAME &nbsp;&nbsp;&nbsp; Name: www &nbsp;&nbsp;&nbsp; Value: YOUR-SITE.netlify.app &nbsp;&nbsp;&nbsp; TTL: 600
+</div>
+<ol start="5">
+<li>Click <strong>Save</strong></li>
+</ol>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 5</div>
+<h2>Wait & Test</h2>
+<p>DNS propagation takes 5 minutes to 48 hours (usually 1-4 hours).</p>
+<ol>
+<li>Wait 1 hour</li>
+<li>Visit <code>https://thebreakdown.in</code></li>
+<li>Check SSL (padlock icon in browser)</li>
+<li>Test on mobile</li>
+</ol>
+</div>
+
+<div class="step">
+<div class="step-num">STEP 6</div>
+<h2>Set Up Newsletter (Optional)</h2>
+<p>For email signup, use Netlify Forms:</p>
+<ol>
+<li>In Netlify dashboard → <strong>Forms</strong></li>
+<li>The form on your site will auto-detect</li>
+<li>Add notification email in <strong>Form notifications</strong></li>
+</ol>
+</div>
+
+<h2 style="font-family:'Bebas Neue';font-size:28px;letter-spacing:1px;margin:3rem 0 1rem">Files to Deploy</h2>
+<div class="files">
+<div class="file">
+<div class="file-name">index.html</div>
+<div class="file-desc">Your website</div>
+</div>
+<div class="file">
+<div class="file-name">favicon.ico</div>
+<div class="file-desc">B mark icon (16x16)</div>
+</div>
+<div class="file">
+<div class="file-name">_headers</div>
+<div class="file-desc">Security headers</div>
+</div>
+</div>
+
+<div class="warning">
+<h3>Need Help?</h3>
+<p>If DNS doesn't work after 4 hours, contact GoDaddy support and ask them to update nameservers. Tell them you're using Netlify hosting.</p>
+</div>
+
+</div>
+</body>
+</html>

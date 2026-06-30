@@ -1,0 +1,74 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
+  <defs>
+    <linearGradient id="g10" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0B1120"/>
+    </linearGradient>
+    <radialGradient id="glow10" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B15"/>
+      <stop offset="100%" stop-color="#F59E0B00"/>
+    </radialGradient>
+  </defs>
+  <rect width="3840" height="2160" fill="url(#g10)"/>
+  <rect width="3840" height="2160" fill="url(#glow10)"/>
+  
+  <rect x="0" y="0" width="3840" height="80" fill="#111827" opacity="0.6"/>
+  <text x="60" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#94A3B8" letter-spacing="4">SUMMARY</text>
+  <text x="3780" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F59E0B" text-anchor="end">10/10</text>
+  <line x1="60" y1="80" x2="3780" y2="80" stroke="#F59E0B" stroke-width="2" opacity="0.3"/>
+
+  <!-- Big reveal -->
+  <text x="1920" y="400" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="160" font-weight="900" fill="#F8FAFC" text-anchor="middle">₹100</text>
+  <text x="1920" y="490" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="48" font-weight="400" fill="#94A3B8" text-anchor="middle" letter-spacing="6">SPENT.</text>
+
+  <!-- Key takeaways -->
+  <g transform="translate(1220, 650)">
+    <!-- Fact 1: Social welfare -->
+    <rect x="0" y="0" width="1400" height="80" rx="8" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <rect x="0" y="0" width="8" height="80" rx="4" fill="#EF4444"/>
+    <text x="30" y="48" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">Only</text>
+    <text x="100" y="48" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="900" fill="#EF4444">₹4</text>
+    <text x="145" y="48" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">reaches social welfare (health, education, housing)</text>
+
+    <!-- Fact 2: Infrastructure -->
+    <rect x="0" y="100" width="1400" height="80" rx="8" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <rect x="0" y="100" width="8" height="80" rx="4" fill="#10B981"/>
+    <text x="30" y="148" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">Only</text>
+    <text x="100" y="148" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="900" fill="#10B981">₹22</text>
+    <text x="155" y="148" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">builds infrastructure — roads, railways, ports</text>
+
+    <!-- Fact 3: Delays -->
+    <rect x="0" y="200" width="1400" height="80" rx="8" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <rect x="0" y="200" width="8" height="80" rx="4" fill="#F59E0B"/>
+    <text x="30" y="248" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8"></text>
+    <text x="30" y="248" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="900" fill="#F59E0B">1,981</text>
+    <text x="200" y="248" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">projects delayed ·</text>
+    <text x="570" y="248" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="900" fill="#F59E0B">₹5.66L Cr</text>
+    <text x="860" y="248" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#94A3B8">over budget</text>
+  </g>
+
+  <!-- Closing question -->
+  <rect x="1420" y="1000" width="1000" height="80" rx="40" fill="#F59E0B" opacity="0.1" stroke="#F59E0B" stroke-width="1"/>
+  <text x="1920" y="1055" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="32" font-weight="700" fill="#F59E0B" text-anchor="middle">Is your tax money working hard enough?</text>
+
+  <!-- Call to action buttons -->
+  <g transform="translate(1320, 1200)">
+    <rect x="0" y="0" width="380" height="60" rx="30" fill="#F59E0B"/>
+    <text x="190" y="38" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#0B1120" text-anchor="middle">Swipe up for full breakdown</text>
+
+    <rect x="420" y="0" width="380" height="60" rx="30" fill="#1E293B" stroke="#F59E0B" stroke-width="1"/>
+    <text x="610" y="38" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F59E0B" text-anchor="middle">Save to understand Budget 2026</text>
+
+    <rect x="840" y="0" width="380" height="60" rx="30" fill="#1E293B" stroke="#F59E0B" stroke-width="1"/>
+    <text x="1030" y="38" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F59E0B" text-anchor="middle">Share for taxpayer transparency</text>
+  </g>
+
+  <!-- Hashtags -->
+  <text x="1920" y="1450" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="400" fill="#64748B" text-anchor="middle" letter-spacing="1">#TaxReform  #India  #WhereYourMoneyGoes  #Budget2026  #PublicFinance</text>
+
+  
+  <rect x="0" y="2100" width="3840" height="60" fill="#111827" opacity="0.4"/>
+  <text x="1920" y="2136" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" fill="#64748B" text-anchor="middle" letter-spacing="2">NEWSJACK · EDITORIAL INFOGRAPHIC</text>
+</svg>

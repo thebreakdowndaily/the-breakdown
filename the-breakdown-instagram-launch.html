@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown - Instagram Launch Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#1a1a2e;--g:#e4a11d;--w:#fff;--gr:#888;--d:#0f0f1a;--cb:#16213e;--b:#2a2a4a}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--d);color:var(--w);line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,15,26,.98);border-bottom:1px solid var(--b);padding:0 2rem}
+.ni{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nl{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--w)}
+.nb{width:30px;height:30px;background:var(--c);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:16px;color:var(--g)}
+.nt{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px}
+.nk{display:flex;gap:1.5rem;list-style:none}
+.nk a{color:var(--gr);text-decoration:none;font-size:13px;letter-spacing:1px;text-transform:uppercase;transition:color .3s}
+.nk a:hover{color:var(--g)}
+.hero{padding:80px 2rem 60px;text-align:center;border-bottom:1px solid var(--b)}
+.hero h1{font-family:'Bebas Neue';font-size:clamp(36px,6vw,64px);letter-spacing:4px;margin-bottom:.5rem}
+.hero h1 span{color:var(--g)}
+.hero p{color:var(--gr);font-size:18px;margin-bottom:2rem}
+.hm{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;font-size:14px;color:var(--gr)}
+.hm span{display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;background:var(--g);border-radius:50%}
+section{padding:60px 2rem;border-bottom:1px solid var(--b)}
+.si{max-width:1200px;margin:0 auto}
+.sl{font-family:'Bebas Neue';font-size:13px;letter-spacing:4px;color:var(--g);margin-bottom:.5rem}
+.st{font-family:'Bebas Neue';font-size:clamp(28px,4vw,44px);letter-spacing:2px;margin-bottom:1rem;line-height:1.1}
+.sd{color:var(--gr);font-size:16px;margin-bottom:3rem;max-width:700px;line-height:1.7}
+.gl{width:50px;height:2px;background:var(--g);margin:1rem 0 2rem}
+.steps{display:grid;gap:1.5rem}
+.step{background:var(--cb);border:1px solid var(--b);padding:1.5rem;display:grid;grid-template-columns:50px 1fr;gap:1.5rem;align-items:start}
+.sn{width:44px;height:44px;background:var(--c);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:20px;color:var(--g)}
+.step h3{font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:.5rem}
+.step p{color:var(--gr);font-size:14px;line-height:1.7}
+.step ul{margin-top:.5rem;padding-left:1.2rem;color:var(--gr);font-size:13px;line-height:1.8}
+.step code{background:var(--c);padding:2px 8px;font-size:12px;color:var(--g)}
+.ph{width:280px;margin:0 auto;background:#000;border-radius:32px;padding:10px;border:2px solid #333}
+.ps{background:var(--d);border-radius:22px;overflow:hidden;min-height:500px}
+.phh{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);font-size:14px}
+.php{padding:14px;text-align:center}
+.pa{width:72px;height:72px;background:var(--c);border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:32px;color:var(--g);margin:0 auto 10px}
+.pn{font-family:'Bebas Neue';font-size:18px;letter-spacing:1px}
+.ph{color:var(--gr);font-size:12px;margin-bottom:6px}
+.pb{font-size:12px;color:var(--gr);line-height:1.4;margin-bottom:10px}
+.pst{display:flex;justify-content:center;gap:1.5rem;margin-bottom:10px}
+.psi{text-align:center}
+.psv{font-family:'Bebas Neue';font-size:18px}
+.psl{font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px}
+.pl{color:var(--g);font-size:12px;text-decoration:none;margin-bottom:10px;display:block}
+.pbtn{display:block;width:100%;padding:7px;background:var(--cb);border:1px solid var(--b);color:var(--w);font-family:'Bebas Neue';font-size:13px;letter-spacing:1px;text-align:center;text-decoration:none;margin-bottom:14px}
+.phl{display:flex;gap:10px;justify-content:center;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--b)}
+.phi{text-align:center;width:52px}
+.phc{width:48px;height:48px;border-radius:50%;background:var(--cb);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 4px}
+.phn{font-size:8px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px}
+.pgr{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.pgi{aspect-ratio:1;background:var(--cb);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;text-align:center;font-size:8px;color:var(--gr)}
+.pgi.gb{border:2px solid var(--g)}
+.pgt{font-size:7px;letter-spacing:.5px;text-transform:uppercase;color:var(--g);margin-bottom:2px}
+.hr{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:2rem 0}
+.hi{text-align:center;width:72px}
+.hc{width:64px;height:64px;border-radius:50%;background:var(--cb);border:2px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 4px;transition:border-color .3s}
+.hc:hover{border-color:var(--g)}
+.hn{font-family:'Bebas Neue';font-size:10px;letter-spacing:1px;color:var(--gr)}
+.gm{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:400px;margin:2rem auto}
+.gi{aspect-ratio:1;background:var(--cb);border:1px solid var(--b);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;text-align:center;transition:border-color .3s}
+.gi:hover{border-color:var(--g)}
+.gi.ft{grid-column:span 2;grid-row:span 2}
+.gty{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--g);margin-bottom:2px}
+.gwt{font-family:'Bebas Neue';font-size:9px;letter-spacing:.5px;color:var(--w);line-height:1.2}
+.gi.ft .gwt{font-size:14px}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.cc{background:var(--cb);border:1px solid var(--b);padding:1.2rem;transition:border-color .3s}
+.cc:hover{border-color:var(--g)}
+.cct{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:.5rem}
+.cc h4{font-family:'Bebas Neue';font-size:20px;letter-spacing:1px;margin-bottom:.5rem}
+.cc p{color:var(--gr);font-size:13px;line-height:1.6}
+.ccm{margin-top:.75rem;display:flex;gap:.75rem;font-size:11px;color:var(--gr)}
+.sp{display:flex;gap:.75rem;overflow-x:auto;padding:1rem 0;scroll-snap-type:x mandatory}
+.sm{min-width:180px;height:220px;background:var(--cb);border:1px solid var(--b);border-radius:6px;padding:.75rem;display:flex;flex-direction:column;justify-content:center;scroll-snap-align:start;flex-shrink:0}
+.smn{font-family:'Bebas Neue';font-size:10px;color:var(--g);margin-bottom:.5rem}
+.sm h5{font-family:'Bebas Neue';font-size:14px;letter-spacing:.5px;margin-bottom:.4rem;line-height:1.2}
+.sm p{font-size:10px;color:var(--gr);line-height:1.4}
+.stbl{width:100%;border-collapse:collapse;font-size:13px}
+.stbl th{text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:13px;letter-spacing:2px;color:var(--g)}
+.stbl td{padding:10px 14px;border-bottom:1px solid var(--b);color:var(--gr)}
+.stbl tr:hover td{color:var(--w)}
+.badge{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
+.bc{background:var(--g);color:var(--c)}
+.br{background:#dc3545;color:var(--w)}
+.bs{background:#28a745;color:var(--w)}
+.bt{background:var(--b);color:var(--w)}
+.hg{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}
+.ht{padding:5px 12px;background:var(--cb);border:1px solid var(--b);font-size:12px;color:var(--gr);transition:all .3s;cursor:default}
+.ht:hover{border-color:var(--g);color:var(--g)}
+.ht.p{border-color:var(--g);color:var(--g)}
+.cl{list-style:none}
+.cl li{padding:8px 0;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;font-size:13px;color:var(--gr)}
+.cl li::before{content:'';width:16px;height:16px;border:2px solid var(--b);border-radius:3px;flex-shrink:0}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem}
+.mc{background:var(--cb);border:1px solid var(--b);padding:1.2rem;text-align:center}
+.mv{font-family:'Bebas Neue';font-size:36px;color:var(--g)}
+.ml{font-size:12px;color:var(--gr);text-transform:uppercase;letter-spacing:1px}
+footer{padding:40px 2rem;text-align:center;border-top:1px solid var(--b)}
+footer p{color:var(--gr);font-size:13px}
+@media(max-width:768px){.nk{display:none}.step{grid-template-columns:1fr}.sn{width:36px;height:36px;font-size:16px}}
+</style>
+</head>
+<body>
+<nav><div class="ni">
+<a href="#" class="nl"><div class="nb">B</div><span class="nt">THE BREAKDOWN</span></a>
+<ul class="nk">
+<li><a href="#setup">Setup</a></li>
+<li><a href="#profile">Profile</a></li>
+<li><a href="#grid">Grid</a></li>
+<li><a href="#content">Content</a></li>
+<li><a href="#templates">Templates</a></li>
+<li><a href="#schedule">Schedule</a></li>
+<li><a href="#strategy">Strategy</a></li>
+</ul>
+</div></nav>
+
+<div class="hero">
+<h1>INSTAGRAM <span>LAUNCH GUIDE</span></h1>
+<p>How to set up, design, and grow The Breakdown on Instagram</p>
+<div class="hm">
+<span><span class="dot"></span> 16 Posts Planned</span>
+<span><span class="dot"></span> 10-Week Calendar</span>
+<span><span class="dot"></span> Full Templates</span>
+</div>
+</div>
+
+<section id="setup"><div class="si">
+<p class="sl">Step 1</p>
+<h2 class="st">Account Setup</h2>
+<div class="gl"></div>
+<div class="steps">
+<div class="step"><div class="sn">1</div><div>
+<h3>Create the Account</h3>
+<p>Switch to a <strong>Creator Account</strong>. Get better analytics, smaller category label, easier contact options.</p>
+<ul>
+<li>Username: <code>@thebreakdown</code> (backup: @thebreakdownhq)</li>
+<li>Category: <strong>News & Media</strong> or <strong>Journalist</strong></li>
+<li>Contact info: add email for business inquiries</li>
+</ul>
+</div></div>
+<div class="step"><div class="sn">2</div><div>
+<h3>Profile Picture</h3>
+<p>Use the <strong>B icon mark</strong> from the logo pack. Gold on charcoal circle. 320x320px minimum.</p>
+<ul>
+<li>Export from <code>the-breakdown-logo-pack.html</code></li>
+<li>Use "Icon Mark (Light)" variant</li>
+<li>Test at small size - must be recognizable as a B</li>
+</ul>
+</div></div>
+<div class="step"><div class="sn">3</div><div>
+<h3>Bio</h3>
+<p>Keep it clean. One line of what you do. One line of what you cover. One CTA.</p>
+<ul>
+<li>Line 1: <strong>Complex stories. Clear analysis.</strong></li>
+<li>Line 2: <strong>Geopolitics | Tech | Economy | Media</strong></li>
+<li>Line 3: <strong>New breakdowns every Tue & Fri</strong></li>
+<li>Line 4: <strong>Full analysis below</strong> + link</li>
+</ul>
+</div></div>
+<div class="step"><div class="sn">4</div><div>
+<h3>Website Link</h3>
+<p>Use <strong>linktr.ee/thebreakdown</strong> or your custom website. Link to: YouTube, Newsletter, X, About page.</p>
+<ul>
+<li>Primary link: YouTube latest video</li>
+<li>Secondary: Newsletter signup</li>
+<li>Tertiary: X account</li>
+</ul>
+</div></div>
+</div>
+</div></section>
+<section id="profile"><div class="si">
+<p class="sl">Step 2</p>
+<h2 class="st">Profile Preview</h2>
+<div class="gl"></div>
+<p class="sd">This is how your profile should look. Clean. Professional. Immediately clear what you do.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+<div class="ph">
+<div class="ps">
+<div class="phh"><span>&larr;</span><span style="font-family:'Bebas Neue';letter-spacing:1px">THEBREAKDOWN</span><span>&middot;&middot;&middot;</span></div>
+<div class="php">
+<div class="pa">B</div>
+<div class="pn">The Breakdown</div>
+<div class="ph">Complex Stories. Clear Analysis.</div>
+<div class="pb">Geopolitics &bull; Tech &bull; Economy &bull; Media<br>New breakdowns every Tue &amp; Fri</div>
+<div class="pst">
+<div class="psi"><div class="psv">0</div><div class="psl">Posts</div></div>
+<div class="psi"><div class="psv">0</div><div class="psl">Followers</div></div>
+<div class="psi"><div class="psv">0</div><div class="psl">Following</div></div>
+</div>
+<a href="#" class="pl">linktr.ee/thebreakdown</a>
+<a href="#" class="pbtn">Message</a>
+</div>
+<div class="phl">
+<div class="phi"><div class="phc">&#127758;</div><div class="phn">Geopolitics</div></div>
+<div class="phi"><div class="phc">&#128187;</div><div class="phn">Tech</div></div>
+<div class="phi"><div class="phc">&#128200;</div><div class="phn">Economy</div></div>
+<div class="phi"><div class="phc">&#128240;</div><div class="phn">Media</div></div>
+<div class="phi"><div class="phc">&#8505;&#65039;</div><div class="phn">About</div></div>
+</div>
+<div class="pgr">
+<div class="pgi gb"><div class="pgt">Carousel</div><div class="gwt">TELEGRAM BAN</div></div>
+<div class="pgi"><div class="pgt">Reel</div><div class="gwt">30s Explainer</div></div>
+<div class="pgi"><div class="pgt">Story</div><div class="gwt">Poll</div></div>
+<div class="pgi gb"><div class="pgt">Carousel</div><div class="gwt">US-IRAN DEAL</div></div>
+<div class="pgi"><div class="pgt">Static</div><div class="gwt">Quote Card</div></div>
+<div class="pgi"><div class="pgt">Story</div><div class="gwt">YT Link</div></div>
+</div>
+</div>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;margin-bottom:1rem">Highlight Covers</h3>
+<p style="color:var(--gr);font-size:14px;margin-bottom:2rem">5 categories. Simple white icons on charcoal. No text on covers.</p>
+<div class="hr">
+<div class="hi"><div class="hc">&#127758;</div><div class="hn">GEOPOLITICS</div></div>
+<div class="hi"><div class="hc">&#128187;</div><div class="hn">TECH</div></div>
+<div class="hi"><div class="hc">&#128200;</div><div class="hn">ECONOMY</div></div>
+<div class="hi"><div class="hc">&#128240;</div><div class="hn">MEDIA</div></div>
+<div class="hi"><div class="hc">&#8505;&#65039;</div><div class="hn">ABOUT</div></div>
+</div>
+<p style="color:var(--gr);font-size:13px;margin-top:2rem"><strong style="color:var(--w)">Design specs:</strong> 1080x1920 frame. Center icon only. Background #1a1a2e. Icon white.</p>
+</div>
+</div>
+</div></section>
+<section id="grid"><div class="si">
+<p class="sl">Step 3</p>
+<h2 class="st">Grid Layout</h2>
+<div class="gl"></div>
+<p class="sd">Your grid should alternate between carousels, reels, and stories. Visual variety + consistency.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start">
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Launch Week Grid</h3>
+<div class="gm">
+<div class="gi" style="background:var(--c)"><div class="gty">Story</div><div class="gwt">TEASER</div></div>
+<div class="gi" style="background:var(--c)"><div class="gty">Story</div><div class="gwt">REVEAL</div></div>
+<div class="gi ft gb"><div class="gty">Carousel</div><div class="gwt">TELEGRAM BAN - 10 THINGS</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">HIGHLIGHT</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">POLL</div></div>
+<div class="gi"><div class="gty">Reel</div><div class="gwt">30s EXPLAINER</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">YT LINK</div></div>
+<div class="gi"><div class="gty">Story</div><div class="gwt">QUESTION</div></div>
+<div class="gi ft gb"><div class="gty">Carousel</div><div class="gwt">US-IRAN DEAL</div></div>
+</div>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Grid Rules</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem;margin-bottom:1rem">
+<p style="font-size:13px;color:var(--gr);line-height:1.8">
+<strong style="color:var(--g)">Pattern:</strong> [Carousel] [Reel/Static] [Carousel] [Carousel] [Reel/Static] [Carousel]<br><br>
+<strong style="color:var(--g)">Color:</strong> All posts use #1a1a2e background. Dark grid = cohesive.<br><br>
+<strong style="color:var(--g)">B mark:</strong> Bottom-right corner on every post. Small. Semi-transparent.<br><br>
+<strong style="color:var(--g)">No photos:</strong> Graphics only. Icons, text, data. No stock photos.
+</p>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<p style="font-size:13px;color:var(--gr);line-height:1.8">
+<strong style="color:var(--w)">The 3-Grid Rule:</strong><br>
+Before posting, check last 9 posts:<br>
+1. Consistent color palette<br>
+2. Alternating formats<br>
+3. Visual hierarchy (featured stands out)
+</p>
+</div>
+</div>
+</div>
+</div></section>
+<section id="content"><div class="si">
+<p class="sl">Step 4</p>
+<h2 class="st">First 16 Posts</h2>
+<div class="gl"></div>
+<p class="sd">Pre-launch through Week 1. Every post planned. Every format covered.</p>
+<div class="cg">
+<div class="cc"><div class="cct">Monday Pre-Launch</div><h4>Teaser Story</h4><p>"Something is coming." + countdown sticker. Build anticipation.</p><div class="ccm"><span>Story</span><span>8 PM IST</span></div></div>
+<div class="cc"><div class="cct">Monday Pre-Launch</div><h4>Brand Reveal</h4><p>B mark animated. "Tomorrow." Minimal. Clean.</p><div class="ccm"><span>Story</span><span>9 PM IST</span></div></div>
+<div class="cc" style="border-color:var(--g)"><div class="cct">Tuesday Launch</div><h4>Telegram Ban Carousel</h4><p>10 slides. "10 things the headlines missed." Flagship post.</p><div class="ccm"><span>Carousel</span><span>12 PM IST</span></div></div>
+<div class="cc"><div class="cct">Tuesday Launch</div><h4>Carousel Highlight</h4><p>Share slide 1. "Swipe through." Drive traffic.</p><div class="ccm"><span>Story</span><span>12:30 PM</span></div></div>
+<div class="cc"><div class="cct">Tuesday Launch</div><h4>Poll Story</h4><p>Slide 5 + poll: "Should India ban Telegram?"</p><div class="ccm"><span>Story</span><span>2 PM IST</span></div></div>
+<div class="cc" style="border-color:#dc3545"><div class="cct">Tuesday Launch</div><h4>30-Second Reel</h4><p>Fast cuts. Text overlays. Telegram ban in 30s.</p><div class="ccm"><span>Reel</span><span>6 PM IST</span></div></div>
+<div class="cc"><div class="cct">Tuesday Launch</div><h4>YouTube Promo</h4><p>"Full analysis live now" + link. Cross-platform.</p><div class="ccm"><span>Story</span><span>6:30 PM</span></div></div>
+<div class="cc"><div class="cct">Tuesday Launch</div><h4>Question Box</h4><p>"What do you think will happen?" Engagement.</p><div class="ccm"><span>Story</span><span>8 PM IST</span></div></div>
+<div class="cc" style="border-color:var(--g)"><div class="cct">Wednesday</div><h4>US-Iran Deal Carousel</h4><p>10 slides. Geopolitics pillar. Second major post.</p><div class="ccm"><span>Carousel</span><span>12 PM IST</span></div></div>
+<div class="cc"><div class="cct">Wednesday</div><h4>Behind-the-Scenes</h4><p>"How we research a story." Build trust.</p><div class="ccm"><span>Story</span><span>4 PM IST</span></div></div>
+<div class="cc" style="border-color:var(--g)"><div class="cct">Thursday</div><h4>Meta AI Carousel</h4><p>10 slides. Tech pillar. 2 billion users.</p><div class="ccm"><span>Carousel</span><span>12 PM IST</span></div></div>
+<div class="cc"><div class="cct">Thursday</div><h4>Interactive Poll</h4><p>"Did you know Meta AI was on your phone?"</p><div class="ccm"><span>Story</span><span>2 PM IST</span></div></div>
+<div class="cc" style="border-color:var(--g)"><div class="cct">Friday</div><h4>Modi-Trump Carousel</h4><p>10 slides. Ties to YouTube video.</p><div class="ccm"><span>Carousel</span><span>12 PM IST</span></div></div>
+<div class="cc"><div class="cct">Friday</div><h4>YouTube Video Story</h4><p>Video #1 link. Cross-platform drive.</p><div class="ccm"><span>Story</span><span>6 PM IST</span></div></div>
+<div class="cc"><div class="cct">Saturday</div><h4>The Missing Hug Reel</h4><p>15s. 2019 hug vs 2026 handshake. Visual diplomacy.</p><div class="ccm"><span>Reel</span><span>12 PM IST</span></div></div>
+<div class="cc"><div class="cct">Sunday</div><h4>What to Watch</h4><p>5 slides. Upcoming events. Forward-looking.</p><div class="ccm"><span>Carousel</span><span>12 PM IST</span></div></div>
+</div>
+</div></section>
+<section id="templates"><div class="si">
+<p class="sl">Step 5</p>
+<h2 class="st">Content Templates</h2>
+<div class="gl"></div>
+<p class="sd">Every format has a template. Consistent design = recognizable brand.</p>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Carousel Slides (1080 x 1350)</h3>
+<div class="sp">
+<div class="sm" style="border-color:var(--g)"><div class="smn">SLIDE 1 - HOOK</div><h5>INDIA BANNED TELEGRAM</h5><p>10 things the headlines missed</p><p style="margin-top:auto;color:var(--g);font-size:9px">B icon mark bottom-right</p></div>
+<div class="sm"><div class="smn">SLIDE 2 - POINT</div><h5>THE TIMELINE</h5><p>June 6: Fake paper. June 10: Summons. June 14: "Satisfactory." June 16: Ban.</p></div>
+<div class="sm"><div class="smn">SLIDE 3 - POINT</div><h5>THE REAL REASON</h5><p>Section 69A doesn't cover exam fraud. They framed it as "public order."</p></div>
+<div class="sm"><div class="smn">SLIDE 4 - POINT</div><h5>PAVEL DUROV</h5><p>Russian-born. Fled Russia. Arrested France. Detained India. 3 democracies.</p></div>
+<div class="sm"><div class="smn">SLIDE 5 - DATA</div><h5>250 MILLION USERS</h5><p>More than Russia, Iran, and Brazil combined.</p></div>
+<div class="sm"><div class="smn">SLIDE 9 - TAKEAWAY</div><h5>THE PRECEDENT</h5><p>Government can detain CEO, ban platform in 48hrs, cite a paper leak.</p></div>
+<div class="sm" style="border-color:var(--g)"><div class="smn">SLIDE 10 - CTA</div><h5>THE BREAKDOWN</h5><p>Complex stories. Follow for more.</p><p style="margin-top:auto;color:var(--g);font-size:9px">B mark large, centered</p></div>
+</div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Reel Structure (1080 x 1920)</h3>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:11px;color:var(--g);margin-bottom:.4rem">0-1s</div><div style="font-family:'Bebas Neue';font-size:16px;margin-bottom:.4rem">HOOK</div><div style="font-size:11px;color:var(--gr)">Bold text. Gold line.</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:11px;color:var(--g);margin-bottom:.4rem">1-15s</div><div style="font-family:'Bebas Neue';font-size:16px;margin-bottom:.4rem">POINTS</div><div style="font-size:11px;color:var(--gr)">5 points. 2-3s each.</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:11px;color:var(--g);margin-bottom:.4rem">15-25s</div><div style="font-family:'Bebas Neue';font-size:16px;margin-bottom:.4rem">CTA</div><div style="font-size:11px;color:var(--gr)">B mark. Follow.</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:11px;color:var(--g);margin-bottom:.4rem">25-30s</div><div style="font-family:'Bebas Neue';font-size:16px;margin-bottom:.4rem">END</div><div style="font-size:11px;color:var(--gr)">Fade to black.</div></div>
+</div>
+</div></section>
+<section id="schedule"><div class="si">
+<p class="sl">Step 6</p>
+<h2 class="st">Weekly Posting Schedule</h2>
+<div class="gl"></div>
+<p class="sd">Consistency beats virality. Post at the same times every week.</p>
+<table class="stbl">
+<thead><tr><th>Day</th><th>Time (IST)</th><th>Format</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td><strong style="color:var(--w)">Monday</strong></td><td>8 PM</td><td><span class="badge bs">Story</span></td><td>Teaser / Countdown</td></tr>
+<tr><td><strong style="color:var(--w)">Tuesday</strong></td><td>12 PM</td><td><span class="badge bc">Carousel</span></td><td>Main analysis (flagship)</td></tr>
+<tr><td><strong style="color:var(--w)">Tuesday</strong></td><td>6 PM</td><td><span class="badge bs">Story</span></td><td>YouTube promo + link</td></tr>
+<tr><td><strong style="color:var(--w)">Wednesday</strong></td><td>12 PM</td><td><span class="badge bc">Carousel</span></td><td>Secondary carousel</td></tr>
+<tr><td><strong style="color:var(--w)">Thursday</strong></td><td>12 PM</td><td><span class="badge br">Reel</span></td><td>15-30s explainer</td></tr>
+<tr><td><strong style="color:var(--w)">Friday</strong></td><td>12 PM</td><td><span class="badge bc">Carousel</span></td><td>Week recap / What to Watch</td></tr>
+<tr><td><strong style="color:var(--w)">Friday</strong></td><td>6 PM</td><td><span class="badge bs">Story</span></td><td>YouTube promo + link</td></tr>
+<tr><td><strong style="color:var(--w)">Saturday</strong></td><td>12 PM</td><td><span class="badge br">Reel</span></td><td>Visual storytelling</td></tr>
+<tr><td><strong style="color:var(--w)">Sunday</strong></td><td>12 PM</td><td><span class="badge bc">Carousel</span></td><td>What to Watch Next Week</td></tr>
+</tbody>
+</table>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Best Times (IST)</h3>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:12px;color:var(--g)">MORNING</div><div style="font-family:'Bebas Neue';font-size:24px">8-9 AM</div><div style="font-size:11px;color:var(--gr)">Commuters</div></div>
+<div style="background:var(--cb);border:2px solid var(--g);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:12px;color:var(--g)">LUNCH ★</div><div style="font-family:'Bebas Neue';font-size:24px">12-1 PM</div><div style="font-size:11px;color:var(--gr)">Highest engagement</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:12px;color:var(--g)">EVENING</div><div style="font-family:'Bebas Neue';font-size:24px">6-8 PM</div><div style="font-size:11px;color:var(--gr)">Post-work</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:12px;color:var(--g)">NIGHT</div><div style="font-family:'Bebas Neue';font-size:24px">9-10 PM</div><div style="font-size:11px;color:var(--gr)">Before bed</div></div>
+</div>
+</div></section>
+<section id="strategy"><div class="si">
+<p class="sl">Step 7</p>
+<h2 class="st">Growth Strategy</h2>
+<div class="gl"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Hashtags</h3>
+<p style="color:var(--gr);font-size:13px;margin-bottom:.5rem">Primary (every post):</p>
+<div class="hg">
+<span class="ht p">#TheBreakdown</span>
+<span class="ht p">#ComplexStoriesClearAnalysis</span>
+<span class="ht p">#NewsAnalysis</span>
+</div>
+<p style="color:var(--gr);font-size:13px;margin:1rem 0 .5rem">Category (rotate):</p>
+<div class="hg">
+<span class="ht">#Geopolitics</span><span class="ht">#Diplomacy</span><span class="ht">#IndiaUS</span>
+<span class="ht">#TechNews</span><span class="ht">#AI</span><span class="ht">#DigitalRights</span>
+<span class="ht">#Economy</span><span class="ht">#Trade</span><span class="ht">#PressFreedom</span>
+</div>
+<p style="color:var(--gr);font-size:12px;margin-top:.75rem">Carousels: 15-20 hashtags. Reels: 5-8. Stories: 0-3.</p>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin-bottom:1rem">Engagement Rules</h3>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1.2rem">
+<ul class="cl">
+<li><strong>Reply to all comments</strong> within 1 hour</li>
+<li><strong>Like 10-15 posts/day</strong> from target accounts</li>
+<li><strong>Comment 3-5x/day</strong> on target accounts</li>
+<li><strong>Share 2-3 stories/day</strong> from relevant sources</li>
+<li><strong>DM 5-10 new followers</strong> with welcome</li>
+<li><strong>Never spam.</strong> Never beg. Never cold pitch.</li>
+</ul>
+</div>
+</div>
+</div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Target Accounts</h3>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@caspianreport</div><div style="font-size:11px;color:var(--gr)">Geopolitics</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@visualpolitik</div><div style="font-size:11px;color:var(--gr)">Geopolitics</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@axios</div><div style="font-size:11px;color:var(--gr)">News</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@foreignpolicy</div><div style="font-size:11px;color:var(--gr)">Geopolitics</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@thewire</div><div style="font-size:11px;color:var(--gr)">Indian News</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:.75rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:14px">@techcrunch</div><div style="font-size:11px;color:var(--gr)">Tech</div></div>
+</div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Growth Milestones</h3>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:28px;color:var(--g)">100</div><div style="font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px">Followers</div><div style="font-size:10px;color:var(--gr);margin-top:.4rem">Thank you story</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:28px;color:var(--g)">500</div><div style="font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px">Followers</div><div style="font-size:10px;color:var(--gr);margin-top:.4rem">First collab</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:28px;color:var(--g)">1K</div><div style="font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px">Followers</div><div style="font-size:10px;color:var(--gr);margin-top:.4rem">Shopping unlock</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:28px;color:var(--g)">5K</div><div style="font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px">Followers</div><div style="font-size:10px;color:var(--gr);margin-top:.4rem">IG Live</div></div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center"><div style="font-family:'Bebas Neue';font-size:28px;color:var(--g)">10K</div><div style="font-size:10px;color:var(--gr);text-transform:uppercase;letter-spacing:1px">Followers</div><div style="font-size:10px;color:var(--gr);margin-top:.4rem">Link in Stories</div></div>
+</div>
+<h3 style="font-family:'Bebas Neue';font-size:22px;letter-spacing:1px;margin:2rem 0 1rem">Key Metrics</h3>
+<div class="mg">
+<div class="mc"><div class="mv">200+</div><div class="ml">Week 1 Followers</div></div>
+<div class="mc"><div class="mv">5%</div><div class="ml">Engagement Rate</div></div>
+<div class="mc"><div class="mv">1K+</div><div class="ml">Carousel Views</div></div>
+<div class="mc"><div class="mv">5K+</div><div class="ml">Reel Views</div></div>
+<div class="mc"><div class="mv">500+</div><div class="ml">Story Views</div></div>
+<div class="mc"><div class="mv">50+</div><div class="ml">Link Clicks</div></div>
+</div>
+</div></section>
+<section><div class="si">
+<p class="sl">Step 8</p>
+<h2 class="st">Launch Checklist</h2>
+<div class="gl"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem">
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Pre-Launch (1 Week)</h3>
+<ul class="cl">
+<li>Create Instagram account</li>
+<li>Set up profile (bio, PFP, link)</li>
+<li>Create 5 highlight covers</li>
+<li>Design first 4 carousels</li>
+<li>Edit first 2 Reels</li>
+<li>Schedule pre-launch stories</li>
+<li>Cross-promote on X and YouTube</li>
+<li>Set up linktr.ee</li>
+</ul>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Launch Day (Tuesday)</h3>
+<ul class="cl">
+<li>Post teaser stories (Mon 8 PM)</li>
+<li>Post first carousel (Tue 12 PM)</li>
+<li>Post Reel (Tue 6 PM)</li>
+<li>Post YouTube promo story</li>
+<li>Engage with all comments (1hr)</li>
+<li>Share to Stories from others</li>
+<li>Monitor analytics</li>
+</ul>
+</div>
+<div>
+<h3 style="font-family:'Bebas Neue';font-size:18px;letter-spacing:1px;color:var(--g);margin-bottom:1rem">Post-Launch (Week 1)</h3>
+<ul class="cl">
+<li>Post 2-3 carousels/week</li>
+<li>Post 1-2 Reels/week</li>
+<li>Post daily Stories</li>
+<li>Engage 10 target accounts/day</li>
+<li>Reply to all DMs (24hr)</li>
+<li>Track metrics daily</li>
+<li>Adjust strategy based on data</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<footer>
+<p style="font-family:'Bebas Neue';font-size:18px;letter-spacing:2px;color:var(--g);margin-bottom:.5rem">THE BREAKDOWN</p>
+<p>Complex stories. Clear analysis. Instagram Launch Guide.</p>
+</footer>
+
+</body>
+</html>

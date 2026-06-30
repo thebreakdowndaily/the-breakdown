@@ -1,0 +1,26 @@
+{
+  "section": "stats",
+  "label": "Statistics Section",
+  "description": "Edit the statistics displayed on the homepage. Numbers animate into view on scroll.",
+  "fields": [
+    {
+      "key": "stats-title",
+      "label": "Section Title",
+      "type": "text",
+      "value": "By The Numbers",
+      "hint": "Title displayed above the statistics"
+    },
+    {
+      "key": "stats",
+      "label": "Statistics Items",
+      "type": "json",
+      "value": [
+        {"icon": "📝", "number": "100+", "label": "Stories Published"},
+        {"icon": "🌍", "number": "50+", "label": "Countries Covered"},
+        {"icon": "👥", "number": "1M+", "label": "Readers"},
+        {"icon": "🤖", "number": "24/7", "label": "AI Research"}
+      ],
+      "hint": "Each stat displays an icon, number, and label. Numbers animate on scroll."
+    }
+  ]
+}

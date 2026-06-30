@@ -1,0 +1,35 @@
+{
+  "section": "featured",
+  "label": "Featured Stories Configuration",
+  "description": "Configure how featured and trending stories appear on the homepage.",
+  "fields": [
+    {
+      "key": "featured-title",
+      "label": "Section Title",
+      "type": "text",
+      "value": "Stories We Are Breaking Down",
+      "hint": "Title displayed above the featured stories section"
+    },
+    {
+      "key": "trending-title",
+      "label": "Trending Section Title",
+      "type": "text",
+      "value": "Most Read This Week",
+      "hint": "Title displayed above the trending stories section"
+    },
+    {
+      "key": "max-featured",
+      "label": "Max Featured Stories",
+      "type": "text",
+      "value": "6",
+      "hint": "Maximum number of stories to display in featured section"
+    },
+    {
+      "key": "max-trending",
+      "label": "Max Trending Stories",
+      "type": "text",
+      "value": "4",
+      "hint": "Maximum number of stories to display in trending section"
+    }
+  ]
+}

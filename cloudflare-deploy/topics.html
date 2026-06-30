@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="deploy-version" content="5">
+<title>Topics — The Breakdown</title>
+<meta name="description" content="Browse all topics and tags covered by The Breakdown's forensic newsroom.">
+<meta property="og:title" content="Topics — The Breakdown">
+<meta property="og:description" content="Browse all topics and tags covered by The Breakdown's forensic newsroom.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thebreakdown.in/topics">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Topics — The Breakdown">
+<meta name="twitter:description" content="Browse all topics and tags covered by The Breakdown's forensic newsroom.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/design-system.css?v=5">
+<link rel="stylesheet" href="/css/editorial.css?v=5">
+<script defer src="/js/components.js?v=5"></script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>body{padding-top:60px}</style>
+</head>
+<body>
+
+<main class="page-wrap" id="content">
+<a href="/" class="back-link" style="display:inline-flex;align-items:center;gap:8px;color:var(--gray);font-size:14px;margin-bottom:2rem;font-family:'JetBrains Mono',monospace">&larr; Back to Home</a>
+<h1>Topics</h1>
+<p class="subhead">Browse all topics covered by The Breakdown. Each topic links to every dispatch tagged with it.</p>
+<div id="topicsApp"><div class="loading">Loading topics...</div></div>
+</main>
+
+<script>
+(function(){
+  var container=document.getElementById('topicsApp');
+  if(!container)return;
+  var selectedTag=null;
+  function loadTags(){
+    container.innerHTML='<div class="loading">Loading topics...</div>';
+    fetch('/api/stories/tags').then(function(r){return r.json()}).then(function(d){
+      var tags=d.tags||[];
+      if(!tags.length){container.innerHTML='<div class="loading">No topics found.</div>';return}
+      container.innerHTML='<div class="tag-cloud">'+tags.map(function(t){return '<a href="#" data-tag="'+t.tag+'" onclick="event.preventDefault();window.__selectTag(\''+t.tag+'\')">'+t.tag+' <span class="count">'+t.count+'</span></a>'}).join('')+'</div><div id="tagStories"></div>';
+    }).catch(function(){container.innerHTML='<div class="loading">Failed to load topics.</div>'});
+  }
+  window.__selectTag=function(tag){
+    selectedTag=tag;
+    var allTags=document.querySelectorAll('.tag-cloud a');
+    allTags.forEach(function(a){a.style.borderColor=''});
+    var active=document.querySelector('.tag-cloud a[data-tag="'+tag+'"]');
+    if(active)active.style.borderColor='var(--gold)';
+    var storyDiv=document.getElementById('tagStories');
+    storyDiv.innerHTML='<div class="loading">Loading stories...</div>';
+    fetch('/api/stories/by-tag/'+encodeURIComponent(tag)).then(function(r){return r.json()}).then(function(d){
+      var stories=d.stories||[];
+      if(!stories.length){storyDiv.innerHTML='<div class="loading">No stories for this tag.</div>';return}
+      storyDiv.innerHTML='<div style="margin-bottom:1rem;font-family:\'JetBrains Mono\',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gray)">'+stories.length+' dispatch'+(stories.length>1?'es':'')+' tagged &ldquo;'+tag+'&rdquo;</div><div class="stories-list">'+stories.map(function(s){
+        var dt=s.published_at?new Date(s.published_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'';
+        return '<a href="/story/'+s.slug+'" class="story-row"><span class="cat">'+(s.category||'Latest')+'</span><span class="title">'+s.title+'</span><span class="date">'+dt+'</span></a>';
+      }).join('')+'</div>';
+    }).catch(function(){storyDiv.innerHTML='<div class="loading">Failed to load stories.</div>'});
+  };
+  loadTags();
+})();
+</script>
+</body>
+</html>

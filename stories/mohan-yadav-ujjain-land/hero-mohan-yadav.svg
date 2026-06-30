@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="100%" height="auto">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A0A0A"/>
+      <stop offset="50%" style="stop-color:#1a0d00"/>
+      <stop offset="100%" style="stop-color:#0A0A0A"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#D4A843"/>
+      <stop offset="100%" style="stop-color:#B8922F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Grid pattern -->
+  <g opacity="0.08">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="630" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="630" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="800" y1="0" x2="800" y2="630" stroke="#D4A843" stroke-width="0.5"/>
+    <line x1="1000" y1="0" x2="1000" y2="630" stroke="#D4A843" stroke-width="0.5"/>
+  </g>
+  <!-- Land plot visualization -->
+  <g transform="translate(50,50)">
+    <g opacity="0.6">
+      <!-- Scattered land plots -->
+      <rect x="80" y="80" width="40" height="25" fill="#D4A843" opacity="0.7" rx="2"/>
+      <rect x="140" y="95" width="55" height="30" fill="#D4A843" opacity="0.5" rx="2"/>
+      <rect x="90" y="120" width="35" height="20" fill="#D4A843" opacity="0.6" rx="2"/>
+      <rect x="160" y="130" width="45" height="28" fill="#D4A843" opacity="0.4" rx="2"/>
+      <rect x="220" y="85" width="60" height="35" fill="#D4A843" opacity="0.65" rx="2"/>
+      <rect x="300" y="100" width="40" height="25" fill="#D4A843" opacity="0.55" rx="2"/>
+      <rect x="250" y="140" width="50" height="30" fill="#D4A843" opacity="0.45" rx="2"/>
+      <rect x="320" y="135" width="35" height="22" fill="#D4A843" opacity="0.7" rx="2"/>
+      <rect x="370" y="90" width="55" height="32" fill="#D4A843" opacity="0.5" rx="2"/>
+      <rect x="440" y="110" width="42" height="26" fill="#D4A843" opacity="0.6" rx="2"/>
+      <rect x="380" y="145" width="48" height="28" fill="#D4A843" opacity="0.4" rx="2"/>
+      <rect x="500" y="85" width="38" height="24" fill="#D4A843" opacity="0.65" rx="2"/>
+      <rect x="550" y="105" width="52" height="30" fill="#D4A843" opacity="0.5" rx="2"/>
+      <rect x="480" y="130" width="44" height="27" fill="#D4A843" opacity="0.55" rx="2"/>
+    </g>
+  </g>
+  <!-- Highway lines -->
+  <g stroke="#D4A843" stroke-width="2" opacity="0.3" stroke-dasharray="8,4">
+    <line x1="100" y1="400" x2="1100" y2="380"/>
+    <line x1="200" y1="350" x2="1000" y2="420"/>
+    <line x1="300" y1="300" x2="900" y2="350"/>
+  </g>
+  <!-- Text -->
+  <text x="600" y="240" text-anchor="middle" font-family="Bebas Neue, Impact, sans-serif" font-size="72" fill="url(#gold)" letter-spacing="3">168 ACRES</text>
+  <text x="600" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#ffffff" font-weight="300">THE CHIEF MINISTER'S LAND EMPIRE</text>
+  <text x="600" y="340" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#999999">How Mohan Yadav's family bought Ujjain where his government built roads</text>
+  <!-- Bottom bar -->
+  <rect x="0" y="570" width="1200" height="60" fill="#0d0d0d" opacity="0.9"/>
+  <text x="60" y="608" font-family="Bebas Neue, Impact, sans-serif" font-size="22" fill="#D4A843" letter-spacing="2">THE BREAKDOWN</text>
+  <text x="1140" y="608" text-anchor="end" font-family="Arial, sans-serif" font-size="14" fill="#666666">INVESTIGATION | JUNE 2026</text>
+</svg>

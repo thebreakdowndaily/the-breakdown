@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Carousel #1: CEA "MBA Era Over"</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  :root {
+    --bg: #0A0A0A;
+    --card: #111111;
+    --gold: #D4A843;
+    --gold-light: #E8C468;
+    --red: #E63946;
+    --green: #2EC4B6;
+    --text: #FFFFFF;
+    --muted: #999999;
+    --border: #222222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    padding: 40px;
+  }
+
+  .page-header {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .page-header .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .page-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .download-bar {
+    max-width: 1200px;
+    margin: 0 auto 32px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .download-bar button {
+    background: var(--gold);
+    color: #0A0A0A;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .download-bar button:hover { background: var(--gold-light); }
+  .download-bar button.secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .download-bar button.secondary:hover { background: #1A1A1A; }
+
+  .slides-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .slide-wrap {
+    position: relative;
+  }
+  .slide-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .slide {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Slide types */
+  .slide-hook {
+    background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+    border: 1px solid var(--gold);
+    justify-content: space-between;
+  }
+  .slide-hook .hook-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  .slide-hook .hook-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .slide-context {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .slide-context .ctx-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .slide-context .ctx-text {
+    font-size: clamp(11px, 1.4vw, 14px);
+    line-height: 1.55;
+    color: #E0E0E0;
+  }
+
+  .slide-stat {
+    background: linear-gradient(135deg, #0A0A0A 0%, #111 100%);
+    border: 1px solid var(--gold);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-stat .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .slide-stat .stat-label {
+    font-size: clamp(10px, 1.3vw, 13px);
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .slide-stat .stat-detail {
+    font-size: clamp(9px, 1.1vw, 11px);
+    color: var(--green);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .slide-compare {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .slide-compare .cmp-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .slide-compare .cmp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .slide-compare .cmp-country {
+    width: 30%;
+    font-size: clamp(10px, 1.2vw, 12px);
+    font-weight: 600;
+  }
+  .slide-compare .cmp-bar {
+    flex: 1;
+    height: 6px;
+    background: #222;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .slide-compare .cmp-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 3px;
+  }
+  .slide-compare .cmp-fill.red { background: var(--red); }
+  .slide-compare .cmp-val {
+    width: 12%;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(9px, 1vw, 11px);
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .slide-compare .cmp-val.red { color: var(--red); }
+
+  .slide-contrarian {
+    background: linear-gradient(135deg, #1A0A0A 0%, #0A0A0A 100%);
+    border: 1px solid #331111;
+  }
+  .slide-contrarian .con-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .slide-contrarian .con-text {
+    font-size: clamp(11px, 1.3vw, 14px);
+    line-height: 1.55;
+    color: #FF9999;
+  }
+
+  .slide-future {
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+  .slide-future .fut-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 10px;
+  }
+  .slide-future .fut-text {
+    font-size: clamp(11px, 1.4vw, 14px);
+    line-height: 1.55;
+    color: #E0E0E0;
+  }
+
+  .slide-takeaway {
+    background: linear-gradient(135deg, #111 0%, #1A1A1A 100%);
+    border: 1px solid var(--border);
+  }
+  .slide-takeaway .tk-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .slide-takeaway .tk-items {
+    font-size: clamp(12px, 1.5vw, 15px);
+    font-weight: 600;
+    line-height: 1.8;
+  }
+  .slide-takeaway .tk-items span { color: var(--gold); }
+
+  .slide-brand {
+    background: var(--bg);
+    border: 2px solid var(--gold);
+    text-align: center;
+    align-items: center;
+  }
+  .slide-brand .br-logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+  .slide-brand .br-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .slide-brand .br-handle {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .slide-brand .br-cta {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .caption-box {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+  }
+  .caption-box h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .caption-box p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #E0E0E0;
+  }
+  .caption-box .tags {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .slides-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 500px) {
+    .slides-grid { grid-template-columns: 1fr; }
+    body { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="label">Instagram Carousel #1</div>
+  <h1>India's CEA Says "MBA & Software Era Is Over"</h1>
+  <p>10-slide carousel at 1080×1080px. Click "Download All" or download individual slides.</p>
+</div>
+
+<div class="download-bar">
+  <button onclick="downloadAll()">⬇ Download All Slides (PNG)</button>
+  <button class="secondary" onclick="downloadSlide(0)">Slide 1</button>
+  <button class="secondary" onclick="downloadSlide(1)">Slide 2</button>
+  <button class="secondary" onclick="downloadSlide(2)">Slide 3</button>
+  <button class="secondary" onclick="downloadSlide(3)">Slide 4</button>
+  <button class="secondary" onclick="downloadSlide(4)">Slide 5</button>
+  <button class="secondary" onclick="downloadSlide(5)">Slide 6</button>
+  <button class="secondary" onclick="downloadSlide(6)">Slide 7</button>
+  <button class="secondary" onclick="downloadSlide(7)">Slide 8</button>
+  <button class="secondary" onclick="downloadSlide(8)">Slide 9</button>
+  <button class="secondary" onclick="downloadSlide(9)">Slide 10</button>
+</div>
+
+<div class="slides-grid">
+
+  <!-- SLIDE 1 — Hook -->
+  <div class="slide-wrap">
+    <div class="slide-num">01 / 10 — Hook</div>
+    <div class="slide slide-hook" id="slide-0">
+      <div class="hook-text">India's CEA just told your parents the engineering dream is over.</div>
+      <div class="hook-sub">The Breakdown</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — Context -->
+  <div class="slide-wrap">
+    <div class="slide-num">02 / 10 — Context</div>
+    <div class="slide slide-context" id="slide-1">
+      <div class="ctx-label">What Happened</div>
+      <div class="ctx-text">India's Chief Economic Advisor V. Anantha Nageswaran said on an ANI podcast: "The globalising world gave advantage for software or MBA education — that era is over." He urged Indians to respect plumbers, carpenters, welders — skills AI cannot replace.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — Hidden Fact -->
+  <div class="slide-wrap">
+    <div class="slide-num">03 / 10 — Hidden Fact</div>
+    <div class="slide slide-context" id="slide-2">
+      <div class="ctx-label">The Hidden Fact</div>
+      <div class="ctx-text">This isn't just opinion — it's policy signaling. India's top economic advisor is telling 1.5 crore college students that their parents' career plan is obsolete. That's not a hot take. That's a government position.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — Stat -->
+  <div class="slide-wrap">
+    <div class="slide-num">04 / 10 — Stat</div>
+    <div class="slide slide-stat" id="slide-3">
+      <div class="stat-num">-40%</div>
+      <div class="stat-label">IT hiring from 2022 peak</div>
+      <div class="stat-detail">+35% YoY demand for skilled trades</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — Why It Matters -->
+  <div class="slide-wrap">
+    <div class="slide-num">05 / 10 — Why It Matters</div>
+    <div class="slide slide-context" id="slide-4">
+      <div class="ctx-label">Why It Matters</div>
+      <div class="ctx-text">India has no national trade certification. No social safety net for tradespeople. A cultural bias that treats "plumber" as failure. The CEA is right about the direction — but the infrastructure isn't ready.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — Compare -->
+  <div class="slide-wrap">
+    <div class="slide-num">06 / 10 — Compare</div>
+    <div class="slide slide-compare" id="slide-5">
+      <div class="cmp-title">Respect For Trades By Country</div>
+      <div class="cmp-row">
+        <div class="cmp-country">🇩🇪 Germany</div>
+        <div class="cmp-bar"><div class="cmp-fill" style="width:90%"></div></div>
+        <div class="cmp-val">90%</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-country">🇨🇭 Switzerland</div>
+        <div class="cmp-bar"><div class="cmp-fill" style="width:85%"></div></div>
+        <div class="cmp-val">85%</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-country">🇯🇵 Japan</div>
+        <div class="cmp-bar"><div class="cmp-fill" style="width:80%"></div></div>
+        <div class="cmp-val">80%</div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-country">🇮🇳 India</div>
+        <div class="cmp-bar"><div class="cmp-fill red" style="width:25%"></div></div>
+        <div class="cmp-val red">25%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — Contrarian -->
+  <div class="slide-wrap">
+    <div class="slide-num">07 / 10 — Contrarian</div>
+    <div class="slide slide-contrarian" id="slide-6">
+      <div class="con-icon">⚠️</div>
+      <div class="con-text">The CEA is right about the problem. But telling students "become a plumber" without building trade certification, safety nets, and social respect is aspirational at best — abdication at worst.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — Future -->
+  <div class="slide-wrap">
+    <div class="slide-num">08 / 10 — What Happens Next</div>
+    <div class="slide slide-future" id="slide-7">
+      <div class="fut-label">What Happens Next</div>
+      <div class="fut-text">The degree bubble is bursting. But the "trade skill era" won't begin until India builds the bridge between aspiration and infrastructure. Germany didn't just say "learn trades" — they built a system. India needs to do the same.</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — Takeaway -->
+  <div class="slide-wrap">
+    <div class="slide-num">09 / 10 — Takeaway</div>
+    <div class="slide slide-takeaway" id="slide-8">
+      <div class="tk-label">Key Takeaway</div>
+      <div class="tk-items">
+        <span>✓</span> Ask what's AI-proof<br>
+        <span>✓</span> Build skills, not just degrees<br>
+        <span>✓</span> Respect the trades — they pay<br>
+        <span>✓</span> Degree AND skill, not degree vs skill
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 — CTA / Brand -->
+  <div class="slide-wrap">
+    <div class="slide-num">10 / 10 — Brand CTA</div>
+    <div class="slide slide-brand" id="slide-9">
+      <svg class="br-logo" viewBox="0 0 100 100">
+        <rect width="48" height="100" rx="4" fill="white"/>
+        <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+        <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+      </svg>
+      <div class="br-name">The Breakdown</div>
+      <div class="br-handle">@thebreakdowndaily</div>
+      <div class="br-cta">Follow for daily breakdowns of stories<br>that matter. Save this for the debate.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="caption-box">
+  <h3>Copy-Paste Caption</h3>
+  <p>India's CEA just told your parents the engineering dream is over. The era of software and MBA advantage is done.</p>
+  <p style="margin-top:8px;">The question isn't "degree vs skill." It's "degree AND skill."</p>
+  <p style="margin-top:8px;">Save this for the next family debate. Follow @thebreakdowndaily.</p>
+  <div class="tags">#FutureOfWork #India #Education #AI #TheBreakdown #Skills #Engineering #MBA #CareerAdvice #TechJobs</div>
+</div>
+
+<script>
+  async function downloadSlide(index) {
+    const el = document.getElementById('slide-' + index);
+    const canvas = await html2canvas(el, {
+      width: 1080,
+      height: 1080,
+      scale: 1,
+      backgroundColor: null,
+      useCORS: true
+    });
+    const link = document.createElement('a');
+    link.download = 'thebreakdown-carousel-1-slide-' + (index + 1) + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  async function downloadAll() {
+    for (let i = 0; i < 10; i++) {
+      await downloadSlide(i);
+      await new Promise(r => setTimeout(r, 300));
+    }
+  }
+</script>
+
+</body>
+</html>

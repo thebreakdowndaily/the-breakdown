@@ -1,0 +1,27 @@
+{
+  "section": "ticker",
+  "label": "Breaking News Ticker",
+  "description": "Edit the scrolling news ticker headlines. Items scroll automatically and pause on hover.",
+  "fields": [
+    {
+      "key": "headlines",
+      "label": "Headlines",
+      "type": "json",
+      "value": [
+        {"title": "World's First Nuclear-Powered Hydrogen Plant Is in India — Here's Why That Matters", "link": "/story/nuclear-hydrogen-kalpakkam-world-first"},
+        {"title": "NEET 2026: The Exam That Broke India — Scam, Scandal, System Failure", "link": "/story/neet-2026-the-exam-that-broke-india"},
+        {"title": "Bangladesh-China: Tarique Rahman's Beijing Visit Reshapes South Asia", "link": "/story/bangladesh-china-tarique-rahman-beijing-2026"},
+        {"title": "India's Digital Regulation Offensive 2026: DPDP, IT Rules, Crypto Bill", "link": "/story/india-digital-regulation-offensive-2026-dpdp-it-rules-crypto"},
+        {"title": "RBI Monsoon Warning: Growth, Inflation, and Outlook — June 2026", "link": "/story/rbi-monsoon-warning-growth-inflation-outlook-june-2026"}
+      ],
+      "hint": "Breaking news headlines that scroll in the ticker bar. Add, remove, or reorder."
+    },
+    {
+      "key": "ticker-speed",
+      "label": "Scroll Speed (seconds)",
+      "type": "text",
+      "value": "24",
+      "hint": "Duration in seconds for one full scroll cycle"
+    }
+  ]
+}

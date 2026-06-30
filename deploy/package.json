@@ -1,0 +1,9 @@
+{
+  "name": "the-breakdown-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Breakdown — static site with serverless CMS API",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

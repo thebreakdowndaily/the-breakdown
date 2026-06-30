@@ -1,0 +1,41 @@
+{
+  "title": "US-Iran Peace Deal 2026: Full 14-Point Agreement Explained | The Breakdown",
+  "description": "Trump signed a 14-point peace deal with Iran at the G7. Strait of Hormuz reopens, sanctions waived, $300B reconstruction fund. A complete breakdown of what's in the deal and what comes next.",
+  "canonical": "https://thebreakdown.in/story/us-iran-peace-deal-2026",
+  "og": {
+    "title": "US-Iran Peace Deal 2026: Full 14-Point Agreement Explained",
+    "description": "Trump signed a 14-point peace deal with Iran at the G7. Strait of Hormuz reopens, sanctions waived, $300B reconstruction fund. A complete breakdown of what's in the deal and what comes next.",
+    "type": "article",
+    "url": "https://thebreakdown.in/story/us-iran-peace-deal-2026",
+    "image": "https://thebreakdown.in/og-image.png",
+    "site_name": "The Breakdown"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@thebreakdownin",
+    "title": "US-Iran Peace Deal 2026: Full 14-Point Agreement Explained",
+    "description": "Trump signed a 14-point peace deal with Iran at the G7. Strait of Hormuz reopens, sanctions waived, $300B reconstruction fund. A complete breakdown of what's in the deal and what comes next."
+  },
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "US-Iran Peace Deal 2026: Full 14-Point Agreement Explained",
+    "description": "Trump signed a 14-point peace deal with Iran at the G7. Strait of Hormuz reopens, sanctions waived, $300B reconstruction fund. A complete breakdown of what's in the deal and what comes next.",
+    "articleSection": "Geopolitics",
+    "keywords": "US-Iran, peace-deal, Trump, Versailles, Strait-of-Hormuz, sanctions, nuclear, G7, Iran, JD-Vance",
+    "datePublished": "2026-06-25T10:00:00Z",
+    "dateModified": "2026-06-25T08:33:10.056Z",
+    "author": {
+      "@type": "Organization",
+      "name": "The Breakdown"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Breakdown",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://thebreakdown.in/og-image.png"
+      }
+    }
+  }
+}

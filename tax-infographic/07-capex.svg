@@ -1,0 +1,73 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
+  <rect x="0" y="0" width="3840" height="2160" fill="#0B1120"/>
+  <defs>
+    <linearGradient id="g7" x1="0" y1="0" x2="0" y2="2160">
+      <stop offset="0%" stop-color="#10B98115"/>
+      <stop offset="100%" stop-color="#10B98100"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="3840" height="2160" fill="url(#g7)"/>
+  
+  <rect x="0" y="0" width="3840" height="80" fill="#111827" opacity="0.6"/>
+  <text x="60" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#94A3B8" letter-spacing="4">TAX BREAKDOWN · INDIA 2026</text>
+  <text x="3780" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F59E0B" text-anchor="end">7/10</text>
+  <line x1="60" y1="80" x2="3780" y2="80" stroke="#F59E0B" stroke-width="2" opacity="0.3"/>
+
+  <text x="200" y="400" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="220" font-weight="900" fill="#10B981">₹22</text>
+  <text x="440" y="340" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="32" font-weight="400" fill="#94A3B8">out of every ₹100</text>
+  <text x="440" y="390" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="32" font-weight="400" fill="#94A3B8">for capital expenditure</text>
+
+  <text x="200" y="550" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="56" font-weight="800" fill="#F8FAFC">Capital Expenditure</text>
+  <text x="200" y="610" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#64748B">Roads, bridges, railways, ports — your infrastructure</text>
+  <line x1="200" y1="650" x2="600" y2="650" stroke="#10B981" stroke-width="3"/>
+
+  <g transform="translate(200, 780)">
+    <rect x="0" y="40" width="3000" height="60" rx="6" fill="#1E293B"/>
+    <rect x="0" y="40" width="660" height="60" rx="6" fill="#10B981"/>
+    <text x="20" y="78" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#0B1120">₹22 — CAPEX</text>
+    <rect x="660" y="40" width="2340" height="60" rx="6" fill="#1E293B" opacity="0.5"/>
+  </g>
+
+  <!-- Infrastructure icons and breakdown -->
+  <g transform="translate(200, 1000)">
+    <rect x="0" y="0" width="340" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="170" y="60" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="40" fill="#10B981" text-anchor="middle">🛣️</text>
+    <text x="170" y="110" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#F8FAFC" text-anchor="middle">Roads</text>
+    <text x="170" y="145" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">National Highways</text>
+    <text x="170" y="175" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" fill="#10B981" text-anchor="middle">₹2.7L Cr</text>
+  </g>
+  <g transform="translate(580, 1000)">
+    <rect x="0" y="0" width="340" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="170" y="60" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="40" fill="#10B981" text-anchor="middle">🚂</text>
+    <text x="170" y="110" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#F8FAFC" text-anchor="middle">Railways</text>
+    <text x="170" y="145" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">Track & Station Modernisation</text>
+    <text x="170" y="175" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" fill="#10B981" text-anchor="middle">₹2.6L Cr</text>
+  </g>
+  <g transform="translate(960, 1000)">
+    <rect x="0" y="0" width="340" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="170" y="60" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="40" fill="#10B981" text-anchor="middle">🏗️</text>
+    <text x="170" y="110" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#F8FAFC" text-anchor="middle">Defence Infra</text>
+    <text x="170" y="145" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">Border & Strategic Projects</text>
+    <text x="170" y="175" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" fill="#10B981" text-anchor="middle">₹1.6L Cr</text>
+  </g>
+  <g transform="translate(1340, 1000)">
+    <rect x="0" y="0" width="340" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="170" y="60" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="40" fill="#10B981" text-anchor="middle">🏭</text>
+    <text x="170" y="110" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#F8FAFC" text-anchor="middle">Urban Infra</text>
+    <text x="170" y="145" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#64748B" text-anchor="middle">Smart Cities, Water, Power</text>
+    <text x="170" y="175" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" fill="#10B981" text-anchor="middle">₹1.8L Cr</text>
+  </g>
+
+  <!-- Progress bar for capex target -->
+  <g transform="translate(200, 1300)">
+    <text x="0" y="30" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#94A3B8">CAPEX TARGET PROGRESS</text>
+    <text x="3000" y="30" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#10B981" text-anchor="end">₹11.1L Cr Budgeted</text>
+    <rect x="0" y="55" width="3000" height="40" rx="4" fill="#1E293B"/>
+    <rect x="0" y="55" width="2100" height="40" rx="4" fill="#10B981" opacity="0.7"/>
+    <text x="1500" y="82" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#0B1120" text-anchor="middle">70% Utilisation Rate</text>
+  </g>
+  
+  <rect x="0" y="2100" width="3840" height="60" fill="#111827" opacity="0.4"/>
+  <text x="1920" y="2136" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" fill="#64748B" text-anchor="middle" letter-spacing="2">NEWSJACK · EDITORIAL INFOGRAPHIC</text>
+</svg>

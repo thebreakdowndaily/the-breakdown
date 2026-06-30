@@ -1,0 +1,649 @@
+{
+  "report": {
+    "title": "Verification Report — Modi Cabinet Reshuffle 2026 Story",
+    "story_file": "modi-cabinet-reshuffle-2026.html",
+    "dossier_file": "research-dossier.html",
+    "generated": "2026-06-26",
+    "overall_grade": "B-",
+    "summary": "The story is well-sourced and structurally accurate but contains 4 minor factual errors, 6 claims presented as confirmed that remain unverified/speculative, and 11+ pieces of new intelligence from the dossier that should be incorporated. The most critical error is presenting the 6.6% GDP figure as current growth (it is an FY27 forecast; actual FY26 growth was 7.7%). The June 9 vs June 10 date error for Modi 3.0's swearing-in also needs correction. Several defector details and the women's reservation update are now outdated relative to the dossier's intelligence.",
+    "claims": [
+      {
+        "id": "C1",
+        "location": "L66 (lead paragraph)",
+        "exact_quote": "On the evening of June 23, Prime Minister Narendra Modi met President Droupadi Murmu at Rashtrapati Bhavan.",
+        "classification": "Verified Fact",
+        "confidence": 98,
+        "dossier_reference": "Section 1.5 — PM Modi met President Murmu on June 23. CONFIRMED. Rashtrapati Bhavan posted X confirmation. HIGH confidence.",
+        "recommended_changes": "None. Fully accurate.",
+        "story_source": "Rashtrapati Bhavan X account (primary source)"
+      },
+      {
+        "id": "C2",
+        "location": "L66",
+        "exact_quote": "The President's Office shared pictures on X: 'Prime Minister Shri @narendramodi called on President Droupadi Murmu at Rashtrapati Bhavan.'",
+        "classification": "Verified Fact",
+        "confidence": 98,
+        "dossier_reference": "Section 1.5 — Quote matches Rashtrapati Bhavan X post. HIGH confidence.",
+        "recommended_changes": "None.",
+        "story_source": "Rashtrapati Bhavan X account (primary source)"
+      },
+      {
+        "id": "C3",
+        "location": "L66",
+        "exact_quote": "Commerce Minister Piyush Goyal posted his farewell to USTR Jamieson Greer",
+        "classification": "Verified Fact",
+        "confidence": 90,
+        "dossier_reference": "Section 5 timeline — June 23, 2026: 'Piyush Goyal posts farewell to USTR Jamieson Greer.' HIGH confidence (assumed from dossier timeline).",
+        "recommended_changes": "Could add specific wording from Goyal's post for credibility. Verify against Goyal's actual X account.",
+        "story_source": "Piyush Goyal's X account"
+      },
+      {
+        "id": "C4",
+        "location": "L66",
+        "exact_quote": "Hours earlier, the President had accepted the resignation of George Kurian, Minister of State for Minority Affairs.",
+        "classification": "Verified Fact",
+        "confidence": 98,
+        "dossier_reference": "Section 1.1 — Resignation sent June 22, accepted June 23. HIGH confidence. Primary source: Rashtrapati Bhavan communiqué.",
+        "recommended_changes": "None. Dossier also notes Kurian held two additional portfolios: MoS Fisheries, Animal Husbandry & Dairying — could add for completeness.",
+        "story_source": "Rashtrapati Bhavan communiqué (primary)"
+      },
+      {
+        "id": "C5",
+        "location": "L66",
+        "exact_quote": "The sequence — a resignation, then a meeting with the constitutional head of state — followed a pattern Modi has used twice before: in July 2016 and July 2021, when he reshuffled his councils of ministers just after completing two years in office.",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "Section 5 timeline — July 6, 2016 and July 7, 2021 both confirmed as major reshuffle dates. HIGH confidence.",
+        "recommended_changes": "None. Pattern observation is accurate.",
+        "story_source": "Historical records / Section 5 timeline"
+      },
+      {
+        "id": "C6",
+        "location": "L66",
+        "exact_quote": "The reshuffle expected in the coming days will likely be the last major reorganisation of Modi's government before the 2029 Lok Sabha elections.",
+        "classification": "Speculative",
+        "confidence": 60,
+        "dossier_reference": "Section 2.14 — Swearing-in date June 28-29 (MEDIUM confidence). 2029 horizon referenced throughout dossier. This is an analytical prediction, not a verified fact.",
+        "recommended_changes": "Frame more explicitly as analysis/prediction. Add 'if sources are correct' or similar qualifier. The swearing-in date is still unconfirmed as of June 26.",
+        "story_source": "Analytical inference"
+      },
+      {
+        "id": "C7",
+        "location": "L69 (stat card)",
+        "exact_quote": "72 Current Ministers",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "Section 6 — 'Current Council of Ministers strength: 72 (as formed June 10, 2024).' HIGH confidence.",
+        "recommended_changes": "None. Note that this number may change after Kurian's resignation (now 71 active) and before the reshuffle finalizes.",
+        "story_source": "The Federal; multiple outlets"
+      },
+      {
+        "id": "C8",
+        "location": "L70 (stat card)",
+        "exact_quote": "30 Cabinet Rank",
+        "classification": "Verified Fact",
+        "confidence": 85,
+        "dossier_reference": "Section 6 — 'Current Cabinet-rank ministers: 30' — listed from existing story stat bar. Not independently verified by dossier but uncontested.",
+        "recommended_changes": "Consider verifying from PMO/DoPT official count before re-publication.",
+        "story_source": "Existing story / Indian Mandarins"
+      },
+      {
+        "id": "C9",
+        "location": "L71 (stat card)",
+        "exact_quote": "7 Women (of 72)",
+        "classification": "Verified Fact",
+        "confidence": 90,
+        "dossier_reference": "Section 6 — 'Women ministers currently: 7 of 72 (9.7%)' — verified by existing story. However, Section 3 notes this count may already be outdated after recent resignations.",
+        "recommended_changes": "Add caveat: 'as of June 10, 2024 formation' or 'pre-reshuffle count.' Add context that this is 9.7% against a new 33% target under Nari Shakti Vandan Adhiniyam (effective April 17, 2026).",
+        "story_source": "Existing story"
+      },
+      {
+        "id": "C10",
+        "location": "L72 (stat card)",
+        "exact_quote": "38 Portfolios Likely Affected",
+        "classification": "Speculative",
+        "confidence": 30,
+        "dossier_reference": "Section 2 — Indian Mandarins (June 18) claimed '38 portfolios likely reshuffled.' Source reliability: 6/10, 'notably speculative.' No corroboration from other outlets.",
+        "recommended_changes": "Downgrade presentation. Add attribution: 'according to Indian Mandarins' rather than presenting as statistical fact. Add a 'likely' or 'reported to be' qualifier. Or consider removing if not independently sourced.",
+        "story_source": "Indian Mandarins (June 18, 2026) — single source, reliability 6/10"
+      },
+      {
+        "id": "C11",
+        "location": "L73 (stat card)",
+        "exact_quote": "6+ Ministers to be Dropped",
+        "classification": "Speculative",
+        "confidence": 35,
+        "dossier_reference": "Section 9 — 'Full list of departing ministers: Only 4 confirmed/minister exiting. Claims of 'half a dozen' or '6+' remain unconfirmed.' Only 1 resignation formally accepted (Kurian).",
+        "recommended_changes": "Change to '4 confirmed/minister exiting, with more expected' rather than '6+'. The 4 are Kurian (confirmed), Bittu (term ended, resignation pending), Malhotra (expected), Chaudhary (expected). Any beyond 4 is unconfirmed.",
+        "story_source": "Unattributed 'insider' claims"
+      },
+      {
+        "id": "C12",
+        "location": "L74 (stat card)",
+        "exact_quote": "Last Reshuffle (June 9)",
+        "classification": "Needs Correction",
+        "confidence": 5,
+        "dossier_reference": "Section 3 CORRECTION — 'Technically June 10, 2024 was the swearing-in date for Modi 3.0. The existing story's June 9 should be June 10 (per The Federal).'",
+        "recommended_changes": "CHANGE to 'June 10, 2024'. This is a factual date error.",
+        "story_source": "Error in existing story"
+      },
+      {
+        "id": "C13",
+        "location": "L78",
+        "exact_quote": "At least four ministers are confirmed to exit, with more expected.",
+        "classification": "Needs Correction",
+        "confidence": 30,
+        "dossier_reference": "Section 1, Section 3 — Only ONE minister's resignation has been formally accepted by the President (Kurian). Bittu's resignation is NOT accepted. Malhotra and Chaudhary have NOT submitted resignations. 'Confirmed to exit' overstates certainty for 3 of the 4 named individuals.",
+        "recommended_changes": "REPHRASE to: 'George Kurian has resigned. Three other ministers are expected to step down, with their formal resignations pending.' Or: 'At least one minister has exited, with three more expected to follow.' The word 'confirmed' should only apply to Kurian.",
+        "story_source": "Multiple news reports (The Federal, ET, News18)"
+      },
+      {
+        "id": "C14",
+        "location": "L84 (table row)",
+        "exact_quote": "George Kurian — MoS Minority Affairs — RS term ended Jun 21, not renominated — Governor (probable)",
+        "classification": "Verified Fact (minus 'Governor probable')",
+        "confidence": 95,
+        "dossier_reference": "Section 1.1 — Resignation confirmed. RS term ended June 21. Not renominated. HIGH confidence. 'Governor probable' source: The Federal (MEDIUM confidence, unconfirmed).",
+        "recommended_changes": "Keep all factual elements. Add caveat to 'Governor (probable)' — label as 'speculated' or 'reported as probable.' Also note Kurian held MoS Fisheries, Animal Husbandry & Dairying additionally.",
+        "story_source": "Rashtrapati Bhavan (primary); The Federal (Governor claim)"
+      },
+      {
+        "id": "C15",
+        "location": "L85 (table row)",
+        "exact_quote": "Ravneet Bittu — MoS Railways & Food Processing — RS term ended Jun 21, not renominated — Punjab poll outreach",
+        "classification": "Needs Correction",
+        "confidence": 60,
+        "dossier_reference": "Section 1.2 — RS term ended, not renominated: CONFIRMED. 'Punjab poll outreach': CORRECT (Bittu stated intent to contest 2027 Punjab polls). BUT: 'Bittu is technically still MoS until his resignation is accepted... as of June 26, no formal resignation has been announced by Rashtrapati Bhavan for Bittu.'",
+        "recommended_changes": "Add note: 'Bittu's formal resignation has not yet been accepted by the President. He remains technically in office pending the reshuffle.' Do not present as already exited.",
+        "story_source": "Times of India (June 4), The Hindu (June 5), Hindustan Times (June 3)"
+      },
+      {
+        "id": "C16",
+        "location": "L86 (table row)",
+        "exact_quote": "Harsh Malhotra — MoS Road Transport & Corporate Affairs — Appointed Delhi BJP president — Organisational role",
+        "classification": "Verified Fact (appointment); Speculative (exit)",
+        "confidence": 85,
+        "dossier_reference": "Section 1.3 — Appointed Delhi BJP president May 28, 2026: CONFIRMED. 'Expected to resign under one person, one post.' MEDIUM confidence on resignation timing — not yet submitted to President as of June 26.",
+        "recommended_changes": "Add date of appointment (May 28, 2026) for precision. Qualify exit: 'expected to step down' rather than implied confirmed exit.",
+        "story_source": "Indian Express (May 28), The Hindu (May 28), ANI (May 31)"
+      },
+      {
+        "id": "C17",
+        "location": "L87 (table row)",
+        "exact_quote": "Pankaj Chaudhary — MoS Finance — Appointed UP BJP president — Organisational role",
+        "classification": "Verified Fact (appointment); Speculative (exit)",
+        "confidence": 85,
+        "dossier_reference": "Section 1.4 — Appointed UP BJP president Dec 14, 2025: CONFIRMED. Expected to resign under one person, one post. MEDIUM confidence — resignation pending since Dec 2025.",
+        "recommended_changes": "Add date of appointment (Dec 14, 2025) and note that resignation has been expected for 6+ months. Qualify the exit certainty.",
+        "story_source": "The Hindu (Dec 14, 2025), Hindustan Times (Dec 13, 2025)"
+      },
+      {
+        "id": "C18",
+        "location": "L92",
+        "exact_quote": "Bittu and Kurian were left out of the BJP's Rajya Sabha candidate list announced on June 18, effectively ending their ministerial tenures.",
+        "classification": "Needs Correction",
+        "confidence": 40,
+        "dossier_reference": "Section 1.1, 1.2 — Kurian: resignation accepted, tenure ended. Bittu: RS term ended but resignation NOT accepted. 'Effectively ending their ministerial tenures' can only apply to Kurian. For Bittu, the statement is inaccurate — he remains technically a minister.",
+        "recommended_changes": "CHANGE to: 'Bittu and Kurian were left out of the BJP's RS candidate list. Kurian's resignation was accepted on June 23; Bittu's status remains technically active pending the reshuffle.'",
+        "story_source": "Times of India, The Hindu, multiple"
+      },
+      {
+        "id": "C19",
+        "location": "L92",
+        "exact_quote": "Malhotra and Chaudhary are expected to step down under the party's 'one man, one post' principle",
+        "classification": "Speculative",
+        "confidence": 65,
+        "dossier_reference": "Section 1.3, 1.4 — Both expected to resign under this principle. MEDIUM confidence on timing. Dossier says 'expected to resign' — same language as story. Consistent.",
+        "recommended_changes": "Consider adding: '...though formal resignations have not yet been submitted to the President.' This would increase accuracy.",
+        "story_source": "Multiple news reports (The Hindu, Indian Express, Hindustan Times)"
+      },
+      {
+        "id": "C20",
+        "location": "L92-93",
+        "exact_quote": "Beyond these four, insiders say at least half a dozen more ministers could be dropped — some for underperformance, others to make room for the wave of defectors the BJP has absorbed from rival parties.",
+        "classification": "Speculative",
+        "confidence": 30,
+        "dossier_reference": "Section 9 — 'Claims of 'half a dozen' or '6+' remain unconfirmed.' No specific names verified for additional departures beyond the 4 discussed.",
+        "recommended_changes": "Attributed properly ('insiders say') which is correct. Could add: 'though none of these additional names have been confirmed through official channels.'",
+        "story_source": "Anonymous 'insider' sources"
+      },
+      {
+        "id": "C21",
+        "location": "L95",
+        "exact_quote": "In April, seven Rajya Sabha MPs from the Aam Aadmi Party 'merged' with the BJP, led by the prominent face of Raghav Chadha",
+        "classification": "Verified Fact",
+        "confidence": 98,
+        "dossier_reference": "Section 1.7 — Seven AAP RS MPs joined BJP on April 24, 2026. Confirmed by BJP President Nitin Nabin on X. List includes Raghav Chadha. HIGH confidence.",
+        "recommended_changes": "None. Fully accurate.",
+        "story_source": "NDTV (April 24), DW (April 25), BJP President Nabin's X post"
+      },
+      {
+        "id": "C22",
+        "location": "L95-96",
+        "exact_quote": "Chadha... has since praised Modi so fulsomely that he has drawn criticism for comparing him favourably to Jawaharlal Nehru",
+        "classification": "Allegation / Political Claim",
+        "confidence": 50,
+        "dossier_reference": "Not directly addressed in dossier. This is a political/opinion claim about Chadha's statements. Would need primary source verification (Chadha's actual speeches/posts and the criticism).",
+        "recommended_changes": "ADD sourcing for the specific Nehru comparison quote and the criticism. Without attribution to a specific speech or news report, this reads as editorializing. Consider citing the source of this claim.",
+        "story_source": "Unattributed; likely from media reports or social media"
+      },
+      {
+        "id": "C23",
+        "location": "L96",
+        "exact_quote": "Chadha, along with former cricketer Harbhajan Singh, former AAP strategist Sandeep Pathak, and business figures Ashok Mittal, Rajinder Gupta, and Vikramjit Sahni — all six from Punjab — are potential inductees.",
+        "classification": "Verified Fact (membership) / Speculative (induction)",
+        "confidence": 85,
+        "dossier_reference": "Section 1.7 — All 7 AAP MPs confirmed. Names: Raghav Chadha, Sandeep Pathak, Ashok Mittal, Harbhajan Singh, Swati Maliwal, Vikram Sahney, Rajinder Gupta. NOTE: Story says 'Vikramjit Sahni' — dossier says 'Vikram Sahney' (spelling discrepancy). All six from Punjab confirmed. 'Potential inductees' is speculative but plausible (Section 2.8 — MEDIUM confidence).",
+        "recommended_changes": "CORRECT spelling: 'Vikram Sahney' (not 'Vikramjit Sahni'). Add Swati Maliwal (from Delhi) to complete the list of 7. The story says 'all six from Punjab' — this is correct for the six named (Chadha is also Punjab). Add qualification that not all 7 are expected to get ministerial posts.",
+        "story_source": "NDTV (April 24), Nabin's X post"
+      },
+      {
+        "id": "C24",
+        "location": "L96",
+        "exact_quote": "Swati Maliwal, from Delhi, is also in the mix.",
+        "classification": "Verified Fact (membership) / Speculative (induction)",
+        "confidence": 85,
+        "dossier_reference": "Section 1.7 — Swati Maliwal is one of 7 AAP MPs who joined BJP, from Delhi. 'In the mix' matches dossier's 'potential inductees' (Section 2.8 — MEDIUM confidence).",
+        "recommended_changes": "None. Accurately positioned as potential inductee.",
+        "story_source": "NDTV (April 24), Nabin's X post"
+      },
+      {
+        "id": "C25",
+        "location": "L97",
+        "exact_quote": "From West Bengal, the rupture in the Trinamool Congress has produced 20 rebel Lok Sabha MPs who merged with the National Citizens Party of India (NCPI) and signalled their intent to join the NDA.",
+        "classification": "Needs Correction (minor)",
+        "confidence": 90,
+        "dossier_reference": "Section 1.8 — Event CONFIRMED. HIGH confidence. Exact name: 'Nationalist Citizens Party of India' (not 'National Citizens Party of India'). NCPI registered Jan 2023, Tripura-based.",
+        "recommended_changes": "CORRECT party name to 'Nationalist Citizens Party of India (NCPI).' Add context: NCPI is a Tripura-based party, not a national party — this is relevant to the legal mechanism of the merger. Add that Kakoli Ghosh Dastidar was elected NCPI president on May 30, 2026 (per Times of India, June 16).",
+        "story_source": "The News Mill (June 14), Deccan Herald (June 14), Hindustan Times (June 15)"
+      },
+      {
+        "id": "C26",
+        "location": "L97-98",
+        "exact_quote": "Kakoli Ghosh Dastidar and Sudeep Bandyopadhyay are in the reckoning for Cabinet-rank positions.",
+        "classification": "Speculative",
+        "confidence": 45,
+        "dossier_reference": "Section 2.9 — LOW-MEDIUM confidence. 'Plausible but faces practical hurdles.' The 20 TMC MPs are now with NCPI (Tripura party), not directly BJP. Their absorption into NDA ministries is legally and politically complex.",
+        "recommended_changes": "CORRECT spelling: 'Sudip Bandyopadhyay' (not Sudeep). Add that they joined via NCPI, not directly into BJP, which makes the Cabinet path more complex. Reduce certainty from 'in the reckoning' to 'reportedly under consideration.'",
+        "story_source": "Existing story; OneIndia (June 26)"
+      },
+      {
+        "id": "C27",
+        "location": "L97",
+        "exact_quote": "From Maharashtra, the six Shiv Sena (UBT) MPs who joined Eknath Shinde's faction in 'Operation Tiger' have also created expectations of representation.",
+        "classification": "Verified Fact (defection) / Speculative (representation)",
+        "confidence": 95,
+        "dossier_reference": "Section 1.9 — Operation Tiger CONFIRMED and COMPLETE. Six of nine Sena (UBT) MPs formally joined Shinde Sena on June 22, 2026. Shinde and Fadnavis publicly confirmed. All 6 names verified. HIGH confidence. 'Expectations of representation' is speculative but plausible.",
+        "recommended_changes": "STRENGTHEN by adding the 6 MP names (Sanjay Deshmukh, Sanjay Jadhav, Sanjay Dina Patil, Nagesh Patil-Ashtikar, Omprakash Rajenimbalkar, Bhausaheb Wakchaure). Add Fadnavis/Shinde quotes confirming Operation Tiger's success. This adds credibility and specificity.",
+        "story_source": "The Week (June 17), Indian Express (June 13, 17), National Herald (June 22), Rediff (June 22)"
+      },
+      {
+        "id": "C28",
+        "location": "L100",
+        "exact_quote": "Commerce Minister Piyush Goyal is the leading candidate to replace Nirmala Sitharaman as Finance Minister.",
+        "classification": "Speculative",
+        "confidence": 35,
+        "dossier_reference": "Section 2.1 — LOW-MEDIUM confidence. Contradictory signals. Raisina Hills (June 24) says Goyal 'likely to persist with Commerce.' OneIndia (June 26) says Shaktikanta Das could replace FM. No official confirmation from PMO.",
+        "recommended_changes": "REFINE to: 'Piyush Goyal is among the candidates being discussed for Finance, though sources are divided — some suggest he may persist with Commerce.' Balance with counter-evidence from dossier.",
+        "story_source": "The Raisina Hills (June 24), Indian Mandarins (June 18), OneIndia (June 26)"
+      },
+      {
+        "id": "C29",
+        "location": "L100",
+        "exact_quote": "Goyal, who has led the India-US trade negotiations and built a strong rapport with USTR Jamieson Greer",
+        "classification": "Verified Fact",
+        "confidence": 90,
+        "dossier_reference": "Background claim consistent with Goyal's role as Commerce Minister. Goyal posted farewell to Greer on June 23 (Section 5 timeline). Trade deal context mentioned in Section 1. Background is factual.",
+        "recommended_changes": "None. Contextual background is accurate.",
+        "story_source": "General knowledge / timeline"
+      },
+      {
+        "id": "C30",
+        "location": "L100-101",
+        "exact_quote": "India is navigating the post-Iran-war economic landscape, oil price volatility, and a slowing GDP growth rate of 6.6%.",
+        "classification": "Needs Correction",
+        "confidence": 20,
+        "dossier_reference": "Section 3, 6, 11 — 6.6% is the FY27 FORECAST (RBI, World Bank, BMI, UN consensus). Actual FY26 GDP growth was 7.7% (MoSPI official data, June 2026 — The Hindu, BMI). Presenting 6.6% as the current growth rate is misleading.",
+        "recommended_changes": "CHANGE to: '...and GDP growth projected to slow to 6.6% in FY27, down from 7.7% in FY26.' This distinction between actual and projected growth is critical for accuracy. ADD that the RBI MPC held rates at 5.25% on June 5 amid these concerns (Section 7, new intelligence).",
+        "story_source": "RBI MPC (June 5), World Bank (June 2026), BMI (June 11)"
+      },
+      {
+        "id": "C31",
+        "location": "L102",
+        "exact_quote": "Sitharaman's fate is unclear. She could be moved to another portfolio — defence is one possibility — or assigned an organisational role.",
+        "classification": "Speculative",
+        "confidence": 25,
+        "dossier_reference": "Section 2.2 — All conflicting speculation. LOW confidence. OneIndia (June 26) says 'moved to HRD.' Defence is mentioned by existing story. No official signals. Dossier notes she presented 9th consecutive Budget in Feb 2026.",
+        "recommended_changes": "FRAME as purely speculative: 'Multiple conflicting reports suggest Sitharaman could be moved to Defence, HRD, or given an organizational role, but nothing is confirmed.' Add the factual anchor: she is currently still Finance Minister and presented her 9th Budget in Feb 2026.",
+        "story_source": "Existing story; OneIndia (June 26), Vibes of India (June 26)"
+      },
+      {
+        "id": "C32",
+        "location": "L102-103",
+        "exact_quote": "Railways Minister Ashwini Vaishnaw, who currently holds multiple portfolios including electronics and IT, is being mentioned as a possible successor to Goyal at Commerce, or as a candidate for Finance if the calculus shifts.",
+        "classification": "Speculative",
+        "confidence": 40,
+        "dossier_reference": "Section 2.7 — LOW-MEDIUM confidence. The Federal (June 24) and Indian Mandarins (June 18) mention Vaishnaw for Commerce/Finance. Vaishnaw's current portfolios confirmed as Railways, I&B, Electronics & IT (3 portfolios). Speculative but repeatedly mentioned.",
+        "recommended_changes": "ADD that Vaishnaw currently holds 3 portfolios (Railways, I&B, Electronics & IT) — story only mentions 'electronics and IT.' Mention that he is expected to be divested of some. Attribute speculation to sources.",
+        "story_source": "The Federal (June 24), Indian Mandarins (June 18)"
+      },
+      {
+        "id": "C33",
+        "location": "L106",
+        "exact_quote": "Dharmendra Pradhan — Education Minister under fire over the NEET paper leak and a series of examination controversies. BJP insiders say his removal is being seriously considered, with the party's Odisha in-charge BJ Panda seen as a potential replacement.",
+        "classification": "Speculative (removal) / Unverified (BJ Panda claim)",
+        "confidence": 30,
+        "dossier_reference": "Section 2.4 — Pradhan removal: MEDIUM confidence. Growing political pressure, but PM may retain him (Modi's Birthday Wish for Pradhan suggests support). Pradhan managed NEET re-exam (June 21). BJ Panda claim: Section 3 — 'This claim was not corroborated in any June 2026 source found. May need verification or removal.'",
+        "recommended_changes": "REMOVE 'BJ Panda' claim entirely — it is uncorroborated (per dossier). For Pradhan, BALANCE with counter-evidence: 'However, Pradhan was seen actively managing the NEET re-exam and has the PM's reported support, leaving his fate uncertain.' Add NEET context: exam cancelled May 12, re-exam held June 21, CBI arrested 13 people (Section 6).",
+        "story_source": "The Federal (June 24 — 'is Pradhan next?'), OneIndia (June 23 — Pradhan interview)"
+      },
+      {
+        "id": "C34",
+        "location": "L107",
+        "exact_quote": "Devendra Fadnavis — The Maharashtra Chief Minister may be brought to the Centre as a Cabinet minister, a move that would reshape both state and central politics.",
+        "classification": "Speculative",
+        "confidence": 15,
+        "dossier_reference": "Section 2.6 — LOW confidence. 'No corroboration found in June 2026 searches.' No independent verification. Appears only in the existing story without cited primary source.",
+        "recommended_changes": "CONSIDER REMOVAL or add strong caveat: 'This claim, circulating in political circles, has not been corroborated by any June 2026 news reports. It remains highly speculative.' Alternatively, mention it as 'a fringe speculation in Delhi political circles.'",
+        "story_source": "Existing story (no primary source cited)"
+      },
+      {
+        "id": "C35",
+        "location": "L108",
+        "exact_quote": "Ashwini Vaishnaw, Prahlad Joshi, Mansukh Mandaviya — All three currently hold multiple portfolios and are expected to be divested of some to make way for new inductees.",
+        "classification": "Speculative",
+        "confidence": 35,
+        "dossier_reference": "Section 2.7 covers Vaishnaw (LOW-MEDIUM). Prahlad Joshi and Mansukh Mandaviya NOT addressed in dossier — no verification available for these names specifically. The general claim about divestiture is plausible but unsourced for Joshi and Mandaviya.",
+        "recommended_changes": "ADD sourcing for Joshi and Mandaviya specifically, or remove them if unsourced. Keep Vaishnaw as supported by dossier. Consider verifying from Indian Mandarins or other sources.",
+        "story_source": "Unattributed; likely Indian Mandarins or similar"
+      },
+      {
+        "id": "C36",
+        "location": "L109",
+        "exact_quote": "Hardeep Puri & BL Verma — Their Rajya Sabha terms end in November.",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "Section 2.5 — RS terms end November 25, 2026. Confirmed by News18 (July 2025), Wikipedia 2026 RS elections. HIGH confidence.",
+        "recommended_changes": "ADD specific date: November 25, 2026. Adds precision and credibility.",
+        "story_source": "News18 (July 14, 2025), Wikipedia 2026 RS elections"
+      },
+      {
+        "id": "C37",
+        "location": "L109",
+        "exact_quote": "The BJP will take a call on their continuation soon.",
+        "classification": "Speculative",
+        "confidence": 55,
+        "dossier_reference": "Section 2.5 — MEDIUM confidence on potential exits. OneIndia says Puri 'could be shown the door.' Plausible given known RS term end, but timing uncertain.",
+        "recommended_changes": "ADD: 'With their terms ending in November, the reshuffle presents a natural decision point for the party on their future.' Provides context without over-claiming.",
+        "story_source": "OneIndia (June 26), Vibes of India (June 26)"
+      },
+      {
+        "id": "C38",
+        "location": "L115",
+        "exact_quote": "Modi's third-term government, constituted on June 9, 2024, had 72 ministers.",
+        "classification": "Needs Correction",
+        "confidence": 5,
+        "dossier_reference": "Section 3 — 'Technically June 10, 2024 was the swearing-in date for Modi 3.0.' Same error as stat card.",
+        "recommended_changes": "CHANGE 'June 9' to 'June 10, 2024'.",
+        "story_source": "Persistent date error in existing story"
+      },
+      {
+        "id": "C39",
+        "location": "L115",
+        "exact_quote": "The BJP fell short of a parliamentary majority, making NDA allies crucial.",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "General political knowledge. Not specifically addressed in dossier but consistent with 2024 Lok Sabha election results (BJP won 240 seats, short of 272 majority).",
+        "recommended_changes": "None. Accurate statement.",
+        "story_source": "2024 Lok Sabha election results (general knowledge)"
+      },
+      {
+        "id": "C40",
+        "location": "L115-116",
+        "exact_quote": "Since then, the party has absorbed AAP MPs, TMC rebels, and Shiv Sena (UBT) defectors in numbers that have shifted the arithmetic of Parliament.",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "Section 1.7 (AAP — 7 MPs, April 24), 1.8 (TMC — 20 MPs, June 14), 1.9 (Sena UBT — 6 MPs, June 17-22). All confirmed with HIGH confidence. Numbers: 7 + 20 + 6 = 33 opposition MPs aligned with NDA.",
+        "recommended_changes": "ADD total number for impact: 'a total of 33 opposition MPs.' Specify timeframes for each defection wave.",
+        "story_source": "Multiple verified sources (see dossier)"
+      },
+      {
+        "id": "C41",
+        "location": "L117",
+        "exact_quote": "Assembly elections are due in early 2027 in Uttar Pradesh, Punjab, Uttarakhand, Gujarat, Goa, Himachal Pradesh, and Manipur.",
+        "classification": "Verified Fact",
+        "confidence": 90,
+        "dossier_reference": "Section 3 CORRECTION — CORRECT. Dossier adds: early election buzz in UP (HT, June 18), BJP asked state units to prepare in UP, Punjab, Goa, Uttarakhand (News18).",
+        "recommended_changes": "ADD detail: 'BJP has already asked state units to begin preparations in UP, Punjab, Goa, and Uttarakhand.' Adds fresh intelligence.",
+        "story_source": "Hindustan Times (June 18), News18 (June 2026)"
+      },
+      {
+        "id": "C42",
+        "location": "L117-118",
+        "exact_quote": "Women's representation — currently just seven out of 72 ministers — is expected to increase significantly, partly as a messaging exercise and partly because Modi has committed to operationalising women's reservation by 2029.",
+        "classification": "Needs Correction (outdated)",
+        "confidence": 40,
+        "dossier_reference": "Section 3 — CRITICAL UPDATE: Union Cabinet cleared amendments to Women's Reservation Act on April 8-9, 2026. Nari Shakti Vandan Adhiniyam came into force April 17, 2026. Lok Sabha to expand from 543 to 816 seats; 273 seats (33%) reserved for women. The commitment has been OPERATIONALIZED, not just a 'commitment to operationalise by 2029.'",
+        "recommended_changes": "REWRITE: 'The Union Cabinet cleared amendments to the Women's Reservation Act in April 2026, expanding the Lok Sabha to 816 seats with 273 reserved for women. However, women currently hold only 7 of 72 ministerial positions (9.7%) — far below the 33% target. This reshuffle is expected to significantly increase women's representation.'",
+        "story_source": "Indian Express (April 8), CNBC TV18 (April 8), NewsOnAir.gov.in (April 17)"
+      },
+      {
+        "id": "C43",
+        "location": "L119",
+        "exact_quote": "The 2024 reshuffle was just a formation. This one is a recalibration.",
+        "classification": "Expert Opinion",
+        "confidence": "N/A",
+        "dossier_reference": "This is an analytical framing. The dossier supports the interpretation that this reshuffle is more consequential than a routine exercise (Section 7, Section 10 story opportunities).",
+        "recommended_changes": "None. Appropriate analytical framing backed by dossier intelligence.",
+        "story_source": "The Breakdown's editorial analysis"
+      },
+      {
+        "id": "C44",
+        "location": "L119-120",
+        "exact_quote": "Sources say the PMO has compiled detailed datasets on file pendency and ministerial performance — the kind of metrics that have been used to decide who stays and who goes.",
+        "classification": "Political Claim",
+        "confidence": 55,
+        "dossier_reference": "Attributed to anonymous sources. Consistent with the Raisina Hills quote (L122-123) about 'ministers who delivered far below performances.' Not independently verified but plausible and attributed.",
+        "recommended_changes": "ADD named attribution: '...according to a senior BJP functionary speaking to The Raisina Hills.' This strengthens the sourcing.",
+        "story_source": "Attributed to anonymous 'sources' / The Raisina Hills"
+      },
+      {
+        "id": "C45",
+        "location": "L122-123",
+        "exact_quote": "The PM seeks to jolt the ministers out of inertia. A sense has been felt within the government that some of the ministers have delivered far below performances. Many will be dropped.",
+        "classification": "Political Claim",
+        "confidence": 55,
+        "dossier_reference": "Section 4 — The Raisina Hills source. Named author (Manish Anand). Anonymous 'senior BJP functionary' quote. Moderate reliability. The quote itself is a political statement, not a verifiable fact.",
+        "recommended_changes": "Consider adding: 'The Raisina Hills reported a senior BJP functionary as saying...' for clearer attribution.",
+        "story_source": "The Raisina Hills (June 24, 2026) — anonymous source"
+      },
+      {
+        "id": "C46",
+        "location": "L127",
+        "exact_quote": "Modi reshuffled his council of ministers on July 6, 2016 and July 7, 2021 — each time just over a month after completing two years in office.",
+        "classification": "Verified Fact",
+        "confidence": 97,
+        "dossier_reference": "Section 5 timeline — July 6, 2016 and July 7, 2021 confirmed as major reshuffle dates. HIGH confidence.",
+        "recommended_changes": "None. Fully accurate.",
+        "story_source": "Historical records / Section 5 timeline"
+      },
+      {
+        "id": "C47",
+        "location": "L127-128",
+        "exact_quote": "The 2021 reshuffle was the most extensive of his second term: 15 new Cabinet ministers (including promotions for seven ministers of state) and 28 new ministers of state were sworn in. Senior ministers including Ravi Shankar Prasad, Harsh Vardhan, Thawar Chand Gehlot, and Prakash Javadekar were dropped. Nirmala Sitharaman, Piyush Goyal, and Dharmendra Pradhan were elevated to Cabinet rank.",
+        "classification": "Verified Fact",
+        "confidence": 95,
+        "dossier_reference": "Section 5 — 'July 7, 2021: Modi's biggest reshuffle: 43 ministers sworn in. 12 ministers dropped.' The story's breakdown of 15 Cabinet + 28 MoS = 43 total, which matches. Named ministers dropped/elevated are consistent with known history.",
+        "recommended_changes": "None. Well-sourced historical context.",
+        "story_source": "Historical records / Section 5 timeline"
+      },
+      {
+        "id": "C48",
+        "location": "L129",
+        "exact_quote": "The BJP's new national office-bearers under party president Nitin Nabin are expected to be announced by June 30, replacing the Team JP Nadda structure.",
+        "classification": "Verified Fact",
+        "confidence": 90,
+        "dossier_reference": "Section 3 — CORRECT. The Federal (June 24) confirms Nabin's organizational overhaul expected by June 30. Nabin became BJP national president, replacing JP Nadda. Nabin elected to RS from Bihar in March 2026.",
+        "recommended_changes": "ADD that Nabin was elected to RS from Bihar in March 2026, which connects his eligibility. Adds useful context.",
+        "story_source": "The Federal (June 24)"
+      },
+      {
+        "id": "C49",
+        "location": "L129",
+        "exact_quote": "Several outgoing ministers are expected to move into organisational roles, creating a revolving door between the government and the party apparatus.",
+        "classification": "Verified Fact",
+        "confidence": 85,
+        "dossier_reference": "Supported by Malhotra (Delhi BJP president) and Chaudhary (UP BJP president) appointments — both are ministers moving to organizational roles. This pattern is confirmed.",
+        "recommended_changes": "ADD specific examples: 'Harsh Malhotra has been appointed Delhi BJP president and Pankaj Chaudhary UP BJP president, exemplifying this revolving door.'",
+        "story_source": "Indian Express (May 28), The Hindu (Dec 14, 2025)"
+      },
+      {
+        "id": "C50",
+        "location": "L137-140 (table)",
+        "exact_quote": "Who Benefits, Who Loses table — By Region: West Bengal, Punjab, Bihar gain; Kerala loses. By Party: Defectors gain; underperforming incumbents lose. By Demography: Women, Gen Z faces, Jatt Sikhs gain; Ageing ministers (70+) lose. By Portfolio: Finance (Goyal), Commerce (Vaishnaw) gain; Education (Pradhan uncertain).",
+        "classification": "Mixed (Verified Fact & Speculative)",
+        "confidence": 50,
+        "dossier_reference": "West Bengal gain: supported by TMC defectors (Section 1.8). Punjab gain: supported by AAP defectors (Section 1.7). Bihar gain: supported by Nitish Kumar RS election (Section 2.10). Kerala lose: Kurian out (Section 1.1). Defectors gain: speculative but plausible (Section 2.8, 2.9). Women gain: consistent with WRA passage (Section 1.10). Gen Z faces: not verified. Jatt Sikhs: Raghav Chadha, Harbhajan Singh — plausible. Finance (Goyal): LOW confidence (Section 2.1). Commerce (Vaishnaw): LOW-MEDIUM (Section 2.7). Education (Pradhan): MEDIUM (Section 2.4).",
+        "recommended_changes": "REFINE table cells to reflect confidence levels. Change 'Finance (Goyal)' to 'Finance (Goyal speculated)'. Change 'Commerce (Vaishnaw)' to 'Commerce (Vaishnaw speculated)'. Add sources column or confidence indicators to table. 'Gen Z faces' is unsupported and should be removed or qualified.",
+        "story_source": "Analytical summary by The Breakdown"
+      },
+      {
+        "id": "C51",
+        "location": "L148-149 (Bottom Line)",
+        "exact_quote": "Modi's 2026 Cabinet reshuffle is not a routine reorganisation. It is a political recalibration driven by three forces: the need to accommodate a historic influx of defectors, the imperative to signal intent ahead of 2027 state elections, and the recognition that this is the last chance to shape the team that will fight the 2029 general election.",
+        "classification": "Expert Opinion",
+        "confidence": "N/A",
+        "dossier_reference": "This analytical verdict is well-supported by the dossier. The three forces identified (defector influx, 2027 elections, 2029 horizon) are all documented in Section 7 (new developments) and throughout the dossier.",
+        "recommended_changes": "None. Strong analytical conclusion supported by evidence.",
+        "story_source": "The Breakdown's editorial analysis"
+      },
+      {
+        "id": "C52",
+        "location": "L148-149",
+        "exact_quote": "The ministers being dropped are not just those who have underperformed — they are those who no longer fit the electoral arithmetic.",
+        "classification": "Expert Opinion",
+        "confidence": "N/A",
+        "dossier_reference": "Analytical interpretation supported by defector-focused strategy documented in dossier (Section 2.8, 2.9, 2.10, 7).",
+        "recommended_changes": "None. Sound analysis.",
+        "story_source": "The Breakdown's editorial analysis"
+      },
+      {
+        "id": "C53",
+        "location": "L148-149",
+        "exact_quote": "The ministers being inducted — Raghav Chadha, Kakoli Ghosh Dastidar, the Shinde Sena defectors — are not just new faces. They are trophies in a strategy of competitive co-option.",
+        "classification": "Speculative (inductees) / Expert Opinion (framing)",
+        "confidence": 55,
+        "dossier_reference": "Raghav Chadha: MEDIUM confidence (Section 2.8). Kakoli Ghosh Dastidar: LOW-MEDIUM (Section 2.9). Shinde Sena defectors: not specifically named as individual inductees, but representation expected (Section 1.9). The 'trophies of competitive co-option' framing is editorial analysis.",
+        "recommended_changes": "REFINE to: 'Reportedly under consideration for induction — Raghav Chadha, Kakoli Ghosh Dastidar, and Shinde Sena representatives — these figures...' Adds appropriate qualification about the speculative nature of specific inductions.",
+        "story_source": "The Breakdown's editorial analysis"
+      }
+    ],
+    "critical_factual_errors": [
+      {
+        "error": "June 9 vs June 10, 2024 date error",
+        "locations": ["L74 (stat card)", "L115"],
+        "correction": "Change to June 10, 2024 (actual swearing-in date of Modi 3.0)",
+        "source": "The Federal; Section 3 of dossier"
+      },
+      {
+        "error": "GDP growth rate presented as current (6.6%) when it is an FY27 forecast",
+        "location": "L100-101",
+        "correction": "Specify that FY26 actual growth was 7.7%, and 6.6% is the projected growth for FY27",
+        "source": "MoSPI (June 2026), RBI MPC (June 5), Section 6 & 11 of dossier"
+      },
+      {
+        "error": "Ravneet Bittu presented as confirmed exiting when his resignation has not been formally accepted",
+        "location": "L85 (table), L92",
+        "correction": "Bittu is technically still a minister as of June 26. His RS term ended but no resignation accepted.",
+        "source": "Section 1.2, Section 3 of dossier"
+      },
+      {
+        "error": "Women's reservation presented as a future commitment when the Act came into force April 17, 2026",
+        "location": "L117-118",
+        "correction": "Update to reflect that Cabinet cleared amendments in April 2026 and Nari Shakti Vandan Adhiniyam is now operational",
+        "source": "Section 1.10, Section 3 of dossier"
+      }
+    ],
+    "new_intelligence_to_incorporate": [
+      {
+        "intelligence": "Operation Tiger — all 6 Sena (UBT) MP names confirmed",
+        "confidence": "HIGH",
+        "action": "Add names: Sanjay Deshmukh, Sanjay Jadhav, Sanjay Dina Patil, Nagesh Patil-Ashtikar, Omprakash Rajenimbalkar, Bhausaheb Wakchaure",
+        "dossier_section": "1.9"
+      },
+      {
+        "intelligence": "Shinde/Fadnavis statements on Operation Tiger success",
+        "confidence": "HIGH",
+        "action": "Include direct quotes: Shinde — 'Operation Tiger is now complete and successful... foolproof.' Fadnavis — 'The operation has been successful.'",
+        "dossier_section": "1.9"
+      },
+      {
+        "intelligence": "NCPI merger details — party registered Jan 2023, Tripura-based; Kakoli Ghosh Dastidar elected president May 30",
+        "confidence": "HIGH",
+        "action": "Add NCPI background and leadership takeover detail for depth",
+        "dossier_section": "1.8"
+      },
+      {
+        "intelligence": "Women's Reservation Act came into force April 17, 2026",
+        "confidence": "HIGH",
+        "action": "Update paragraph to reflect operationalized law, not future commitment. Lok Sabha to expand to 816 seats, 273 reserved for women.",
+        "dossier_section": "1.10"
+      },
+      {
+        "intelligence": "GDP data — FY26 actual 7.7%, FY27 forecast 6.6%",
+        "confidence": "HIGH",
+        "action": "Correct the distinction between actual and projected growth. Add RBI repo rate context (5.25%, unchanged June 5).",
+        "dossier_section": "6, 7"
+      },
+      {
+        "intelligence": "Tarun Chugh — RS nominee from MP, Punjab face, potential minister",
+        "confidence": "MEDIUM",
+        "action": "Add as new Punjab contender alongside Chadha, Harbhajan, Mittal",
+        "dossier_section": "3, 7"
+      },
+      {
+        "intelligence": "Shaktikanta Das speculation for Cabinet (possibly Finance)",
+        "confidence": "LOW",
+        "action": "Consider adding as 'fringe speculation' for completeness and news value, clearly caveated",
+        "dossier_section": "2.3, 7"
+      },
+      {
+        "intelligence": "Amit Shah's reported meeting with President (June 25-26) to finalize date",
+        "confidence": "MEDIUM",
+        "action": "Add as latest development connecting leadership involvement",
+        "dossier_section": "1.6"
+      },
+      {
+        "intelligence": "Swearing-in date narrowed to June 28-29 (6 independent sources)",
+        "confidence": "MEDIUM",
+        "action": "Update 'expected in coming days' to 'expected June 28-29' with appropriate caveats",
+        "dossier_section": "2.14"
+      },
+      {
+        "intelligence": "Nitish Kumar elected unopposed to RS from Bihar (March 2026) — eligible for Cabinet",
+        "confidence": "MEDIUM",
+        "action": "Add as potential JD(U) cabinet inductee for Bihar representation",
+        "dossier_section": "2.10, 7"
+      },
+      {
+        "intelligence": "Official name is Nationalist Citizens Party of India (NCPI), not 'National Citizens Party'",
+        "confidence": "HIGH",
+        "action": "Correct party name in story",
+        "dossier_section": "1.8"
+      }
+    ],
+    "claims_requiring_stronger_attribution": [
+      "C22 — Chadha-Nehru comparison needs sourcing",
+      "C33 — BJ Panda claim is uncorroborated, recommend removal",
+      "C34 — Fadnavis move to Centre has no corroboration, consider removal",
+      "C35 — Prahlad Joshi and Mansukh Mandaviya portfolio divestiture claims need sourcing",
+      "C45 — Anonymous source quote should name The Raisina Hills"
+    ],
+    "spelling_corrections": [
+      {"current": "Sudeep Bandyopadhyay", "correct": "Sudip Bandyopadhyay", "location": "L97"},
+      {"current": "Vikramjit Sahni", "correct": "Vikram Sahney", "location": "L96"},
+      {"current": "National Citizens Party of India", "correct": "Nationalist Citizens Party of India (NCPI)", "location": "L97"}
+    ],
+    "conclusion": "The story is fundamentally sound and well-structured, with strong sourcing for most major claims. However, it requires 4 critical factual corrections (June 9→10 date, GDP 6.6% clarification, Bittu's resignation status, women's reservation update), 2 uncorroborated claims that should be removed or heavily caveated (BJ Panda, Fadnavis move), and several speculative claims that need clearer qualification. Incorporating the 11+ pieces of new intelligence from the dossier would significantly strengthen the story's depth and accuracy. Recommended priority: fix the factual errors first, then enrich with verified defector details from the dossier."
+  }
+}

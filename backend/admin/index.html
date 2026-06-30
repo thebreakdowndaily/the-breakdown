@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Admin Panel</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --bg-card: #141416;
+    --bg-hover: #1c1c1f;
+    --border: #27272a;
+    --text: #fafafa;
+    --text-muted: #a1a1aa;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --destructive: #ef4444;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --radius: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Login */
+  .login-container {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .login-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 40px; width: 100%; max-width: 400px;
+  }
+  .login-card h1 { font-size: 1.5rem; margin-bottom: 4px; }
+  .login-card p { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px; }
+  .login-card input {
+    width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 0.875rem; margin-bottom: 16px;
+  }
+  .login-card input:focus { outline: none; border-color: var(--primary); }
+  .login-card .error { color: var(--destructive); font-size: 0.8rem; margin-bottom: 12px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+    border-radius: var(--radius); font-size: 0.875rem; font-weight: 500;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.15s;
+  }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-outline:hover:not(:disabled) { background: var(--bg-hover); }
+  .btn-danger { background: var(--destructive); color: white; }
+  .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
+  .btn-success { background: var(--success); color: black; }
+
+  /* Layout */
+  .app-header {
+    background: var(--bg-card); border-bottom: 1px solid var(--border);
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-header h1 { font-size: 1.1rem; font-weight: 600; }
+  .app-header .meta { font-size: 0.75rem; color: var(--text-muted); }
+  .app-content { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; text-align: center;
+  }
+  .stat-card .value { font-size: 1.8rem; font-weight: 700; }
+  .stat-card .label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Status badges */
+  .status {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .status-draft { background: #1e293b; color: #94a3b8; }
+  .status-in-review { background: #1c1917; color: #fbbf24; }
+  .status-fact-checking { background: #1c1917; color: #fb923c; }
+  .status-ready { background: #052e16; color: #4ade80; }
+  .status-published { background: #1e3a5f; color: #60a5fa; }
+  .status-archived { background: #1f1f1f; color: #71717a; }
+
+  /* Story table */
+  .story-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .story-table th {
+    text-align: left; padding: 10px 12px; background: var(--bg-card);
+    border-bottom: 1px solid var(--border); color: var(--text-muted); font-weight: 500;
+    position: sticky; top: 0;
+  }
+  .story-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .story-table tr:hover td { background: var(--bg-hover); }
+  .story-table .title-cell { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Form */
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 0.875rem; font-family: inherit;
+  }
+  .form-group textarea { min-height: 300px; font-family: 'Menlo', 'Monaco', monospace; font-size: 0.8rem; line-height: 1.5; }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Markdown preview */
+  .preview { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-height: 300px; }
+  .preview h1 { font-size: 1.5rem; margin-bottom: 12px; }
+  .preview h2 { font-size: 1.2rem; margin: 16px 0 8px; }
+  .preview p { margin-bottom: 8px; }
+  .preview ul, .preview ol { padding-left: 20px; margin-bottom: 8px; }
+
+  /* Pipeline log */
+  .log-entry { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+  .log-entry .time { color: var(--text-muted); margin-right: 8px; }
+  .log-entry .arrow { color: var(--text-muted); margin: 0 4px; }
+
+  /* Panel tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab {
+    padding: 8px 16px; border-radius: var(--radius); cursor: pointer; font-size: 0.875rem;
+    background: transparent; color: var(--text-muted); border: 1px solid transparent;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { background: var(--bg-card); border-color: var(--border); color: var(--text); font-weight: 500; }
+
+  /* Toast notifications */
+  .toast {
+    position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: var(--radius);
+    font-size: 0.875rem; z-index: 1000; animation: slideIn 0.3s ease;
+  }
+  .toast-success { background: var(--success); color: black; }
+  .toast-error { background: var(--destructive); color: white; }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  .empty-state { text-align: center; padding: 48px; color: var(--text-muted); }
+
+  /* Tabs within editor */
+  .editor-tabs { display: flex; gap: 2px; margin-bottom: 12px; }
+  .editor-tab {
+    padding: 6px 14px; border-radius: 4px 4px 0 0; cursor: pointer; font-size: 0.8rem;
+    background: transparent; color: var(--text-muted); border: 1px solid transparent; border-bottom: none;
+  }
+  .editor-tab.active { background: var(--bg); border-color: var(--border); color: var(--text); }
+
+  .search-bar {
+    display: flex; gap: 12px; margin-bottom: 16px; align-items: center;
+  }
+  .search-bar input {
+    padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 0.875rem; flex: 1;
+  }
+  .search-bar select {
+    padding: 8px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); color: var(--text); font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .story-table { font-size: 0.8rem; }
+    .story-table .title-cell { max-width: 150px; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ============================================================
+// The Breakdown — Admin SPA
+// ============================================================
+
+const API = window.location.origin + '/api'
+let state = {
+  token: localStorage.getItem('breakdown_token') || null,
+  user: null,
+  stories: [],
+  stats: null,
+  view: 'dashboard',
+  editStory: null,
+  pipelineLog: [],
+  searchQuery: '',
+  statusFilter: 'all',
+  toast: null,
+  loading: false,
+}
+
+// ---- API HELPER ----
+async function api(path, options = {}) {
+  const headers = { 'Content-Type': 'application/json' }
+  if (state.token) headers['Authorization'] = `Bearer ${state.token}`
+  const res = await fetch(API + path, { ...options, headers })
+  if (res.status === 401) {
+    state.token = null
+    localStorage.removeItem('breakdown_token')
+    state.view = 'login'
+    render()
+    throw new Error('Session expired')
+  }
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || 'Request failed')
+  return data
+}
+
+// ---- TOAST ----
+function showToast(message, type = 'success') {
+  state.toast = { message, type }
+  render()
+  setTimeout(() => { state.toast = null; render() }, 3000)
+}
+
+// ---- VIEWS ----
+const views = {
+  async login(username, password) {
+    try {
+      const data = await api('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+      })
+      state.token = data.token
+      state.user = data.user
+      localStorage.setItem('breakdown_token', data.token)
+      await loadDashboard()
+      render()
+    } catch (e) {
+      document.getElementById('login-error').textContent = e.message
+    }
+  },
+
+  async logout() {
+    state.token = null
+    state.user = null
+    state.stories = []
+    state.stats = null
+    localStorage.removeItem('breakdown_token')
+    state.view = 'login'
+    render()
+  },
+
+  async loadDashboard() {
+    state.loading = true; render()
+    try {
+      const [storyData, statsData, userData] = await Promise.all([
+        api('/stories?all=true&limit=100'),
+        api('/pipeline/stats'),
+        api('/auth/me'),
+      ])
+      state.stories = storyData.stories
+      state.stats = statsData
+      state.user = userData.user
+      state.view = 'dashboard'
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+    state.loading = false; render()
+  },
+
+  async showStory(slug) {
+    state.loading = true; render()
+    try {
+      const data = await api(`/stories/${slug}?all=true`)
+      state.editStory = data.story
+      const logData = await api(`/pipeline/${slug}/log`)
+      state.pipelineLog = logData.logs
+      state.view = 'editor'
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+    state.loading = false; render()
+  },
+
+  newStory() {
+    state.editStory = {
+      slug: '',
+      title: '',
+      summary: '',
+      body: '',
+      category: 'Uncategorised',
+      tags: [],
+      hero: '',
+      caption: '',
+      author: 'The Breakdown Desk',
+      readTime: 5,
+    }
+    state.pipelineLog = []
+    state.view = 'editor'
+    render()
+  },
+
+  async saveStory(data) {
+    try {
+      if (state.editStory.id) {
+        const result = await api(`/stories/${state.editStory.slug}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        })
+        state.editStory = result.story
+        showToast('Story updated')
+      } else {
+        const result = await api('/stories', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        })
+        state.editStory = result.story
+        const logData = await api(`/pipeline/${result.story.slug}/log`)
+        state.pipelineLog = logData.logs
+        showToast('Story created')
+      }
+      // Refresh story list
+      const storyData = await api('/stories?all=true&limit=100')
+      state.stories = storyData.stories
+      render()
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+  },
+
+  async pipelineAction(slug, action) {
+    try {
+      await api(`/pipeline/${slug}/${action}`, { method: 'POST' })
+      // Reload
+      await views.loadDashboard()
+      if (state.editStory && state.editStory.slug === slug) {
+        await views.showStory(slug)
+      }
+      showToast(`Action "${action}" completed`)
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+  },
+
+  async generateNewStory() {
+    const suggestion = 'new-story-' + Date.now()
+    state.editStory = {
+      slug: suggestion,
+      title: 'New Story',
+      summary: 'Enter summary here',
+      body: '# New Story\n\nStart writing...',
+      category: 'Uncategorised',
+      tags: [],
+      hero: '',
+      caption: '',
+      author: state.user?.username || 'The Breakdown Desk',
+      readTime: 5,
+    }
+    state.pipelineLog = []
+    state.view = 'editor'
+    render()
+  },
+
+  async deleteStory(slug) {
+    if (!confirm('Archive this story?')) return
+    try {
+      await api(`/stories/${slug}`, { method: 'DELETE' })
+      showToast('Story archived')
+      await views.loadDashboard()
+    } catch (e) {
+      showToast(e.message, 'error')
+    }
+  },
+}
+
+// ---- RENDER ----
+function render() {
+  const app = document.getElementById('app')
+
+  if (state.toast) {
+    const toastEl = document.createElement('div')
+    toastEl.className = `toast toast-${state.toast.type}`
+    toastEl.textContent = state.toast.message
+    document.body.appendChild(toastEl)
+    setTimeout(() => toastEl.remove(), 2900)
+  }
+
+  if (!state.token) {
+    app.innerHTML = renderLogin()
+    return
+  }
+
+  if (state.loading) {
+    app.innerHTML = `<div class="login-container"><div class="login-card"><p style="text-align:center">Loading...</p></div></div>`
+    return
+  }
+
+  switch (state.view) {
+    case 'dashboard': app.innerHTML = renderDashboard(); break
+    case 'editor': app.innerHTML = renderEditor(); break
+    default: app.innerHTML = renderDashboard()
+  }
+}
+
+// ---- LOGIN ----
+function renderLogin() {
+  return `
+    <div class="login-container">
+      <div class="login-card">
+        <h1>The Breakdown</h1>
+        <p>Admin Panel</p>
+        <div id="login-error" class="error"></div>
+        <form onsubmit="event.preventDefault(); views.login(document.getElementById('username').value, document.getElementById('password').value)">
+          <input id="username" type="text" placeholder="Username" value="admin" autofocus>
+          <input id="password" type="password" placeholder="Password">
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Sign In</button>
+        </form>
+      </div>
+    </div>
+  `
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const stats = state.stats || { stats: [], total: 0 }
+  const statusCounts = {}
+  stats.stats.forEach(s => { statusCounts[s.status] = s.count })
+
+  const filtered = state.statusFilter === 'all'
+    ? state.stories
+    : state.stories.filter(s => s.status === state.statusFilter)
+
+  const searched = state.searchQuery
+    ? filtered.filter(s =>
+        s.title.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
+        s.slug.toLowerCase().includes(state.searchQuery.toLowerCase())
+      )
+    : filtered
+
+  return `
+    <div class="app-header">
+      <div>
+        <h1>The Breakdown — Admin</h1>
+        <div class="meta">${state.user?.username} · ${state.user?.role}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-primary btn-sm" onclick="views.generateNewStory()">+ New Story</button>
+        <button class="btn btn-outline btn-sm" onclick="views.logout()">Logout</button>
+      </div>
+    </div>
+    <div class="app-content">
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="value">${stats.total}</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['published'] || 0}</div>
+          <div class="label">Published</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['draft'] || 0}</div>
+          <div class="label">Drafts</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['in-review'] || 0}</div>
+          <div class="label">In Review</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['fact-checking'] || 0}</div>
+          <div class="label">Fact-Checking</div>
+        </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['ready'] || 0}</div>
+          <div class="label">Ready</div>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" placeholder="Search stories..." value="${state.searchQuery}"
+          oninput="state.searchQuery=this.value;render()">
+        <select onchange="state.statusFilter=this.value;render()">
+          <option value="all" ${state.statusFilter==='all'?'selected':''}>All Status</option>
+          <option value="draft" ${state.statusFilter==='draft'?'selected':''}>Draft</option>
+          <option value="in-review" ${state.statusFilter==='in-review'?'selected':''}>In Review</option>
+          <option value="fact-checking" ${state.statusFilter==='fact-checking'?'selected':''}>Fact-Checking</option>
+          <option value="ready" ${state.statusFilter==='ready'?'selected':''}>Ready</option>
+          <option value="published" ${state.statusFilter==='published'?'selected':''}>Published</option>
+          <option value="archived" ${state.statusFilter==='archived'?'selected':''}>Archived</option>
+        </select>
+      </div>
+
+      ${searched.length === 0 ? '<div class="empty-state">No stories found</div>' : `
+      <div style="overflow-x:auto">
+        <table class="story-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Category</th>
+              <th>Author</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${searched.map(s => `
+              <tr onclick="views.showStory('${s.slug}')" style="cursor:pointer">
+                <td class="title-cell">${s.title || s.slug}</td>
+                <td><span class="status status-${s.status}">${s.status}</span></td>
+                <td style="color:var(--text-muted);font-size:0.8rem">${s.category}</td>
+                <td style="color:var(--text-muted);font-size:0.8rem">${s.author}</td>
+                <td>
+                  <div style="display:flex;gap:4px" onclick="event.stopPropagation()">
+                    ${renderPipelineButtons(s)}
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`}
+    </div>
+  `
+}
+
+function renderPipelineButtons(s) {
+  const btns = []
+  if (s.status === 'draft') btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','submit')">Submit</button>`)
+  if (s.status === 'in-review') {
+    btns.push(`<button class="btn btn-sm btn-success" onclick="views.pipelineAction('${s.slug}','approve')">Approve</button>`)
+    btns.push(`<button class="btn btn-sm btn-danger" onclick="views.pipelineAction('${s.slug}','reject')">Reject</button>`)
+  }
+  if (s.status === 'fact-checking') {
+    btns.push(`<button class="btn btn-sm btn-success" onclick="views.pipelineAction('${s.slug}','verify')">Verify</button>`)
+    btns.push(`<button class="btn btn-sm btn-danger" onclick="views.pipelineAction('${s.slug}','reject')">Reject</button>`)
+  }
+  if (s.status === 'ready') {
+    btns.push(`<button class="btn btn-sm btn-primary" onclick="views.pipelineAction('${s.slug}','publish')">Publish</button>`)
+    btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Draft</button>`)
+  }
+  if (s.status === 'published') {
+    btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','archive')">Archive</button>`)
+  }
+  if (s.status === 'archived') {
+    btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Restore</button>`)
+  }
+  btns.push(`<button class="btn btn-sm btn-outline" onclick="views.deleteStory('${s.slug}')" style="color:var(--destructive)">Delete</button>`)
+  return btns.join('')
+}
+
+// ---- EDITOR ----
+function renderEditor() {
+  if (!state.editStory) return '<div class="app-content"><div class="empty-state">No story selected</div></div>'
+  const s = state.editStory
+  const isNew = !s.id
+
+  // Markdown preview
+  let previewHtml = ''
+  if (typeof marked !== 'undefined') {
+    try { previewHtml = marked.parse(s.body || '') } catch(e) { previewHtml = s.body }
+  } else {
+    previewHtml = s.body
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br>')
+  }
+
+  const editorTab = `editor` // state.editorTab || 'write'
+
+  return `
+    <div class="app-header">
+      <div>
+        <h1>${isNew ? 'New Story' : 'Edit Story'}</h1>
+        <div class="meta">
+          <a href="#" onclick="views.loadDashboard();return false">← Dashboard</a>
+          ${!isNew ? `· <span class="status status-${s.status}">${s.status}</span> · ${s.slug}` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="saveCurrentStory()">Save</button>
+        <button class="btn btn-outline btn-sm" onclick="views.loadDashboard()">Cancel</button>
+      </div>
+    </div>
+    <div class="app-content">
+      <div style="display:grid;grid-template-columns:1fr 400px;gap:24px">
+        <div>
+          <div class="form-group">
+            <label>Title</label>
+            <input id="story-title" value="${escapeHtml(s.title)}" onchange="state.editStory.title=this.value">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Slug</label>
+              <input id="story-slug" value="${s.slug}" onchange="state.editStory.slug=this.value">
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="story-category" onchange="state.editStory.category=this.value">
+                ${['Intelligence','Explained','The Fix','Data Lab','Accountability','India','World','AI & Technology','Policy Lab','Economy','Science','Environment','Geopolitics','Politics']
+                  .map(c => `<option value="${c}" ${s.category===c?'selected':''}>${c}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Summary</label>
+            <input id="story-summary" value="${escapeHtml(s.summary)}" onchange="state.editStory.summary=this.value">
+          </div>
+          <div class="form-group">
+            <div class="editor-tabs">
+              <div class="editor-tab active" onclick="switchEditorTab('write')">Write</div>
+              <div class="editor-tab" onclick="switchEditorTab('preview')">Preview</div>
+            </div>
+            <div id="editor-write">
+              <textarea id="story-body" onchange="state.editStory.body=this.value">${escapeHtml(s.body)}</textarea>
+            </div>
+            <div id="editor-preview" class="preview" style="display:none">${previewHtml}</div>
+          </div>
+        </div>
+        <div>
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px">
+            <h3 style="font-size:0.875rem;margin-bottom:12px">Metadata</h3>
+            <div class="form-group">
+              <label>Author</label>
+              <input value="${escapeHtml(s.author)}" onchange="state.editStory.author=this.value">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Read Time (min)</label>
+                <input type="number" value="${s.readTime}" onchange="state.editStory.readTime=parseInt(this.value)||5">
+              </div>
+              <div class="form-group">
+                <label>Tags (comma-sep)</label>
+                <input value="${(s.tags||[]).join(', ')}" onchange="state.editStory.tags=this.value.split(',').map(t=>t.trim()).filter(Boolean)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Hero Image URL</label>
+              <input value="${escapeHtml(s.hero)}" onchange="state.editStory.hero=this.value">
+            </div>
+            <div class="form-group">
+              <label>Caption</label>
+              <input value="${escapeHtml(s.caption)}" onchange="state.editStory.caption=this.value">
+            </div>
+          </div>
+
+          ${!isNew ? `
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px">
+            <h3 style="font-size:0.875rem;margin-bottom:12px">Pipeline</h3>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px">
+              ${renderPipelineButtons(s)}
+            </div>
+            <h4 style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px">Activity Log</h4>
+            ${state.pipelineLog.length === 0 ? '<div style="color:var(--text-muted);font-size:0.8rem">No activity yet</div>' :
+              state.pipelineLog.map(l => `
+                <div class="log-entry">
+                  <span class="time">${new Date(l.created_at).toLocaleString()}</span>
+                  <span class="status status-${l.from_status||'draft'}">${l.from_status||'—'}</span>
+                  <span class="arrow">→</span>
+                  <span class="status status-${l.to_status}">${l.to_status}</span>
+                  <span style="color:var(--text-muted)">by ${l.changed_by}</span>
+                  ${l.note ? `<span style="color:var(--text-muted)">· ${l.note}</span>` : ''}
+                </div>
+              `).join('')
+            }
+          </div>
+
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+            <h3 style="font-size:0.875rem;margin-bottom:8px">Story Info</h3>
+            <div style="font-size:0.8rem;color:var(--text-muted)">
+              <div>Created: ${new Date(s.createdAt).toLocaleString()}</div>
+              <div>Updated: ${new Date(s.updatedAt).toLocaleString()}</div>
+              ${s.publishedAt ? `<div>Published: ${new Date(s.publishedAt).toLocaleString()}</div>` : ''}
+              ${s.id ? `<div>ID: ${s.id}</div>` : ''}
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
+  `
+}
+
+function escapeHtml(str) {
+  if (!str) return ''
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function saveCurrentStory() {
+  const data = {
+    title: document.getElementById('story-title')?.value || state.editStory.title,
+    slug: document.getElementById('story-slug')?.value || state.editStory.slug,
+    summary: document.getElementById('story-summary')?.value || state.editStory.summary,
+    body: document.getElementById('story-body')?.value || state.editStory.body,
+    category: state.editStory.category,
+    tags: state.editStory.tags,
+    hero: state.editStory.hero,
+    caption: state.editStory.caption,
+    author: state.editStory.author,
+    readTime: state.editStory.readTime,
+  }
+  views.saveStory(data)
+}
+
+function switchEditorTab(tab) {
+  const write = document.getElementById('editor-write')
+  const preview = document.getElementById('editor-preview')
+  const tabs = document.querySelectorAll('.editor-tab')
+  tabs.forEach(t => t.classList.remove('active'))
+  if (tab === 'write') {
+    write.style.display = 'block'
+    preview.style.display = 'none'
+    tabs[0].classList.add('active')
+  } else {
+    write.style.display = 'none'
+    preview.style.display = 'block'
+    tabs[1].classList.add('active')
+  }
+}
+
+// ---- INIT ----
+async function init() {
+  if (state.token) {
+    try {
+      await views.loadDashboard()
+    } catch {
+      state.token = null
+      localStorage.removeItem('breakdown_token')
+    }
+  }
+  render()
+}
+
+// Include marked library for markdown rendering
+const script = document.createElement('script')
+script.src = 'https://cdn.jsdelivr.net/npm/marked@14/marked.min.js'
+script.onload = init
+document.head.appendChild(script)
+</script>
+</body>
+</html>

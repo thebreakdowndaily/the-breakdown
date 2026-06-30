@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Instagram Design System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  :root {
+    --bg-primary: #0A0A0A;
+    --bg-card: #111111;
+    --bg-elevated: #1A1A1A;
+    --text-primary: #FFFFFF;
+    --text-secondary: #999999;
+    --accent-gold: #D4A843;
+    --accent-gold-light: #E8C468;
+    --accent-red: #E63946;
+    --accent-green: #2EC4B6;
+    --accent-blue: #4361EE;
+    --accent-purple: #9B5DE5;
+    --border: #222222;
+    --slide-w: 1080px;
+    --slide-h: 1080px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    padding: 0;
+  }
+
+  /* ==================== SECTION HEADERS ==================== */
+  .section-header {
+    padding: 80px 40px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+  }
+  .section-header h1 span { color: var(--accent-gold); }
+  .section-header p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 600px;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+  }
+
+  .content-area {
+    padding: 60px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ==================== BRAND IDENTITY ==================== */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .color-palette {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .color-swatch {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .color-swatch .swatch-color {
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+  }
+  .color-swatch .swatch-info {
+    padding: 12px;
+    background: var(--bg-card);
+  }
+  .color-swatch .swatch-name {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+  .color-swatch .swatch-hex {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .type-sample {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .type-sample .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+  }
+  .type-sample .specimen {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .type-sample .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  /* ==================== CAROUSEL SLIDES ==================== */
+  .carousel-section {
+    margin: 60px 0;
+  }
+  .carousel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 24px;
+  }
+  .slides-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+  }
+  .slides-grid::-webkit-scrollbar { height: 4px; }
+  .slides-grid::-webkit-scrollbar-track { background: var(--bg-elevated); }
+  .slides-grid::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 2px; }
+
+  .slide-wrapper {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    text-align: center;
+  }
+  .slide-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .slide {
+    width: 324px;
+    height: 324px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 36px 28px;
+    border: 1px solid var(--border);
+  }
+
+  /* ---- Slide Templates ---- */
+  .slide-hook {
+    background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
+  }
+  .slide-hook::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(135deg, var(--accent-gold), transparent 40%, transparent 60%, var(--accent-gold));
+    z-index: -1;
+    border-radius: 9px;
+  }
+  .slide-hook .hook-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  .slide-hook .hook-sub {
+    font-size: 12px;
+    color: var(--accent-gold);
+    margin-top: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .slide-context {
+    background: var(--bg-card);
+    text-align: left;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 28px;
+  }
+  .slide-context .context-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 12px;
+  }
+  .slide-context .context-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+
+  .slide-stat {
+    background: linear-gradient(180deg, #0A0A0A 0%, #111111 100%);
+  }
+  .slide-stat .stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--accent-gold);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .slide-stat .stat-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .slide-stat .stat-detail {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    opacity: 0.7;
+  }
+
+  .slide-compare {
+    background: var(--bg-card);
+    padding: 24px;
+  }
+  .slide-compare .compare-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 16px;
+    text-align: left;
+    width: 100%;
+  }
+  .slide-compare .compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    width: 100%;
+    font-size: 12px;
+  }
+  .slide-compare .compare-row:last-child { border: none; }
+  .slide-compare .compare-country {
+    font-weight: 600;
+    width: 35%;
+    text-align: left;
+  }
+  .slide-compare .compare-bar {
+    width: 55%;
+    height: 6px;
+    background: var(--bg-elevated);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .slide-compare .compare-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent-gold);
+  }
+  .slide-compare .compare-val {
+    width: 10%;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-gold);
+  }
+
+  .slide-contrarian {
+    background: linear-gradient(135deg, #1A0A0A 0%, #0A0A0A 100%);
+    border: 1px solid #331111;
+  }
+  .slide-contrarian .contrarian-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+  }
+  .slide-contrarian .contrarian-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #FF9999;
+  }
+
+  .slide-cta {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #B8922E 100%);
+  }
+  .slide-cta .cta-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0A0A0A;
+    margin-bottom: 12px;
+  }
+  .slide-cta .cta-text {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  .slide-brand {
+    background: var(--bg-primary);
+    border: 2px solid var(--accent-gold);
+  }
+  .slide-brand .brand-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+  .slide-brand .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .slide-brand .brand-handle {
+    font-size: 12px;
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+  .slide-brand .brand-cta {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  /* ==================== REEL TEMPLATES ==================== */
+  .reel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .reel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .reel-preview {
+    width: 100%;
+    aspect-ratio: 9/16;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+  }
+  .reel-preview .reel-hook {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .reel-preview .reel-sub {
+    font-size: 12px;
+    margin-top: 12px;
+    color: var(--accent-gold);
+    font-weight: 600;
+  }
+  .reel-preview .reel-timer {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(0,0,0,0.6);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .reel-info {
+    padding: 16px;
+  }
+  .reel-info h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .reel-info p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .reel-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .reel-tag-hook { background: #1a1a00; color: var(--accent-gold); }
+  .reel-tag-trend { background: #0a1a1a; color: var(--accent-green); }
+  .reel-tag-breakdown { background: #1a0a1a; color: var(--accent-purple); }
+
+  /* ==================== STORIES ==================== */
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .story-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .story-preview {
+    width: 100%;
+    aspect-ratio: 9/16;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .story-preview::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.8) 100%);
+  }
+  .story-preview .story-text {
+    position: relative;
+    z-index: 1;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .story-preview .story-cta {
+    position: relative;
+    z-index: 1;
+    font-size: 10px;
+    color: var(--accent-gold);
+    margin-top: 8px;
+    font-weight: 600;
+  }
+  .story-info {
+    padding: 12px;
+  }
+  .story-info h4 {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .story-info p {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* ==================== GRID THEME ==================== */
+  .grid-demo {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin-bottom: 40px;
+  }
+  .grid-cell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .grid-carousel { background: var(--accent-gold); color: #0A0A0A; }
+  .grid-reel { background: var(--accent-red); color: white; }
+  .grid-quote { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
+  .grid-stat { background: #111; color: var(--accent-gold); border: 1px solid var(--border); }
+  .grid-story { background: var(--accent-blue); color: white; }
+
+  /* ==================== SPEC TABLE ==================== */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 13px;
+  }
+  .spec-table th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+  }
+  .spec-table td {
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .spec-table tr:nth-child(even) td { background: var(--bg-card); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 60px 0;
+  }
+
+  /* ==================== LOGO SPEC ==================== */
+  .logo-showcase {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin: 24px 0;
+  }
+  .logo-box {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .logo-box svg { width: 64px; height: 64px; }
+
+  .note-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-gold);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .note-box strong { color: var(--accent-gold); }
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="section-header">
+  <div class="section-label">Instagram Design System v1.0</div>
+  <h1>The <span>Breakdown</span></h1>
+  <p>Complete visual identity, carousel templates, reel specs, and story formats for @thebreakdowndaily</p>
+</div>
+
+<!-- ==================== 1. BRAND IDENTITY ==================== -->
+<div class="content-area">
+  <div class="section-label">01 — Brand Identity</div>
+
+  <!-- Logo -->
+  <h2 style="font-size:28px; margin-bottom:24px;">Logo — Split-B Mark</h2>
+  <div class="logo-showcase">
+    <div class="logo-box" style="background:#0A0A0A;">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="100" rx="4" fill="white"/>
+        <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+        <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+      </svg>
+    </div>
+    <div class="logo-box" style="background:#D4A843;">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="100" rx="4" fill="#0A0A0A"/>
+        <rect x="52" y="0" width="48" height="48" rx="4" fill="#0A0A0A" opacity="0.3"/>
+        <rect x="52" y="52" width="48" height="48" rx="4" fill="#0A0A0A"/>
+      </svg>
+    </div>
+    <div class="logo-box" style="background:white;">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="100" rx="4" fill="#0A0A0A"/>
+        <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+        <rect x="52" y="52" width="48" height="48" rx="4" fill="#0A0A0A"/>
+      </svg>
+    </div>
+    <div>
+      <p style="font-size:13px; color:var(--text-secondary); max-width:280px;">
+        <strong style="color:var(--text-primary);">Usage rules:</strong> Left rect = solid. Right rects = split (top accent, bottom neutral). Minimum clear space = 1x logo width. Never stretch, rotate, or add effects.
+      </p>
+    </div>
+  </div>
+
+  <!-- Color Palette -->
+  <h2 style="font-size:28px; margin:40px 0 24px;">Color Palette</h2>
+  <div class="color-palette">
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:#0A0A0A; padding:12px; color:var(--text-secondary); font-size:11px;">Primary BG</div>
+      <div class="swatch-info"><div class="swatch-name">Deep Black</div><div class="swatch-hex">#0A0A0A</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:#111111; color:var(--text-secondary); font-size:11px;">Card BG</div>
+      <div class="swatch-info"><div class="swatch-name">Card Black</div><div class="swatch-hex">#111111</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:#1A1A1A; color:var(--text-secondary); font-size:11px;">Elevated</div>
+      <div class="swatch-info"><div class="swatch-name">Elevated</div><div class="swatch-hex">#1A1A1A</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:var(--accent-gold); color:#0A0A0A; font-size:11px; font-weight:700;">Accent Gold</div>
+      <div class="swatch-info"><div class="swatch-name">Gold Accent</div><div class="swatch-hex">#D4A843</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:var(--accent-red); color:white; font-size:11px; font-weight:700;">Alert Red</div>
+      <div class="swatch-info"><div class="swatch-name">Alert Red</div><div class="swatch-hex">#E63946</div></div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch-color" style="background:var(--accent-green); color:#0A0A0A; font-size:11px; font-weight:700;">Verified</div>
+      <div class="swatch-info"><div class="swatch-name">Verified Green</div><div class="swatch-hex">#2EC4B6</div></div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>Rule:</strong> Every carousel starts with a dark background (#0A0A0A) and gold accent. Stats always use gold text on dark. CTAs always use dark text on gold. This creates instant brand recognition in the feed.
+  </div>
+
+  <!-- Typography -->
+  <h2 style="font-size:28px; margin:40px 0 24px;">Typography System</h2>
+  <div class="brand-grid">
+    <div>
+      <div class="type-sample">
+        <div class="label">Headline / Slide 1 Hook</div>
+        <div class="specimen" style="font-family:'Space Grotesk',sans-serif; font-weight:700;">Space Grotesk Bold</div>
+        <div class="meta">Used for: Slide 1 hooks, stat numbers, brand name<br>Size: 48-56px (slides), 22-28px (reels)</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Body / Context Text</div>
+        <div class="specimen" style="font-family:'Inter',sans-serif; font-weight:400; font-size:20px;">Inter Regular</div>
+        <div class="meta">Used for: Context slides, captions, body copy<br>Size: 14-16px (slides), 12-14px (reels)</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Data / Technical</div>
+        <div class="specimen" style="font-family:'JetBrains Mono',monospace; font-weight:500; font-size:20px;">JetBrains Mono</div>
+        <div class="meta">Used for: Labels, percentages, hex codes, tags<br>Size: 9-11px (slides), 10-12px (reels)</div>
+      </div>
+    </div>
+    <div>
+      <div class="note-box">
+        <strong>Type Rules:</strong><br><br>
+        • Slide 1: Max 12 words. Space Grotesk 24-28px. White on black.<br>
+        • Context slides: Max 40 words. Inter 14px. Left-aligned.<br>
+        • Stats: Number = Space Grotesk 48-56px gold. Label = Inter 14px gray.<br>
+        • Labels: Always JetBrains Mono 9-11px, uppercase, gold, 2-3px letter-spacing.<br>
+        • CTAs: Always dark text on gold background.<br><br>
+        <strong>Hierarchy:</strong><br>
+        1. Hook (slide 1) — loudest<br>
+        2. Stat/Contrarian — emotional peak<br>
+        3. Context — informational<br>
+        4. CTA — action<br>
+        5. Brand — subtle
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 2. CAROUSEL DESIGN SYSTEM ==================== -->
+  <div class="section-label">02 — Carousel Design System</div>
+  <h2 style="font-size:28px; margin-bottom:16px;">Slide Architecture</h2>
+  <p style="color:var(--text-secondary); margin-bottom:24px; max-width:600px;">Every carousel follows a 10-slide structure. Each slide has a specific job. The sequence is designed to maximize saves and shares.</p>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Slide</th>
+        <th>Template</th>
+        <th>Purpose</th>
+        <th>Max Words</th>
+        <th>Key Element</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Hook</td>
+        <td>Stop the scroll</td>
+        <td>12</td>
+        <td>Gold border + bold headline</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Context</td>
+        <td>Set the scene</td>
+        <td>40</td>
+        <td>Timeline / background</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Hidden Fact</td>
+        <td>Surprise</td>
+        <td>30</td>
+        <td>Magnified detail</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Stat</td>
+        <td>Credibility</td>
+        <td>15</td>
+        <td>Big number in gold</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Why It Matters</td>
+        <td>Impact</td>
+        <td>35</td>
+        <td>Audience connection</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Contrarian</td>
+        <td>Debate starter</td>
+        <td>25</td>
+        <td>Red tint + provocative take</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Expert/Data</td>
+        <td>Authority</td>
+        <td>35</td>
+        <td>Quote or data point</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Future</td>
+        <td>Forward view</td>
+        <td>30</td>
+        <td>Implications / prediction</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Takeaway</td>
+        <td>Retention</td>
+        <td>25</td>
+        <td>Checklist or key insight</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>CTA + Brand</td>
+        <td>Action</td>
+        <td>15</td>
+        <td>Follow + save CTA</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 3. FIRST CAROUSEL — CEA STORY ==================== -->
+  <div class="section-label">03 — First Carousel Post</div>
+  <h2 style="font-size:28px; margin-bottom:8px;">Story: India CEA Says "MBA & Software Era Is Over"</h2>
+  <p style="color:var(--text-secondary); margin-bottom:32px;">Slide-by-slide visual for the first @thebreakdowndaily carousel. Each slide is rendered at 324×324 (actual: 1080×1080).</p>
+
+  <div class="slides-grid">
+
+    <!-- SLIDE 1 — Hook -->
+    <div class="slide-wrapper">
+      <div class="slide-number">01 / 10</div>
+      <div class="slide slide-hook">
+        <div class="hook-text">India's CEA just told your parents the engineering dream is over.</div>
+        <div class="hook-sub">The Breakdown</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 — Context -->
+    <div class="slide-wrapper">
+      <div class="slide-number">02 / 10</div>
+      <div class="slide slide-context">
+        <div class="context-label">What Happened</div>
+        <div class="context-text">India's Chief Economic Advisor V. Anantha Nageswaran said on an ANI podcast: "The globalising world gave advantage for software or MBA education — that era is over." He urged Indians to respect plumbers, carpenters, welders — skills AI cannot replace.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 — Hidden Fact -->
+    <div class="slide-wrapper">
+      <div class="slide-number">03 / 10</div>
+      <div class="slide slide-context">
+        <div class="context-label">The Hidden Fact</div>
+        <div class="context-text">This isn't just opinion — it's policy signaling. India's top economic advisor is telling the country's 1.5 crore college students that their parents' career plan is obsolete. That's not a hot take. That's a government position.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 — Stat -->
+    <div class="slide-wrapper">
+      <div class="slide-number">04 / 10</div>
+      <div class="slide slide-stat">
+        <div class="stat-number">-40%</div>
+        <div class="stat-label">IT hiring from 2022 peak</div>
+        <div class="stat-detail">+35% YoY demand for skilled trades</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 — Why It Matters -->
+    <div class="slide-wrapper">
+      <div class="slide-number">05 / 10</div>
+      <div class="slide slide-context">
+        <div class="context-label">Why It Matters</div>
+        <div class="context-text">India has no national trade certification. No social safety net for tradespeople. A cultural bias that treats "plumber" as failure. The CEA is right about the direction — but the infrastructure isn't ready.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 — Compare -->
+    <div class="slide-wrapper">
+      <div class="slide-number">06 / 10</div>
+      <div class="slide slide-compare">
+        <div class="compare-title">Respect For Trades By Country</div>
+        <div class="compare-row">
+          <div class="compare-country">🇩🇪 Germany</div>
+          <div class="compare-bar"><div class="compare-fill" style="width:90%;"></div></div>
+          <div class="compare-val">90%</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-country">🇨🇭 Switzerland</div>
+          <div class="compare-bar"><div class="compare-fill" style="width:85%;"></div></div>
+          <div class="compare-val">85%</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-country">🇯🇵 Japan</div>
+          <div class="compare-bar"><div class="compare-fill" style="width:80%;"></div></div>
+          <div class="compare-val">80%</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-country">🇮🇳 India</div>
+          <div class="compare-bar"><div class="compare-fill" style="width:25%; background:var(--accent-red);"></div></div>
+          <div class="compare-val" style="color:var(--accent-red);">25%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 — Contrarian -->
+    <div class="slide-wrapper">
+      <div class="slide-number">07 / 10</div>
+      <div class="slide slide-contrarian">
+        <div class="contrarian-icon">⚠️</div>
+        <div class="contrarian-text">The CEA is right about the problem. But telling students "become a plumber" without building trade certification, safety nets, and social respect is aspirational at best — abdication at worst.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8 — Future -->
+    <div class="slide-wrapper">
+      <div class="slide-number">08 / 10</div>
+      <div class="slide slide-context">
+        <div class="context-label">What Happens Next</div>
+        <div class="context-text">The degree bubble is bursting. But the "trade skill era" won't begin until India builds the bridge between aspiration and infrastructure. Germany didn't just say "learn trades" — they built a system. India needs to do the same.</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9 — Takeaway -->
+    <div class="slide-wrapper">
+      <div class="slide-number">09 / 10</div>
+      <div class="slide slide-context" style="background: linear-gradient(135deg, #111 0%, #1A1A1A 100%);">
+        <div class="context-label">Key Takeaway</div>
+        <div class="context-text" style="font-size:15px; font-weight:600;">
+          ✓ Ask what's AI-proof<br>
+          ✓ Build skills, not just degrees<br>
+          ✓ Respect the trades — they pay<br>
+          ✓ Degree AND skill, not degree vs skill
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10 — CTA -->
+    <div class="slide-wrapper">
+      <div class="slide-number">10 / 10</div>
+      <div class="slide slide-brand">
+        <svg viewBox="0 0 100 100" width="56" height="56" style="margin-bottom:16px;">
+          <rect width="48" height="100" rx="4" fill="white"/>
+          <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+          <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+        </svg>
+        <div class="brand-name">The Breakdown</div>
+        <div class="brand-handle">@thebreakdowndaily</div>
+        <div class="brand-cta">Follow for daily breakdowns of stories<br>that matter. Save this for the debate.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <strong>Caption for this carousel:</strong> India's CEA just told your parents the engineering dream is over. The era of software and MBA advantage is done. The question isn't "degree vs skill." It's "degree AND skill." Save this for the next family debate. Follow @thebreakdowndaily. #FutureOfWork #India #Education #AI #TheBreakdown
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 4. REEL TEMPLATES ==================== -->
+  <div class="section-label">04 — Reel Templates</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">3 Core Reel Formats</h2>
+
+  <div class="reel-grid">
+    <!-- Reel 1: Breakdown -->
+    <div class="reel-card">
+      <div class="reel-preview" style="background: linear-gradient(180deg, #0A0A0A 0%, #1A1A1A 100%);">
+        <div class="reel-hook">This is the biggest career story in India right now.</div>
+        <div class="reel-sub">The Breakdown</div>
+        <div class="reel-timer">0:00</div>
+      </div>
+      <div class="reel-info">
+        <h4>The Breakdown Format</h4>
+        <p>Hook (0-3s) → Context (3-10s) → Key facts (10-20s) → Hot take (20-28s) → CTA (28-30s)</p>
+        <span class="reel-tag reel-tag-hook">Hook-Led</span>
+      </div>
+    </div>
+
+    <!-- Reel 2: Fact Check -->
+    <div class="reel-card">
+      <div class="reel-preview" style="background: linear-gradient(180deg, #1A0A0A 0%, #0A0A0A 100%);">
+        <div class="reel-hook" style="color: var(--accent-red);">Fact Check: Is this true?</div>
+        <div class="reel-sub">We verified. Here's what we found.</div>
+        <div class="reel-timer">0:00</div>
+      </div>
+      <div class="reel-info">
+        <h4>Fact Check Format</h4>
+        <p>Claim (0-3s) → Investigation (3-12s) → Verdict (12-18s) → Context (18-25s) → Follow (25-30s)</p>
+        <span class="reel-tag reel-tag-trend">Fact-Check</span>
+      </div>
+    </div>
+
+    <!-- Reel 3: Hot Take -->
+    <div class="reel-card">
+      <div class="reel-preview" style="background: linear-gradient(135deg, #1A1A00 0%, #0A0A0A 100%);">
+        <div class="reel-hook">Everyone is talking about this. Here's what they're missing.</div>
+        <div class="reel-sub">The Breakdown</div>
+        <div class="reel-timer">0:00</div>
+      </div>
+      <div class="reel-info">
+        <h4>Hot Take Format</h4>
+        <p>What's trending (0-3s) → Contrarian angle (3-12s) → Proof (12-22s) → Conclusion (22-28s) → CTA (28-30s)</p>
+        <span class="reel-tag reel-tag-breakdown">Hot Take</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reel Spec Table -->
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Spec</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Aspect Ratio</td>
+        <td>9:16 (1080×1920)</td>
+        <td>Full screen. No borders.</td>
+      </tr>
+      <tr>
+        <td>Hook Duration</td>
+        <td>0-3 seconds</td>
+        <td>Text overlay. Bold. No intro logo.</td>
+      </tr>
+      <tr>
+        <td>Total Length</td>
+        <td>25-35 seconds</td>
+        <td>Optimal for completion rate in 2026.</td>
+      </tr>
+      <tr>
+        <td>Text Font</td>
+        <td>Space Grotesk Bold</td>
+        <td>Same as carousel headlines. Brand consistency.</td>
+      </tr>
+      <tr>
+        <td>Text Position</td>
+        <td>Center-top (safe zone)</td>
+        <td>Avoid bottom 200px (IG UI overlap).</td>
+      </tr>
+      <tr>
+        <td>Captions</td>
+        <td>Always on (auto-generated + edited)</td>
+        <td>85% watch muted. Captions = comprehension.</td>
+      </tr>
+      <tr>
+        <td>Audio</td>
+        <td>Original audio preferred</td>
+        <td>Trending sound within 48h of virality if relevant.</td>
+      </tr>
+      <tr>
+        <td>CTA</td>
+        <td>Text + verbal</td>
+        <td>"Follow @thebreakdowndaily" — both overlay and voice.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 5. STORY TEMPLATES ==================== -->
+  <div class="section-label">05 — Story Templates</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">4 Story Formats</h2>
+
+  <div class="stories-grid">
+    <div class="story-card">
+      <div class="story-preview" style="background: linear-gradient(180deg, #0A0A0A, #111);">
+        <div class="story-text" style="color: var(--accent-gold);">BREAKING</div>
+        <div class="story-text" style="color: white; margin-top:8px;">CEA says MBA era is over</div>
+        <div class="story-cta">Tap for full breakdown →</div>
+      </div>
+      <div class="story-info">
+        <h4>Breaking News</h4>
+        <p>Alert-style. Gold + black. Urgent.</p>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-preview" style="background: linear-gradient(180deg, #111, #1A1A1A);">
+        <div class="story-text" style="color: white;">Do you agree? CEA says respect plumbers over engineers.</div>
+        <div class="story-cta">YES / NO poll</div>
+      </div>
+      <div class="story-info">
+        <h4>Poll / Debate</h4>
+        <p>Question + poll sticker. Drives engagement.</p>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-preview" style="background: linear-gradient(180deg, #1A1A00, #111);">
+        <div class="story-text" style="color: var(--accent-gold); font-size:11px;">DID YOU KNOW?</div>
+        <div class="story-text" style="color: white; margin-top:8px; font-size:12px;">A plumber in Mumbai earns ₹80K/month. An entry-level dev earns ₹45K.</div>
+        <div class="story-cta">Save this fact</div>
+      </div>
+      <div class="story-info">
+        <h4>Quick Fact</h4>
+        <p>Surprising stat. Drives saves.</p>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-preview" style="background: linear-gradient(180deg, #0A0A0A, #111);">
+        <div class="story-text" style="color: white; font-size:12px;">New carousel just dropped ↓</div>
+        <div class="story-text" style="color: var(--accent-gold); margin-top:8px; font-size:11px;">10 slides. Save it. Share it.</div>
+        <div class="story-cta">Swipe up / Link in bio</div>
+      </div>
+      <div class="story-info">
+        <h4>Post Promotion</h4>
+        <p>Drives traffic to carousel/reel.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 6. GRID THEME ==================== -->
+  <div class="section-label">06 — Instagram Grid Theme</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">Feed Pattern — "Checkerboard Rhythm"</h2>
+  <p style="color:var(--text-secondary); margin-bottom:24px; max-width:600px;">Alternate between dark carousels and gold-accent posts. Every 4th post is a reel (red accent). This creates visual rhythm in the grid.</p>
+
+  <div class="grid-demo">
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-reel">R</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-quote">Q</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-stat">S</div>
+    <div class="grid-cell grid-reel">R</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-story">St</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-quote">Q</div>
+    <div class="grid-cell grid-reel">R</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-stat">S</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-quote">Q</div>
+    <div class="grid-cell grid-carousel">C</div>
+    <div class="grid-cell grid-reel">R</div>
+  </div>
+
+  <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:40px;">
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <div style="width:20px; height:20px; background:var(--accent-gold); border-radius:3px;"></div> Carousel (C)
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <div style="width:20px; height:20px; background:var(--accent-red); border-radius:3px;"></div> Reel (R)
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <div style="width:20px; height:20px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:3px;"></div> Quote (Q)
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <div style="width:20px; height:20px; background:#111; border:1px solid var(--border); border-radius:3px;"></div> Stat (S)
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+      <div style="width:20px; height:20px; background:var(--accent-blue); border-radius:3px;"></div> Story Promo (St)
+    </div>
+  </div>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Post Type</th>
+        <th>Frequency</th>
+        <th>Format</th>
+        <th>Purpose</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Carousel</td>
+        <td>4x/week</td>
+        <td>10 slides, 1080×1080</td>
+        <td>Deep analysis, saves, shares</td>
+      </tr>
+      <tr>
+        <td>Reel</td>
+        <td>3x/week</td>
+        <td>9:16, 25-35 sec</td>
+        <td>Reach, new followers</td>
+      </tr>
+      <tr>
+        <td>Quote Card</td>
+        <td>2x/week</td>
+        <td>Single image, 1080×1080</td>
+        <td>Engagement, debate</td>
+      </tr>
+      <tr>
+        <td>Stat Card</td>
+        <td>1x/week</td>
+        <td>Single image, 1080×1080</td>
+        <td>Credibility, saves</td>
+      </tr>
+      <tr>
+        <td>Story</td>
+        <td>Daily (3-5)</td>
+        <td>1080×1920</td>
+        <td>Polls, behind-the-scenes, traffic</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 7. CONTENT CALENDAR ==================== -->
+  <div class="section-label">07 — Posting Schedule</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">Week 1 Content Calendar</h2>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Type</th>
+        <th>Content</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Monday</td>
+        <td>Carousel</td>
+        <td>CEA "MBA Era Over" (this post)</td>
+        <td>12:00 PM</td>
+      </tr>
+      <tr>
+        <td>Monday</td>
+        <td>Story (3x)</td>
+        <td>Breaking + Poll + Post promo</td>
+        <td>12:30 PM</td>
+      </tr>
+      <tr>
+        <td>Tuesday</td>
+        <td>Reel</td>
+        <td>"30-sec: What CEA actually said"</td>
+        <td>6:00 PM</td>
+      </tr>
+      <tr>
+        <td>Wednesday</td>
+        <td>Carousel</td>
+        <td>Warikoo ₹100Cr rejection breakdown</td>
+        <td>12:00 PM</td>
+      </tr>
+      <tr>
+        <td>Thursday</td>
+        <td>Reel</td>
+        <td>Meta AI Mode — "Facebook is now a store"</td>
+        <td>6:00 PM</td>
+      </tr>
+      <tr>
+        <td>Friday</td>
+        <td>Carousel</td>
+        <td>Meta AI Shopping — "The 4 surfaces" (10 slides)</td>
+        <td>12:00 PM</td>
+      </tr>
+      <tr>
+        <td>Saturday</td>
+        <td>Quote Card</td>
+        <td>CEA's exact quote on dark background</td>
+        <td>11:00 AM</td>
+      </tr>
+      <tr>
+        <td>Sunday</td>
+        <td>Reel</td>
+        <td>"This week in 60 seconds" recap</td>
+        <td>5:00 PM</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 8. HASHTAG STRATEGY ==================== -->
+  <div class="section-label">08 — Hashtag Strategy</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">Tiered Hashtag System</h2>
+
+  <div class="brand-grid">
+    <div>
+      <div class="type-sample">
+        <div class="label">Tier 1 — Reach (100K+ posts)</div>
+        <div style="font-size:13px; color:var(--text-primary); line-height:1.8;">
+          #India #News #AI #Technology #Business #StartupIndia #Education #FutureOfWork
+        </div>
+        <div class="meta">5-8 per post. Broad discovery.</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Tier 2 — Niche (10K-100K posts)</div>
+        <div style="font-size:13px; color:var(--text-primary); line-height:1.8;">
+          #FactCheck #DigitalMarketing #CreatorEconomy #StartupIndia #CareerAdvice #SkillIndia #Deepfake
+        </div>
+        <div class="meta">5-8 per post. Targeted audience.</div>
+      </div>
+    </div>
+    <div>
+      <div class="type-sample">
+        <div class="label">Tier 3 — Trending (Daily rotation)</div>
+        <div style="font-size:13px; color:var(--text-primary); line-height:1.8;">
+          Rotate based on daily trending topics. Check Instagram Explore every morning.
+        </div>
+        <div class="meta">3-5 per post. Ride the wave.</div>
+      </div>
+      <div class="type-sample">
+        <div class="label">Tier 4 — Brand (Every post)</div>
+        <div style="font-size:13px; color:var(--accent-gold); line-height:1.8;">
+          #TheBreakdown #Newsjack #TheBreakdownDaily
+        </div>
+        <div class="meta">2-3 per post. Always. Builds brand hashtag equity.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>Rule:</strong> 20-25 hashtags per post. Mix all 4 tiers. Never use the same set twice in a row. Instagram penalizes hashtag spam — vary your mix.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 9. CAPTION FORMULA ==================== -->
+  <div class="section-label">09 — Caption Formula</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">The Breakdown Caption Template</h2>
+
+  <div class="type-sample" style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:32px;">
+    <div class="label">Caption Structure</div>
+    <div style="font-size:14px; line-height:1.8; margin-top:16px;">
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--accent-gold); font-weight:700;">Line 1: Hook</span> (scroll-stopper, max 10 words)<br>
+        <span style="color:var(--text-secondary); font-size:12px;">Example: "India's CEA just told your parents the engineering dream is over."</span>
+      </div>
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--accent-gold); font-weight:700;">Line 2-3: Context</span> (what happened, 1-2 lines)<br>
+        <span style="color:var(--text-secondary); font-size:12px;">Example: "The Chief Economic Advisor said the era of software and MBA advantage is done."</span>
+      </div>
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--accent-gold); font-weight:700;">Line 4-6: Body</span> (your angle, key points, 3-5 lines)
+      </div>
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--accent-gold); font-weight:700;">Line 7: Question</span> (engagement trigger)<br>
+        <span style="color:var(--text-secondary); font-size:12px;">Example: "Is the CEA visionary or out of touch?"</span>
+      </div>
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--accent-gold); font-weight:700;">Line 8: CTA</span> (save, share, follow)<br>
+        <span style="color:var(--text-secondary); font-size:12px;">Example: "Save this for the family debate. Follow @thebreakdowndaily."</span>
+      </div>
+      <div>
+        <span style="color:var(--accent-gold); font-weight:700;">Line 9: Hashtags</span> (20-25, tiered)
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ==================== 10. DESIGN SPECS ==================== -->
+  <div class="section-label">10 — Technical Specs</div>
+  <h2 style="font-size:28px; margin-bottom:24px;">Export & Production Settings</h2>
+
+  <table class="spec-table">
+    <thead>
+      <tr>
+        <th>Format</th>
+        <th>Dimensions</th>
+        <th>File Type</th>
+        <th>Max Size</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Carousel Slide</td>
+        <td>1080 × 1080px</td>
+        <td>PNG (preferred) or JPG</td>
+        <td>30MB per slide</td>
+        <td>10 slides max. sRGB color.</td>
+      </tr>
+      <tr>
+        <td>Reel</td>
+        <td>1080 × 1920px</td>
+        <td>MP4 (H.264)</td>
+        <td>250MB</td>
+        <td>25-35 sec. 30fps min. Captions burned in.</td>
+      </tr>
+      <tr>
+        <td>Story</td>
+        <td>1080 × 1920px</td>
+        <td>PNG or MP4</td>
+        <td>30MB (image) / 250MB (video)</td>
+        <td>15 sec max per story. 3-5 per day.</td>
+      </tr>
+      <tr>
+        <td>Profile Pic</td>
+        <td>320 × 320px</td>
+        <td>PNG</td>
+        <td>5MB</td>
+        <td>Split-B logo. Gold on black.</td>
+      </tr>
+      <tr>
+        <td>Feed Post</td>
+        <td>1080 × 1080px</td>
+        <td>PNG or JPG</td>
+        <td>30MB</td>
+        <td>Quote cards, stat cards.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-box">
+    <strong>Design Tool Recommendation:</strong> Use Figma with a shared "The Breakdown" component library. Export at 2x resolution for retina. All text must pass WCAG AA contrast ratio (4.5:1 minimum). The gold (#D4A843) on black (#0A0A0A) passes at 7.2:1 — excellent.
+  </div>
+
+  <div style="height:80px;"></div>
+
+</div>
+</body>
+</html>

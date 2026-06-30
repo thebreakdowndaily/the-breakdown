@@ -1,0 +1,41 @@
+{
+  "title": "The $80 Billion Question: What the Iran War Actually Cost America | The Breakdown",
+  "description": "The Pentagon wants $80 billion for the Iran war. The real cost is already $132 billion. Harvard says it will hit $1 trillion. A data-driven breakdown.",
+  "canonical": "https://thebreakdown.in/story/us-iran-80b-pentagon-war-cost",
+  "og": {
+    "title": "The $80 Billion Question: What the Iran War Actually Cost America",
+    "description": "The Pentagon wants $80 billion for the Iran war. The real cost is already $132 billion. Harvard says it will hit $1 trillion. A data-driven breakdown.",
+    "type": "article",
+    "url": "https://thebreakdown.in/story/us-iran-80b-pentagon-war-cost",
+    "image": "https://thebreakdown.in/og-image.png",
+    "site_name": "The Breakdown"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@thebreakdownin",
+    "title": "The $80 Billion Question: What the Iran War Actually Cost America",
+    "description": "The Pentagon wants $80 billion for the Iran war. The real cost is already $132 billion. Harvard says it will hit $1 trillion. A data-driven breakdown."
+  },
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The $80 Billion Question: What the Iran War Actually Cost America",
+    "description": "The Pentagon wants $80 billion for the Iran war. The real cost is already $132 billion. Harvard says it will hit $1 trillion. A data-driven breakdown.",
+    "articleSection": "Economy",
+    "keywords": "Iran-war, Pentagon, war-spending, SPR, oil-prices, Congress, war-powers, US-economy, defense-budget",
+    "datePublished": "2026-06-23T10:00:00Z",
+    "dateModified": "2026-06-25T08:29:46.432Z",
+    "author": {
+      "@type": "Organization",
+      "name": "The Breakdown"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Breakdown",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://thebreakdown.in/og-image.png"
+      }
+    }
+  }
+}

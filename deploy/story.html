@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0A0A;--charcoal:#111;--card-bg:#0F0F0F;--border:#1E1E1E;--gold:#D4A843;--gold-light:#E8C468;--white:#FFFFFF;--gray:#777;--text-sm:13px;--text-base:16px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Source Sans 3',sans-serif;font-size:var(--text-base);line-height:1.7;min-height:100vh}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:var(--gold-light)}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:background .3s}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--white)}
+.nav-logo svg{width:28px;height:28px}
+.nav-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white)}
+
+/* Content */
+.story-wrap{max-width:760px;margin:0 auto;padding:120px 2rem 80px}
+.story-category{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.story-title{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:2px;line-height:1.15;margin-bottom:1.5rem}
+.story-meta{display:flex;gap:1rem;font-size:14px;color:var(--gray);font-family:'JetBrains Mono',monospace;margin-bottom:2rem;flex-wrap:wrap}
+.story-image{width:100%;max-height:460px;object-fit:cover;border-radius:4px;margin-bottom:2.5rem;border:1px solid var(--border)}
+.story-image-placeholder{width:100%;height:300px;background:var(--charcoal);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:2.5rem;font-family:'Bebas Neue',sans-serif;font-size:60px;color:var(--gold);opacity:0.3;letter-spacing:2px}
+.story-body{font-size:18px;line-height:1.8;color:rgba(255,255,255,0.88)}
+.story-body p{margin-bottom:1.5rem}
+.story-body h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin:2.5rem 0 1rem;color:var(--gold)}
+.story-body h3{font-size:20px;font-weight:600;margin:2rem 0 1rem}
+.story-body blockquote{border-left:3px solid var(--gold);padding:1rem 1.5rem;margin:1.5rem 0;background:var(--charcoal);color:var(--gray);font-style:italic;border-radius:0 4px 4px 0}
+.story-body ul,.story-body ol{margin:1rem 0 1.5rem 1.5rem}
+.story-body li{margin-bottom:.5rem}
+
+/* Sources */
+.sources-section{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
+.sources-section h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--gold);margin-bottom:1rem}
+.source-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.source-item:last-child{border-bottom:none}
+.source-badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:2px;background:var(--gold);color:var(--bg);font-weight:600;text-transform:uppercase;flex-shrink:0;margin-top:2px}
+.source-badge.verified{background:#2EC4B6}
+.source-label{flex:1}
+.source-url{color:var(--gray);font-size:13px;word-break:break-all}
+
+/* Preview banner */
+.preview-banner{background:rgba(212,168,67,0.12);border:1px solid var(--gold);border-radius:4px;padding:12px 18px;margin-bottom:1.5rem;font-size:13px;color:var(--gold);text-align:center;font-family:'JetBrains Mono',monospace}
+
+/* Back link */
+.back-link{display:inline-flex;align-items:center;gap:8px;color:var(--gray);font-size:14px;margin-bottom:2rem;font-family:'JetBrains Mono',monospace}
+.back-link:hover{color:var(--gold)}
+
+/* Loading/Error */
+.loading{text-align:center;padding:160px 2rem;color:var(--gray)}
+.loading .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-page{text-align:center;padding:160px 2rem}
+.error-page h1{font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:4px;color:var(--gold);margin-bottom:1rem}
+.error-page p{color:var(--gray);margin-bottom:2rem}
+
+/* Image caption */
+.story-image-caption{font-size:13px;color:var(--gray);text-align:center;margin-top:-1.5rem;margin-bottom:2.5rem;font-style:italic;line-height:1.5}
+
+/* Verification box */
+.verification-box{background:var(--charcoal);border:1px solid var(--border);border-radius:4px;padding:1.5rem;margin:2rem 0;font-size:14px;color:var(--gray);line-height:1.7}
+.verification-box strong{color:var(--gold);display:block;margin-bottom:.5rem;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+
+/* Footer */
+.footer-bar{text-align:center;padding:40px 2rem;border-top:1px solid var(--border);color:var(--gray);font-size:13px}
+
+@media(max-width:600px){
+  .story-title{font-size:32px}
+  .story-body{font-size:16px}
+  .story-wrap{padding:100px 1.25rem 60px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="100" rx="4" fill="white"/>
+        <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+        <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+      </svg>
+      <span class="nav-title">THE BREAKDOWN</span>
+    </a>
+  </div>
+</nav>
+
+<div id="content"></div>
+
+<div class="footer-bar">&copy; 2026 The Breakdown. All rights reserved.</div>
+
+<script>
+// Unregister stale service workers
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(regs) {
+    regs.forEach(function(reg) { reg.unregister(); });
+  });
+}
+</script>
+<script>
+const API = '';
+
+(async function loadStory() {
+  const slug = window.location.pathname.replace(/^\/story\//, '').replace(/\/$/, '') || new URLSearchParams(window.location.search).get('slug');
+  const container = document.getElementById('content');
+
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === '1';
+
+  if (!slug) {
+    container.innerHTML = '<div class="error-page"><h1>404</h1><p>Story not found.</p><a href="/" class="back-link">&larr; Back to Home</a></div>';
+    return;
+  }
+
+  try {
+    let story;
+    if (typeof SSR_STORY !== 'undefined') {
+      story = SSR_STORY;
+    } else {
+      const endpoint = isPreview ? API + '/api/stories/preview/' + slug : API + '/api/stories/public/' + slug;
+      const opts = isPreview ? { credentials: 'include' } : {};
+      const res = await fetch(endpoint, opts);
+      if (!res.ok) throw new Error('Not found');
+      const data = await res.json();
+      story = data.story;
+    }
+    if (!story) throw new Error('Not found');
+
+    const date = story.published_at
+      ? new Date(story.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+      : '';
+
+    // SEO meta tags
+    document.title = (story.meta_title || story.title) + ' — The Breakdown';
+    const metaDesc = document.querySelector('meta[name="description"]') || (() => { const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m; })();
+    metaDesc.content = story.meta_description || story.summary || '';
+    const ogImg = document.querySelector('meta[property="og:image"]') || (() => { const m = document.createElement('meta'); m.setAttribute('property', 'og:image'); document.head.appendChild(m); return m; })();
+    ogImg.content = story.og_image || story.fact_check_image || '';
+
+    const sourcesHtml = story.story_sources && story.story_sources.length > 0
+      ? `<div class="sources-section"><h3>Sources &amp; References</h3>${story.story_sources.map(s =>
+          `<div class="source-item"><span class="source-badge ${s.verified ? 'verified' : ''}">${s.source_type || 'web'}</span><div><div class="source-label">${s.label}</div><a href="${s.url}" target="_blank" rel="noopener" class="source-url">${s.url}</a></div></div>`
+        ).join('')}</div>`
+      : '';
+
+    const verifHtml = story.source_verification
+      ? `<div class="verification-box"><strong>Verification Process</strong>${story.source_verification}</div>`
+      : '';
+
+    const captionHtml = story.fact_check_image_caption
+      ? `<p class="story-image-caption">${story.fact_check_image_caption}</p>`
+      : '';
+
+    const imageHtml = story.fact_check_image
+      ? `<img class="story-image" src="${story.fact_check_image}" alt="${story.title}" onerror="this.style.display='none'">${captionHtml}`
+      : '<div class="story-image-placeholder">B</div>';
+
+    // Tags
+    const tagsHtml = story.tags && story.tags.length > 0
+      ? `<div style="margin-top:2rem;display:flex;gap:8px;flex-wrap:wrap">${story.tags.map(t => `<span style="background:var(--charcoal);border:1px solid var(--border);border-radius:2px;padding:4px 12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--gray);letter-spacing:1px">${t}</span>`).join('')}</div>`
+      : '';
+
+    const previewBanner = isPreview
+      ? '<div class="preview-banner"><strong>PREVIEW MODE</strong> — This story is not yet published. Only you can see this.</div>'
+      : '';
+
+    container.innerHTML = `
+      <div class="story-wrap">
+        ${previewBanner}
+        <a href="/" class="back-link">&larr; Back to Home</a>
+        <p class="story-category">${story.category || 'Latest'}</p>
+        <h1 class="story-title">${story.title}</h1>
+        <div class="story-meta">${date ? `<span>${date}</span>` : ''}<span>${story.author || 'The Breakdown'}</span>${story.read_time ? `<span>${story.read_time} min read</span>` : ''}</div>
+        ${imageHtml}
+        ${verifHtml}
+        <div class="story-body">${story.content || '<p>Full content coming soon.</p>'}</div>
+        ${tagsHtml}
+        <div id="related-stories"></div>
+        ${sourcesHtml}
+      </div>
+    `;
+
+    // Related stories
+    if (story.related_story_ids && story.related_story_ids.length > 0) {
+      fetch(API + '/api/stories/published').then(r => r.json()).then(d => {
+        const related = (d.stories || []).filter(s => story.related_story_ids.includes(s.id)).slice(0, 3);
+        if (related.length > 0) {
+          const el = document.getElementById('related-stories');
+          if (el) el.innerHTML = `<div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)"><h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--gold);margin-bottom:1rem">Related Stories</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem">${related.map(s => `<a href="/story/${s.slug}" style="display:block;padding:1rem;background:var(--charcoal);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--white)"><span style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace">${s.category || 'Latest'}</span><div style="font-size:15px;font-weight:600;margin-top:6px">${s.title}</div><span style="font-size:12px;color:var(--gray)">${s.author || 'The Breakdown'}</span></a>`).join('')}</div></div>`;
+        }
+      }).catch(() => {});
+    }
+  } catch (e) {
+    container.innerHTML = '<div class="error-page"><h1>404</h1><p>Story not found or has been removed.</p><a href="/" class="back-link">&larr; Back to Home</a></div>';
+  }
+})();
+</script>
+</body>
+</html>

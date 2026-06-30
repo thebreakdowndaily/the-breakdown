@@ -1,0 +1,41 @@
+{
+  "title": "Anthropic Mythos AI: The Model That Could Hack Anything — Now in Safe Mode | The Breakdown",
+  "description": "Anthropic released Mythos — an AI that finds critical cybersecurity vulnerabilities in hours. Then they released Fable 5, a safe version for the public. Then they suspended both. The full story of the most capable — and most restricted — AI model ever built.",
+  "canonical": "https://thebreakdown.in/story/anthropic-mythos-ai-2026",
+  "og": {
+    "title": "Anthropic Mythos AI: The Model That Could Hack Anything — Now in Safe Mode",
+    "description": "Anthropic released Mythos — an AI that finds critical cybersecurity vulnerabilities in hours. Then they released Fable 5, a safe version for the public. Then they suspended both. The full story of the most capable — and most restricted — AI model ever built.",
+    "type": "article",
+    "url": "https://thebreakdown.in/story/anthropic-mythos-ai-2026",
+    "image": "https://thebreakdown.in/og-image.png",
+    "site_name": "The Breakdown"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@thebreakdownin",
+    "title": "Anthropic Mythos AI: The Model That Could Hack Anything — Now in Safe Mode",
+    "description": "Anthropic released Mythos — an AI that finds critical cybersecurity vulnerabilities in hours. Then they released Fable 5, a safe version for the public. Then they suspended both. The full story of the most capable — and most restricted — AI model ever built."
+  },
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Anthropic Mythos AI: The Model That Could Hack Anything — Now in Safe Mode",
+    "description": "Anthropic released Mythos — an AI that finds critical cybersecurity vulnerabilities in hours. Then they released Fable 5, a safe version for the public. Then they suspended both. The full story of the most capable — and most restricted — AI model ever built.",
+    "articleSection": "Technology",
+    "keywords": "Anthropic, Mythos, Claude, Fable-5, cybersecurity, AI-safety, Project-Glasswing, IPO, frontier-AI, vulnerability",
+    "datePublished": "2026-06-25T10:00:00Z",
+    "dateModified": "2026-06-25T08:37:31.446Z",
+    "author": {
+      "@type": "Organization",
+      "name": "The Breakdown"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Breakdown",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://thebreakdown.in/og-image.png"
+      }
+    }
+  }
+}

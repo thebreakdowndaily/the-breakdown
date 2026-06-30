@@ -1,0 +1,63 @@
+{
+  "section": "hero",
+  "label": "Homepage Hero Section",
+  "description": "Edit the homepage hero banner — title, subtitle, tagline, and background.",
+  "fields": [
+    {
+      "key": "hero-title",
+      "label": "Hero Title",
+      "type": "text",
+      "value": "THE BREAKDOWN",
+      "hint": "Main headline displayed in the hero section"
+    },
+    {
+      "key": "hero-tagline",
+      "label": "Hero Tagline",
+      "type": "text",
+      "value": "Complex stories. Clear analysis.",
+      "hint": "Subtitle below the main headline"
+    },
+    {
+      "key": "hero-subtitle",
+      "label": "Hero Subtitle",
+      "type": "textarea",
+      "value": "Forensic news analysis. Geopolitics, tech, economy, media.",
+      "hint": "Additional description text"
+    },
+    {
+      "key": "hero-cta-text",
+      "label": "CTA Button Text",
+      "type": "text",
+      "value": "Latest Analysis",
+      "hint": "Text for the primary call-to-action button"
+    },
+    {
+      "key": "hero-cta-url",
+      "label": "CTA Button URL",
+      "type": "text",
+      "value": "/story",
+      "hint": "URL for the primary call-to-action button"
+    },
+    {
+      "key": "hero-cta-secondary",
+      "label": "Secondary CTA Text",
+      "type": "text",
+      "value": "Subscribe",
+      "hint": "Text for the secondary call-to-action button"
+    },
+    {
+      "key": "hero-cta-secondary-url",
+      "label": "Secondary CTA URL",
+      "type": "text",
+      "value": "#newsletter",
+      "hint": "URL for the secondary call-to-action button"
+    },
+    {
+      "key": "hero-background",
+      "label": "Hero Background URL",
+      "type": "image",
+      "value": "",
+      "hint": "URL to background video or image (optional)"
+    }
+  ]
+}

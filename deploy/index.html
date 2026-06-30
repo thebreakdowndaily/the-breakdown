@@ -1,0 +1,626 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="deploy-version" content="2">
+    <title>The Breakdown - Complex Stories. Clear Analysis.</title>
+    <meta name="description" content="The Breakdown delivers forensic news analysis. Geopolitics, tech, economy, media. No pundits. No hype. Just analysis.">
+    <meta property="og:title" content="The Breakdown - Complex Stories. Clear Analysis.">
+    <meta property="og:description" content="Forensic news analysis. Geopolitics, tech, economy, media.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer data-domain="thebreakdown.in" src="https://plausible.io/js/script.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --charcoal:#1a1a2e;--gold:#D4A843;--gold-light:#E8C468;
+            --white:#fff;--gray:#888;--gray-light:#aaa;
+            --dark-bg:#0A0A0A;--card-bg:#111111;--card-hover:#1A1A1A;
+            --border:#222222;--border-light:#333333;
+            --glow:rgba(212,168,67,0.45);
+            --text-sm:clamp(0.8rem,1.5vw,0.9rem);
+            --text-base:clamp(1rem,2vw,1.1rem);
+            --text-lg:clamp(1.2rem,2.5vw,1.4rem);
+            --text-xl:clamp(1.5rem,3vw,2rem);
+            --text-2xl:clamp(2rem,5vw,3.5rem);
+            --text-3xl:clamp(2.5rem,7vw,5rem);
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Source Sans 3',sans-serif;background:var(--dark-bg);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+        a{color:inherit}
+        .mono{font-family:'JetBrains Mono',monospace}
+
+        /* ===== SPOTLIGHT CURSOR ===== */
+        .cursor{position:fixed;pointer-events:none;z-index:99999;width:24px;height:24px;border-radius:50%;background:rgba(212,168,67,0.6);transform:translate(-50%,-50%);transition:transform .15s ease,width .2s,height .2s;mix-blend-mode:screen;left:0;top:0}
+        .cursor.hover{width:48px;height:48px;background:rgba(212,168,67,0.15)}
+        @media(hover:none),(pointer:coarse){.cursor{display:none}}
+
+        /* ===== CURSOR-REACTIVE BLUR ===== */
+        .blur-shape{position:fixed;top:0;left:0;width:420px;height:420px;background:radial-gradient(circle,var(--glow),transparent 70%);filter:blur(70px);border-radius:50%;pointer-events:none;z-index:0;transition:transform .3s ease-out}
+        @media(hover:none),(pointer:coarse){.blur-shape{display:none}}
+        .hero-glow{position:absolute;width:520px;height:520px;background:radial-gradient(circle,rgba(212,168,67,0.18),transparent 70%);filter:blur(80px);border-radius:50%;top:10%;left:50%;transform:translateX(-50%);pointer-events:none;z-index:0}
+
+        /* ===== NAVIGATION ===== */
+        nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2rem;transition:transform .35s ease}
+        nav.hidden{transform:translateY(-100%)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:70px}
+        .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--white)}
+        .nav-b{width:36px;height:36px;display:flex;overflow:hidden}
+        .nav-b svg{width:100%;height:100%}
+        .nav-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+        .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+        .nav-links a{color:var(--gray);text-decoration:none;font-size:14px;letter-spacing:1px;text-transform:uppercase;transition:color .3s;position:relative}
+        .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+        .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+        .nav-links a:hover::after,.nav-links a.active::after{width:100%}
+        .nav-cta{background:var(--gold);color:var(--charcoal)!important;padding:8px 20px;font-weight:600;transition:transform .25s,box-shadow .25s!important}
+        .nav-cta:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 8px 24px rgba(212,168,67,0.35)}
+        .nav-cta::after{display:none!important}
+        .mobile-menu{display:none;flex-direction:column;gap:6px;cursor:pointer;padding:6px;background:none;border:none;z-index:1100}
+        .mobile-menu span{width:26px;height:2px;background:var(--white);transition:transform .3s,opacity .3s}
+        .mobile-menu.open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+        .mobile-menu.open span:nth-child(2){opacity:0}
+        .mobile-menu.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+        /* ===== FULLSCREEN OVERLAY MENU ===== */
+        .menu-overlay{position:fixed;inset:0;background:rgba(10,10,10,0.98);backdrop-filter:blur(12px);z-index:1050;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s ease}
+        .menu-overlay.open{opacity:1;visibility:visible}
+        .menu-links{list-style:none;text-align:center}
+        .menu-links li{overflow:hidden}
+        .menu-links a{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,9vw,80px);letter-spacing:4px;color:var(--white);text-decoration:none;display:inline-block;padding:.4rem 0;transform:translateY(110%);transition:transform .5s ease,color .3s}
+        .menu-overlay.open .menu-links a{transform:translateY(0)}
+        .menu-overlay.open .menu-links li:nth-child(1) a{transition-delay:.08s}
+        .menu-overlay.open .menu-links li:nth-child(2) a{transition-delay:.16s}
+        .menu-overlay.open .menu-links li:nth-child(3) a{transition-delay:.24s}
+        .menu-overlay.open .menu-links li:nth-child(4) a{transition-delay:.32s}
+        .menu-links a:hover{color:var(--gold)}
+
+        /* ===== HERO ===== */
+        .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 2rem 80px;position:relative}
+        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(212,168,67,0.05) 0%,transparent 70%);pointer-events:none}
+        .hero>*{position:relative;z-index:1}
+        .hero-gold-line{width:120px;height:2px;background:var(--gold);margin-bottom:3rem;opacity:0;animation:fadeInUp .8s .2s forwards}
+        .hero-b{width:120px;height:120px;margin-bottom:2rem;opacity:0;animation:fadeInUp .8s .4s forwards}
+        .hero-b svg{width:100%;height:100%}
+        .hero h1{font-family:'Bebas Neue',sans-serif;font-size:var(--text-3xl);letter-spacing:6px;margin-bottom:1rem;line-height:1.1;opacity:0;animation:fadeInUp .8s .6s forwards}
+        .hero h1 span{display:block;color:var(--gold)}
+        .hero-tagline{font-style:italic;font-size:var(--text-lg);color:var(--gray);margin-bottom:3rem;font-weight:300;opacity:0;animation:fadeInUp .8s .8s forwards}
+        .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeInUp .8s 1s forwards}
+        .btn-primary{background:var(--gold);color:var(--charcoal);padding:14px 32px;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;cursor:none;transition:transform .25s ease,box-shadow .25s ease;position:relative;overflow:hidden}
+        .btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);transform:translateX(-100%);transition:transform .5s}
+        .btn-primary:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 30px rgba(212,168,67,0.35)}
+        .btn-primary:hover::before{transform:translateX(100%)}
+        .btn-secondary{background:transparent;color:var(--white);padding:14px 32px;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:1px solid var(--border);transition:border-color .3s,transform .25s;cursor:none}
+        .btn-secondary:hover{border-color:var(--gold);transform:translateY(-3px)}
+
+        /* ===== SECTIONS ===== */
+        section{padding:100px 2rem;position:relative;z-index:1}
+        .section-inner{max-width:1200px;margin:0 auto}
+        .section-header{margin-bottom:4rem}
+        .section-label{font-family:'JetBrains Mono',monospace;font-size:var(--text-sm);letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+        .section-title{font-family:'Bebas Neue',sans-serif;font-size:var(--text-2xl);letter-spacing:3px;line-height:1.2}
+        .section-divider{width:60px;height:2px;background:var(--gold);margin-top:1.5rem}
+
+        /* ===== MARQUEE ===== */
+        .marquee{overflow:hidden;white-space:nowrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--charcoal);padding:1.25rem 0}
+        .track{display:inline-flex;gap:48px;animation:scroll 24s linear infinite}
+        .marquee:hover .track{animation-play-state:paused}
+        .track span{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:var(--gray)}
+        .track span::before{content:'\2605';color:var(--gold);margin-right:48px}
+        @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* ===== STORIES ===== */
+        .stories-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2rem}
+        .story-card{background:var(--card-bg);border:1px solid var(--border);padding:2.5rem;transition:border-color .3s,transform .3s,box-shadow .3s;cursor:pointer;text-decoration:none;color:var(--white);display:block}
+        .story-card:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
+        .story-category{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+        .story-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;line-height:1.2;margin-bottom:1rem}
+        .story-excerpt{color:var(--gray);font-size:15px;line-height:1.7;margin-bottom:1.5rem}
+        .story-meta{display:flex;gap:1rem;font-size:13px;color:var(--gray);font-family:'JetBrains Mono',monospace}
+        .story-card.featured{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:3rem;padding:3rem}
+        .story-card.featured .story-content{display:flex;flex-direction:column;justify-content:center}
+        .story-card.featured .story-visual{background:var(--charcoal);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;min-height:300px}
+        .story-visual-b{font-family:'Bebas Neue',sans-serif;font-size:120px;color:var(--gold);opacity:0.3}
+
+        /* ===== ABOUT ===== */
+        .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+        .about-text h3{font-family:'Bebas Neue',sans-serif;font-size:var(--text-xl);letter-spacing:2px;margin-bottom:1.5rem}
+        .about-text p{color:var(--gray);font-size:var(--text-base);line-height:1.8;margin-bottom:1.5rem}
+        .about-pillars{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+        .pillar{background:var(--card-bg);border:1px solid var(--border);padding:1.5rem;transition:border-color .3s,transform .3s}
+        .pillar:hover{border-color:var(--gold);transform:translateY(-4px)}
+        .pillar-icon{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;color:var(--gold);margin-bottom:.5rem;text-transform:uppercase}
+        .pillar-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;margin-bottom:.25rem}
+        .pillar-desc{font-size:13px;color:var(--gray)}
+
+        /* ===== PLATFORMS ===== */
+        .platforms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+        .platform-card{background:var(--card-bg);border:1px solid var(--border);padding:2rem;text-align:center;text-decoration:none;color:var(--white);transition:border-color .3s,transform .3s,box-shadow .3s}
+        .platform-card:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,0.4)}
+        .platform-icon{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:var(--gold);margin-bottom:1rem}
+        .platform-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:.5rem}
+        .platform-desc{font-size:13px;color:var(--gray)}
+
+        /* ===== NEWSLETTER ===== */
+        .newsletter-section{background:var(--charcoal);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+        .newsletter-inner{max-width:700px;margin:0 auto;text-align:center}
+        .newsletter-inner h2{font-family:'Bebas Neue',sans-serif;font-size:var(--text-2xl);letter-spacing:3px;margin-bottom:1rem}
+        .newsletter-inner p{color:var(--gray);font-size:var(--text-base);margin-bottom:2rem;line-height:1.7}
+        .newsletter-form{display:flex;max-width:500px;margin:0 auto}
+        .newsletter-form input{flex:1;padding:14px 20px;background:var(--dark-bg);border:1px solid var(--border);color:var(--white);font-family:'Source Sans 3',sans-serif;font-size:15px;outline:none;transition:border-color .3s,box-shadow .3s}
+        .newsletter-form input::placeholder{color:var(--gray)}
+        .newsletter-form input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,67,0.2)}
+        .newsletter-form button{background:var(--gold);color:var(--charcoal);padding:14px 28px;border:none;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:none;white-space:nowrap;transition:transform .25s,box-shadow .25s}
+        .newsletter-form button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,168,67,0.35)}
+
+        /* ===== FOOTER ===== */
+        footer{padding:60px 2rem 40px;border-top:1px solid var(--border);position:relative;z-index:1}
+        .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+        .footer-brand p{color:var(--gray);font-size:14px;margin-top:1rem;line-height:1.7}
+        .footer-col h4{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gold);margin-bottom:1rem}
+        .footer-col ul{list-style:none}
+        .footer-col li{margin-bottom:.6rem}
+        .footer-col a{color:var(--gray);text-decoration:none;font-size:14px;transition:color .3s}
+        .footer-col a:hover{color:var(--gold)}
+        .footer-bottom{max-width:1200px;margin:3rem auto 0;padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--gray)}
+        .footer-social{display:flex;gap:1.5rem}
+        .footer-social a{color:var(--gray);text-decoration:none;transition:color .3s}
+        .footer-social a:hover{color:var(--gold)}
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:900px){
+            .nav-links{display:none}.mobile-menu{display:flex}
+            .story-card.featured{grid-template-columns:1fr}
+            .about-grid{grid-template-columns:1fr}
+            .footer-inner{grid-template-columns:1fr 1fr}
+            .newsletter-form{flex-direction:column}
+        }
+        @media(max-width:600px){
+            .stories-grid{grid-template-columns:1fr}
+            .about-pillars{grid-template-columns:1fr}
+            .footer-inner{grid-template-columns:1fr}
+            .footer-bottom{flex-direction:column;gap:1rem;text-align:center}
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ===== REDUCED MOTION ===== */
+        @media(prefers-reduced-motion:reduce){
+            *{animation:none!important;transition:none!important}
+            .reveal{opacity:1;transform:none}
+            .hero>*{opacity:1!important}
+            .track{animation:none}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Spotlight Cursor -->
+    <div class="cursor" aria-hidden="true"></div>
+
+    <!-- Cursor-Reactive Blur -->
+    <div class="blur-shape follow" aria-hidden="true"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-b">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="48" height="100" rx="4" fill="white"/>
+                        <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+                        <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+                    </svg>
+                </div>
+                <span class="nav-title">THE BREAKDOWN</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#stories">Stories</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#platforms">Platforms</a></li>
+                <li><a href="#newsletter" class="nav-cta">Subscribe</a></li>
+            </ul>
+            <button class="mobile-menu" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Fullscreen Overlay Menu -->
+    <div class="menu-overlay" id="menuOverlay">
+        <ul class="menu-links">
+            <li><a href="#stories">Stories</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#platforms">Platforms</a></li>
+            <li><a href="#newsletter">Subscribe</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-gold-line"></div>
+        <div class="hero-b">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="100" rx="4" fill="white"/>
+                <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+                <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+            </svg>
+        </div>
+        <h1>THE <span>BREAKDOWN</span></h1>
+        <p class="hero-tagline">Complex stories. Clear analysis.</p>
+        <div class="hero-cta">
+            <a href="#stories" class="btn-primary">Latest Analysis</a>
+            <a href="#newsletter" class="btn-secondary">Subscribe</a>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee" aria-hidden="true">
+        <div class="track">
+            <span>Geopolitics</span><span>Technology</span><span>Economy</span><span>Media</span><span>AI</span><span>Trade</span>
+            <span>Geopolitics</span><span>Technology</span><span>Economy</span><span>Media</span><span>AI</span><span>Trade</span>
+        </div>
+    </div>
+
+    <!-- Stories -->
+    <section id="stories">
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <p class="section-label">Latest</p>
+                <h2 class="section-title">Stories We Are Breaking Down</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="stories-grid" id="storiesGrid">
+                <a href="/story/neet-2026-exam-that-broke-india-22-lakh-paper-leak-cbi" class="story-card featured reveal" id="featuredStory">
+                    <div class="story-visual"><span class="story-visual-b">B</span></div>
+                    <div class="story-content">
+                        <p class="story-category">Education / Governance</p>
+                        <h3 class="story-title">NEET 2026: The Exam That Broke India</h3>
+                        <p class="story-excerpt">A 23-lakh-student exam was cancelled after a paper leak traced from a Rajasthan hostel to a Pune classroom. The re-test cost 7 lakh officials, 51,000 jammers, and the faith of a generation.</p>
+                        <div class="story-meta"><span>June 23, 2026</span><span>12 min read</span></div>
+                    </div>
+                </a>
+                
+                <a href="/story/canada-bill-c34-social-media-ban-under-16-ai-chatbot-regulation" class="story-card reveal">
+                    <p class="story-category">Policy</p>
+                    <h3 class="story-title">Canada Moves to Ban Social Media for Children Under 16, Regulate AI Chatbots</h3>
+                    <p class="story-excerpt">Canada introduced Bill C-34 on June 10, 2026, banning social media for children under 16 and regulating AI chatbots &#8212; joining Australia, Greece, and a growing global movement to restrict minors&#39; access to platforms.</p>
+                    <div class="story-meta"><span>June 23, 2026</span><span>8 min read</span></div>
+                </a>
+                <!-- CMS: published stories will appear here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="section-inner">
+            <div class="about-grid">
+                <div class="about-text reveal">
+                    <p class="section-label">About</p>
+                    <h3>Complex Stories. Clear Analysis.</h3>
+                    <p>The Breakdown is a news analysis platform that goes beyond headlines. We break down geopolitics, technology, economy, and media with forensic precision.</p>
+                    <p>No pundits. No hype. No partisan angles. Just the analysis you need to understand what is actually happening and why it matters.</p>
+                    <p>Every story gets the same treatment: context, stakes, what both sides are missing, and what to watch next.</p>
+                </div>
+                <div class="about-pillars reveal">
+                    <div class="pillar">
+                        <div class="pillar-icon">Geopolitics</div>
+                        <p class="pillar-name">World Affairs</p>
+                        <p class="pillar-desc">35% of coverage. Diplomacy, conflict, alliances.</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">Tech</div>
+                        <p class="pillar-name">Technology / AI</p>
+                        <p class="pillar-desc">25% of coverage. Platforms, privacy, regulation.</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">Economy</div>
+                        <p class="pillar-name">Economy</p>
+                        <p class="pillar-desc">20% of coverage. Trade, tariffs, markets.</p>
+                    </div>
+                    <div class="pillar">
+                        <div class="pillar-icon">Media</div>
+                        <p class="pillar-name">Media / Press</p>
+                        <p class="pillar-desc">12% of coverage. Press freedom, platform bans.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platforms -->
+    <section id="platforms">
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <p class="section-label">Follow</p>
+                <h2 class="section-title">Where To Find Us</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="platforms-grid">
+                <a href="https://youtube.com/@thebreakdowndaily" class="platform-card reveal" target="_blank" rel="noopener">
+                    <div class="platform-icon">YT</div>
+                    <p class="platform-name">YouTube</p>
+                    <p class="platform-desc">Full video breakdowns every Tuesday</p>
+                </a>
+                <a href="https://x.com/thebreakdowndaily" class="platform-card reveal" target="_blank" rel="noopener">
+                    <div class="platform-icon">X</div>
+                    <p class="platform-name">X / Twitter</p>
+                    <p class="platform-desc">Threads and real-time analysis</p>
+                </a>
+                <a href="https://instagram.com/thebreakdowndaily" class="platform-card reveal" target="_blank" rel="noopener">
+                    <div class="platform-icon">IG</div>
+                    <p class="platform-name">Instagram</p>
+                    <p class="platform-desc">Carousels, reels, and stories</p>
+                </a>
+                <a href="#newsletter" class="platform-card reveal">
+                    <div class="platform-icon">NL</div>
+                    <p class="platform-name">Newsletter</p>
+                    <p class="platform-desc">The Daily Breakdown. Tuesdays and Fridays.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section" id="newsletter">
+        <div class="newsletter-inner reveal">
+            <p class="section-label">Newsletter</p>
+            <h2>Get The Breakdown In Your Inbox</h2>
+            <p>Complex stories. Clear analysis. Delivered every Tuesday and Friday. No spam. No fluff. Just the analysis that matters.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='SUBSCRIBED ✓';this.querySelector('input').value=''">
+                <input type="email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="nav-logo">
+                    <div class="nav-b">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="48" height="100" rx="4" fill="white"/>
+                            <rect x="52" y="0" width="48" height="48" rx="4" fill="#D4A843"/>
+                            <rect x="52" y="52" width="48" height="48" rx="4" fill="white"/>
+                        </svg>
+                    </div>
+                    <span class="nav-title">THE BREAKDOWN</span>
+                </div>
+                <p>Complex stories. Clear analysis. A news analysis platform built for people who want to understand the world, not just watch it.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Content</h4>
+                <ul>
+                    <li><a href="https://youtube.com/@thebreakdowndaily" target="_blank">YouTube Videos</a></li>
+                    <li><a href="https://x.com/thebreakdowndaily" target="_blank">X Threads</a></li>
+                    <li><a href="https://instagram.com/thebreakdowndaily" target="_blank">Instagram</a></li>
+                    <li><a href="#newsletter">Newsletter</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Topics</h4>
+                <ul>
+                    <li><a href="#">Geopolitics</a></li>
+                    <li><a href="#">Technology</a></li>
+                    <li><a href="#">Economy</a></li>
+                    <li><a href="#">Media</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="https://youtube.com/@thebreakdowndaily" target="_blank">YouTube</a></li>
+                    <li><a href="https://x.com/thebreakdowndaily" target="_blank">X / Twitter</a></li>
+                    <li><a href="https://instagram.com/thebreakdowndaily" target="_blank">Instagram</a></li>
+                    <li><a href="#newsletter">Newsletter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 The Breakdown. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="https://youtube.com/@thebreakdowndaily" target="_blank">YouTube</a>
+                <a href="https://x.com/thebreakdowndaily" target="_blank">X</a>
+                <a href="https://instagram.com/thebreakdowndaily" target="_blank">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Unregister stale service workers
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(r){r.unregister()})}); }
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+        const finePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+        /* ===== SPOTLIGHT CURSOR ===== */
+        const cursor = document.querySelector('.cursor');
+        if (finePointer && cursor) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('a,button,.story-card,.platform-card,.pillar').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+        /* ===== CURSOR-REACTIVE BLUR (with lag) ===== */
+        const blob = document.querySelector('.blur-shape');
+        if (finePointer && blob) {
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2, x = mouseX, y = mouseY;
+            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+            (function animate() {
+                x += (mouseX - x) * 0.08;
+                y += (mouseY - y) * 0.08;
+                blob.style.transform = `translate(${x - 210}px, ${y - 210}px)`;
+                requestAnimationFrame(animate);
+            })();
+        }
+
+        /* ===== FULLSCREEN OVERLAY MENU ===== */
+        const menuToggle = document.getElementById('menuToggle');
+        const menuOverlay = document.getElementById('menuOverlay');
+        function closeMenu() {
+            menuToggle.classList.remove('open');
+            menuOverlay.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+        menuToggle.addEventListener('click', () => {
+            const open = menuToggle.classList.toggle('open');
+            menuOverlay.classList.toggle('open', open);
+            menuToggle.setAttribute('aria-expanded', String(open));
+            document.body.style.overflow = open ? 'hidden' : '';
+        });
+        menuOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+        /* ===== GSAP: MAGNETIC BUTTONS ===== */
+        if (window.gsap && !reduceMotion && finePointer) {
+            document.querySelectorAll('.btn-primary,.btn-secondary,.nav-cta').forEach(btn => {
+                const strength = 0.4;
+                btn.addEventListener('mousemove', e => {
+                    const r = btn.getBoundingClientRect();
+                    const mx = e.clientX - (r.left + r.width / 2);
+                    const my = e.clientY - (r.top + r.height / 2);
+                    gsap.to(btn, { x: mx * strength, y: my * strength, duration: 0.4, ease: 'power3.out' });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.3)' });
+                });
+            });
+        }
+
+        /* ===== GSAP: MENU STAGGER ===== */
+        if (window.gsap && !reduceMotion) {
+            const overlayLinks = menuOverlay.querySelectorAll('.menu-links a');
+            overlayLinks.forEach(a => a.style.transform = 'none');
+            const menuTl = gsap.timeline({ paused: true });
+            menuTl.fromTo(overlayLinks,
+                { yPercent: 110, opacity: 0 },
+                { yPercent: 0, opacity: 1, duration: 0.5, ease: 'power3.out', stagger: 0.08 }
+            );
+            menuToggle.addEventListener('click', () => {
+                if (menuToggle.classList.contains('open')) menuTl.restart();
+                else menuTl.reverse();
+            });
+        }
+
+        /* ===== STICKY + HIDE-ON-SCROLL NAVBAR ===== */
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const current = window.pageYOffset;
+            if (current > lastScroll && current > 120) navbar.classList.add('hidden');
+            else navbar.classList.remove('hidden');
+            lastScroll = current;
+        });
+
+        /* ===== SCROLL-TRIGGERED REVEAL ===== */
+        const reveals = document.querySelectorAll('.reveal');
+        if (window.gsap && window.ScrollTrigger && !reduceMotion) {
+            gsap.registerPlugin(ScrollTrigger);
+            reveals.forEach(el => {
+                gsap.fromTo(el,
+                    { autoAlpha: 0, y: 28 },
+                    {
+                        autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out',
+                        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+                    }
+                );
+            });
+        } else {
+            const revealObserver = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+                });
+            }, { threshold: 0.15 });
+            reveals.forEach(el => revealObserver.observe(el));
+        }
+
+        /* ===== ACTIVE NAV LINK ON SCROLL ===== */
+        const navLinks = document.querySelectorAll('.nav-links a:not(.nav-cta)');
+        const sections = ['stories', 'about', 'platforms'].map(id => document.getElementById(id));
+        const sectionObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+                }
+            });
+        }, { threshold: 0.1 });
+        sections.forEach(s => s && sectionObserver.observe(s));
+
+        /* ===== SMOOTH SCROLL ===== */
+        document.addEventListener('click', function(e) {
+            const a = e.target.closest('a');
+            if (!a) return;
+            const href = a.getAttribute('href');
+            if (!href || !href.startsWith('#') || href.length < 2) return;
+            e.preventDefault();
+            const t = document.querySelector(href);
+            if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        /* ===== DYNAMIC STORIES FROM API ===== */
+        (async function loadStories() {
+            try {
+                const res = await fetch('/api/stories/published');
+                if (!res.ok) return;
+                const { stories } = await res.json();
+                if (!stories || stories.length === 0) return;
+
+                const grid = document.getElementById('storiesGrid');
+                const featured = document.getElementById('featuredStory');
+
+                const first = stories[0];
+                featured.querySelector('.story-category').textContent = first.category || 'Latest';
+                featured.querySelector('.story-title').textContent = first.title;
+                featured.querySelector('.story-excerpt').textContent = first.summary || 'Full breakdown available.';
+                const meta = featured.querySelector('.story-meta');
+                const date = first.published_at ? new Date(first.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+                meta.innerHTML = date ? `<span>${date}</span><span>${first.read_time || 5} min read</span>` : `<span>${first.read_time || 5} min read</span>`;
+                if (first.slug) featured.href = '/story/' + first.slug;
+
+                for (let i = 1; i < stories.length; i++) {
+                    const s = stories[i];
+                    const card = document.createElement('a');
+                    card.href = s.slug ? '/story/' + s.slug : '#';
+                    card.className = 'story-card reveal';
+                    const d = s.published_at ? new Date(s.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+                    const tags = s.tags && s.tags.length > 0 ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">${s.tags.map(t => `<span style="background:var(--charcoal);padding:2px 8px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--gray);border-radius:2px">${t}</span>`).join('')}</div>` : '';
+                    card.innerHTML = `
+                        <p class="story-category">${s.category || 'Latest'}</p>
+                        <h3 class="story-title">${s.title}</h3>
+                        ${tags}
+                        <p class="story-excerpt">${s.summary || 'Full breakdown available.'}</p>
+                        <div class="story-meta">${d ? `<span>${d}</span>` : ''}<span>${s.read_time || 5} min read</span></div>
+                    `;
+                    grid.appendChild(card);
+                }
+
+                if (window.gsap && window.ScrollTrigger && !reduceMotion) {
+                    ScrollTrigger.refresh();
+                }
+            } catch (e) {
+                // Fallback: static cards already in HTML
+            }
+        })();
+    </script>
+</body>
+</html>

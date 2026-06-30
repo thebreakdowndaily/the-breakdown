@@ -1,0 +1,26 @@
+﻿/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://plausible.io https://static.cloudflareinsights.com https://translate.google.com blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://translate.google.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; media-src https://cdn.pixabay.com; connect-src 'self' https://plausible.io https://the-breakdown-cms.onrender.com https://lvfovvidtowadmnggzzf.supabase.co https://static.cloudflareinsights.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com https://*.ingest.us.sentry.io; frame-src 'self' https:; worker-src 'self' blob:
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Fonts - cache aggressively
+https://fonts.gstatic.com:
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static assets with hashes - cache forever
+/css/*:
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*:
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*:
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML pages - short cache
+*.html:
+  Cache-Control: public, max-age=0, must-revalidate

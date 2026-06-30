@@ -1,0 +1,15 @@
+# References — Western Europe Heatwave 2026
+
+1. BBC News — "France, UK and Spain see record temperatures as heatwave grips western Europe" (June 24, 2026)
+2. AP News — "Western Europe bakes under a 'heat dome'" (June 24, 2026)
+3. Al Jazeera — "Power outages in France as Europe bakes in record heat" (June 24, 2026)
+4. CNN — "Extreme heat is melting national records across Europe" (June 24, 2026)
+5. Euronews — "Red heatwave alerts spread across Europe" (June 24, 2026)
+6. France 24 — "France outage leaves 68,000 homes without power" (June 24, 2026)
+7. Al Jazeera — "Deaths, disruptions across Europe: What you should know" (June 24, 2026)
+8. The Independent — "June temperature record broken as UK swelters" (June 24, 2026)
+9. Evening Standard — "London heatwave meltdown" (June 24, 2026)
+10. ABC News — "Schools close, railways urge against travel" (June 24, 2026)
+11. Météo-France — national temperature indicator data (June 24, 2026)
+12. UK Met Office — red extreme heat warnings (June 24, 2026)
+13. WHO Europe — heat-related deaths data (2022-2026)

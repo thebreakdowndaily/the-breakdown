@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔧 The Fix — The Breakdown</title>
+<meta name="description" content="Evidence-based solutions to everyday problems with extraordinary impact. The systems behind everyday problems—and how they can be improved.">
+<meta property="og:title" content="🔧 The Fix — The Breakdown">
+<meta property="og:description" content="Evidence-based solutions to everyday problems with extraordinary impact. The systems behind everyday problems—and how they can be improved.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thebreakdown.in/the-fix">
+<meta property="og:site_name" content="The Breakdown">
+<meta property="og:image" content="https://thebreakdown.in/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@thebreakdownin">
+<meta name="twitter:title" content="🔧 The Fix — The Breakdown">
+<meta name="twitter:description" content="Evidence-based solutions to everyday problems with extraordinary impact. The systems behind everyday problems—and how they can be improved.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CollectionPage","name":"The Fix","description":"Evidence-based solutions to everyday problems with extraordinary impact.","url":"https://thebreakdown.in/the-fix","publisher":{"@type":"Organization","name":"The Breakdown"}}
+</script>
+<link rel="canonical" href="https://thebreakdown.in/the-fix">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/design-system.css?v=5">
+<link rel="stylesheet" href="/css/editorial.css?v=5">
+<script defer data-domain="thebreakdown.in" src="https://plausible.io/js/script.js"></script>
+<script defer src="/js/components.js?v=5"></script>
+<style>
+/* ─── THE FIX HUB ─── */
+.hub-header{
+  position:relative;
+  padding:80px 0 60px;
+  text-align:center;
+  overflow:hidden;
+}
+.hub-header::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,111,0,0.06) 0%,transparent 20%,transparent 80%,rgba(255,111,0,0.04) 100%);
+  pointer-events:none;
+}
+.hub-icon{
+  font-size:3rem;
+  margin-bottom:16px;
+  display:block;
+}
+.hub-header h1{
+  font-family:var(--font-heading);
+  font-size:clamp(2.5rem,7vw,4rem);
+  font-weight:500;
+  letter-spacing:-0.01em;
+  line-height:1;
+  margin-bottom:16px;
+}
+.hub-header h1 em{
+  font-style:italic;
+  color:#FF6F00;
+}
+.hub-header .sub{
+  font-size:1.05rem;
+  color:var(--text-secondary);
+  max-width:560px;
+  margin:0 auto 8px;
+  line-height:1.5;
+}
+.hub-header .sub-strong{
+  font-size:1.15rem;
+  color:var(--text);
+  max-width:600px;
+  margin:0 auto 24px;
+  line-height:1.5;
+  font-weight:400;
+}
+.hub-count{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--text-tertiary);
+  letter-spacing:0.04em;
+}
+.manifesto{
+  max-width:640px;
+  margin:0 auto 60px;
+  padding:0 var(--space-4);
+}
+.manifesto p{
+  font-size:0.95rem;
+  color:var(--text-secondary);
+  line-height:1.7;
+  margin-bottom:16px;
+}
+.manifesto .cta{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:#FF6F00;
+  letter-spacing:0.04em;
+}
+.manifesto .cta a{
+  color:#FF6F00;
+  text-decoration:underline;
+}
+/* Divider */
+.fix-divider{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:32px auto;
+  max-width:300px;
+}
+.fix-divider span{
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+.fix-divider i{
+  font-style:normal;
+  color:#FF6F00;
+  font-size:1.2rem;
+}
+/* Story Cards */
+#hubStoryGrid{
+  max-width:820px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:var(--space-5);
+}
+.hub-story-card{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:var(--space-5);
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  text-decoration:none;
+  color:inherit;
+  transition:border-color 0.3s, transform 0.2s;
+}
+.hub-story-card:hover{
+  border-color:#FF6F00;
+  transform:translateY(-2px);
+}
+.hub-story-card-image{
+  position:relative;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  background:var(--bg-elevated);
+}
+.hub-story-card-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform 0.4s;
+}
+.hub-story-card:hover .hub-story-card-image img{
+  transform:scale(1.03);
+}
+.hub-story-card-image .fix-badge{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  background:rgba(255,111,0,0.9);
+  color:#fff;
+  border:none;
+  font-size:0.55rem;
+  padding:3px 10px;
+}
+.fix-badge-hub{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,111,0,0.1);
+  border:1px solid rgba(255,111,0,0.25);
+  padding:4px 12px 4px 10px;
+  border-radius:20px;
+  font-family:var(--font-mono);
+  font-size:0.55rem;
+  color:#FF6F00;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+}
+.hub-story-card-body{
+  padding:var(--space-5) var(--space-5) var(--space-5) 0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.hub-story-card-body .category{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  color:#FF6F00;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:var(--space-2);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.hub-story-card-body h2{
+  font-family:var(--font-editorial);
+  font-size:1.15rem;
+  font-weight:600;
+  line-height:1.3;
+  margin-bottom:var(--space-2);
+  color:var(--text);
+}
+.hub-story-card-body p{
+  font-size:0.85rem;
+  color:var(--text-tertiary);
+  line-height:1.5;
+  margin-bottom:var(--space-2);
+}
+.hub-story-card-body .meta{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  color:var(--text-tertiary);
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.hub-story-card-body .meta .tag{
+  color:#FF6F00;
+}
+.hub-story-card-body .meta .dot{
+  color:var(--border);
+}
+/* Empty + Error states */
+.hub-empty{
+  text-align:center;
+  padding:80px 20px;
+  border:2px dashed var(--border);
+  border-radius:var(--radius-md);
+}
+.hub-empty .empty-icon{
+  font-size:3rem;
+  margin-bottom:16px;
+}
+.hub-empty p{
+  color:var(--text-tertiary);
+  font-size:1rem;
+  font-style:italic;
+}
+/* Skeleton loading */
+.hub-skeleton{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:var(--space-5);
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  padding:0;
+}
+.skel-img{
+  aspect-ratio:16/10;
+  background:var(--bg-elevated);
+  animation:pulse 1.5s infinite;
+}
+.skel-body{
+  padding:var(--space-5) var(--space-5) var(--space-5) 0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.skel-body .bar{
+  height:12px;
+  border-radius:6px;
+  background:var(--bg-elevated);
+  animation:pulse 1.5s infinite;
+}
+.skel-body .w60{width:60%}
+.skel-body .w90{width:90%}
+.skel-body .w40{width:40%}
+@keyframes pulse{
+  0%,100%{opacity:0.4}
+  50%{opacity:0.8}
+}
+@media(max-width:768px){
+  .hub-story-card{grid-template-columns:1fr}
+  .hub-story-card-image{aspect-ratio:16/9}
+  .hub-story-card-body{padding:var(--space-4)}
+  .hub-skeleton{grid-template-columns:1fr}
+  .hub-skeleton .skel-img{aspect-ratio:16/9}
+  .hub-skeleton .skel-body{padding:var(--space-4)}
+}
+</style>
+</head>
+<body>
+<div class="container" style="max-width:820px">
+  <div class="hub-header">
+    <span class="hub-icon">🔧</span>
+    <h1>THE <em>FIX</em></h1>
+    <p class="sub-strong">The systems behind everyday problems—and how they can be improved.</p>
+    <p class="sub">Evidence-based solutions to everyday problems with extraordinary impact.</p>
+    <p class="hub-count" id="storyCount">Loading...</p>
+  </div>
+
+  <div class="fix-divider"><span></span><i>✦</i><span></span></div>
+
+  <div class="manifesto">
+    <p>Every Indian city has the same problems. Potholes that return every monsoon. Garbage that piles up unreachable. Footpaths that end abruptly. Manholes that swallow lives. Streetlights that stay dark. Water that arrives — or doesn't — on someone else's schedule.</p>
+    <p>These aren't mysteries. They're systems. And systems can be understood, redesigned, and fixed. <strong>The Fix</strong> investigates the machinery behind everyday failures — the contracts, budgets, laws, incentives, and institutions that produce them — and maps the evidence-based solutions that already work somewhere in the world.</p>
+    <p>Each story identifies a specific problem, traces its root cause through the system, documents who is responsible, and presents a concrete action plan: what citizens can do today, what government should do this year, and how other countries already solved it.</p>
+    <p class="cta">Have a problem you want investigated? <a href="mailto:fix@thebreakdown.in">Tell us →</a></p>
+  </div>
+
+  <div id="hubStoryGrid">
+    <!-- Skeleton -->
+    <div class="hub-skeleton"><div class="skel-img"></div><div class="skel-body"><div class="bar w60"></div><div class="bar w90"></div><div class="bar w90"></div><div class="bar w40"></div></div></div>
+    <div class="hub-skeleton"><div class="skel-img"></div><div class="skel-body"><div class="bar w60"></div><div class="bar w90"></div><div class="bar w90"></div><div class="bar w40"></div></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var grid=document.getElementById('hubStoryGrid');
+  var countEl=document.getElementById('storyCount');
+  var api='/api/stories/by-tag/the-fix';
+
+  fetch(api)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var stories=data.stories||[];
+      countEl.textContent=stories.length+' '+(stories.length===1?'Story':'Stories')+' · Updated '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+
+      if(!stories.length){
+        grid.innerHTML='<div class="hub-empty"><div class="empty-icon">🔧</div><p>No stories yet. The first investigation is being researched right now.</p></div>';
+        return;
+      }
+
+      var html='';
+      stories.forEach(function(s){
+        var date=s.published_at?new Date(s.published_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+        var tags=(s.tags||[]).slice(0,3);
+        var tagHtml=tags.map(function(t){return'<span class="tag">#'+t.replace(/\s+/g,'')+'</span>'}).join('<span class="dot"> · </span>');
+        var imgUrl=s.fact_check_image||'https://thebreakdown.in/og-image.png';
+        var cat=s.category||'Investigation';
+
+        html+=
+          '<a href="/story/'+s.slug+'" class="hub-story-card">'+
+            '<div class="hub-story-card-image">'+
+              '<img src="'+imgUrl+'" alt="'+(s.title||'').replace(/"/g,'&quot;')+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div style=\\\\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:2rem\\\\\'>🔧</div>\'">'+
+              '<span class="fix-badge">🔧 THE FIX</span>'+
+            '</div>'+
+            '<div class="hub-story-card-body">'+
+              '<div class="category"><span class="fix-badge-hub" style="font-size:0.5rem;padding:2px 8px">🔧 THE FIX</span> '+(cat||'')+'</div>'+
+              '<h2>'+s.title+'</h2>'+
+              (s.summary?'<p>'+(s.summary||'').replace(/<[^>]+>/g,'').substring(0,200)+'</p>':'')+
+              '<div class="meta"><span>'+date+'</span>'+(tagHtml?'<span class="dot">·</span> '+tagHtml:'')+(s.read_time?'<span class="dot">·</span> <span>'+s.read_time+' min read</span>':'')+'</div>'+
+            '</div>'+
+          '</a>';
+      });
+      grid.innerHTML=html;
+    })
+    .catch(function(err){
+      grid.innerHTML='<div class="hub-empty"><div class="empty-icon">🔧</div><p>Could not load stories. Please try again later.</p></div>';
+      countEl.textContent='Unable to load';
+    });
+})();
+</script>
+</body>
+</html>

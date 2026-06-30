@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — First Story Pack</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c:#1a1a2e;--g:#e4a11d;--w:#fff;--gr:#888;--d:#0f0f1a;--cb:#16213e;--b:#2a2a4a}
+body{font-family:'Source Sans 3',sans-serif;background:var(--d);color:var(--w);line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:rgba(15,15,26,.98);border-bottom:1px solid var(--b);padding:0 2rem}
+.ni{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nl{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--w)}
+.nb{width:30px;height:30px;background:var(--c);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:16px;color:var(--g)}
+.nt{font-family:'Bebas Neue';font-size:18px;letter-spacing:2px}
+.nk{display:flex;gap:1.5rem;list-style:none}
+.nk a{color:var(--gr);text-decoration:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:color .3s}
+.nk a:hover{color:var(--g)}
+.hero{background:linear-gradient(135deg,var(--d),var(--c),#0a0a14);padding:80px 2rem 60px;text-align:center;border-bottom:2px solid var(--g)}
+.hero h1{font-family:'Bebas Neue';font-size:clamp(36px,6vw,60px);letter-spacing:4px;margin-bottom:.5rem}
+.hero h1 span{color:var(--g)}
+.hero p{color:var(--gr);font-size:17px;max-width:500px;margin:0 auto}
+section{padding:60px 2rem;border-bottom:1px solid var(--b)}
+.si{max-width:1200px;margin:0 auto}
+.sl{font-family:'Bebas Neue';font-size:13px;letter-spacing:4px;color:var(--g);margin-bottom:.5rem}
+.st{font-family:'Bebas Neue';font-size:clamp(26px,4vw,40px);letter-spacing:2px;margin-bottom:.5rem}
+.sd{color:var(--gr);font-size:14px;margin-bottom:2rem;max-width:600px}
+.gl{width:40px;height:2px;background:var(--g);margin:.75rem 0 1.5rem}
+/* Phone Mockup */
+.phone{width:280px;margin:0 auto;background:#000;border-radius:32px;padding:8px;border:2px solid #333;position:relative}
+.psc{background:var(--d);border-radius:24px;overflow:hidden;min-height:500px}
+.psh{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--b);font-size:10px}
+.psbody{aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;min-height:400px}
+/* Story Grid */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.sc{background:var(--cb);border:1px solid var(--b);border-radius:8px;overflow:hidden;transition:border-color .3s}
+.sc:hover{border-color:var(--g)}
+.sch{background:var(--c);padding:.75rem 1rem;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center}
+.sch h3{font-family:'Bebas Neue';font-size:14px;letter-spacing:1px;color:var(--g)}
+.sch .day{font-size:10px;color:var(--gr);padding:2px 8px;background:var(--cb);border-radius:2px}
+.scb{aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;position:relative}
+.scb .top-label{position:absolute;top:12px;left:12px;font-family:'Bebas Neue';font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.15)}
+.scb .bottom-mark{position:absolute;bottom:12px;right:12px;font-family:'Bebas Neue';font-size:14px;color:rgba(255,255,255,.06)}
+.scb .time{position:absolute;top:12px;right:12px;font-size:9px;color:var(--gr)}
+.scb h4{font-family:'Bebas Neue';font-size:clamp(18px,3vw,28px);letter-spacing:2px;margin-bottom:.5rem;line-height:1.1}
+.scb .gold-line{width:30px;height:2px;background:var(--g);margin:.5rem auto}
+.scb p{font-size:12px;color:var(--gr);line-height:1.5}
+.scb .sticker{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:20px;font-size:11px;font-weight:600}
+.scb .sticker.poll{background:var(--cb);border:1px solid var(--b)}
+.scb .sticker.countdown{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.scb .sticker.question{background:var(--c);border:2px solid var(--g)}
+.scb .sticker.link{background:var(--g);color:var(--c)}
+.scb .sticker.emoji-slider{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:8px 16px;border-radius:30px}
+.scf{padding:.75rem 1rem;border-top:1px solid var(--b);font-size:11px;color:var(--gr);line-height:1.5;background:rgba(0,0,0,.2)}
+.scf strong{color:var(--w)}
+/* Timeline row */
+.tlr{display:flex;gap:.75rem;overflow-x:auto;padding:1rem 0;scroll-snap-type:x mandatory}
+.tlr .tl-item{min-width:200px;background:var(--cb);border:1px solid var(--b);padding:1rem;scroll-snap-align:start;flex-shrink:0;border-radius:6px}
+.tlr .tl-item .tl-time{font-family:'Bebas Neue';font-size:13px;color:var(--g);letter-spacing:1px;margin-bottom:.3rem}
+.tlr .tl-item .tl-title{font-size:13px;color:var(--w);margin-bottom:.3rem}
+.tlr .tl-item .tl-desc{font-size:11px;color:var(--gr);line-height:1.4}
+/* Caption */
+.cap{background:var(--cb);border-left:3px solid var(--g);padding:1rem 1.2rem;margin-top:.75rem;font-size:12px;color:var(--gr);line-height:1.7}
+.cap strong{color:var(--w)}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin:1.5rem 0}
+.stat{background:var(--cb);border:1px solid var(--b);padding:1rem;text-align:center}
+.stat .num{font-family:'Bebas Neue';font-size:24px;color:var(--g)}
+.stat .lbl{font-size:9px;color:var(--gr);text-transform:uppercase;letter-spacing:1px;margin-top:.2rem}
+footer{padding:40px 2rem;text-align:center;border-top:1px solid var(--b)}
+footer p{color:var(--gr);font-size:12px}
+.fb{font-family:'Bebas Neue';font-size:18px;color:var(--g);letter-spacing:2px}
+@media(max-width:768px){.nk{display:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="ni">
+<a href="#" class="nl"><div class="nb"><svg width="18" height="18" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg></div><span class="nt">THE BREAKDOWN</span></a>
+<ul class="nk">
+<li><a href="#prelaunch">Pre-Launch</a></li>
+<li><a href="#launchday">Launch Day</a></li>
+<li><a href="#engagement">Engagement</a></li>
+<li><a href="#content">Content Stories</a></li>
+<li><a href="#timeline">Timeline</a></li>
+</ul>
+</div></nav>
+
+<div class="hero">
+<h1>FIRST <span>STORY PACK</span></h1>
+<p>12 ready-to-post Instagram Stories for launch week. Copy the text, screenshot the design, post as-is.</p>
+</div>
+
+<section id="prelaunch"><div class="si">
+<p class="sl">Day -1</p>
+<h2 class="st">Pre-Launch Stories</h2>
+<div class="gl"></div>
+<p class="sd">Build anticipation. Two stories the night before launch. No links. No asks. Just intrigue.</p>
+<div class="sg">
+
+<div class="sc">
+<div class="sch"><h3>Teaser — "Something Is Coming"</h3><span class="day">Mon 8 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e 50%,#0a0a14)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">8:00 PM</div>
+<h4>SOMETHING<br>IS <span style="color:var(--g)">COMING</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:13px;letter-spacing:4px;color:var(--gr);text-transform:uppercase">Tomorrow &middot; 12 PM</p>
+<div class="sticker countdown">⏰ 12h</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Something's coming. 12 PM tomorrow. 👀"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>Brand Reveal</h3><span class="day">Mon 9 PM</span></div>
+<div class="scb" style="background:radial-gradient(circle at center,#1a1a2e,#0f0f1a)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">9:00 PM</div>
+<div style="width:80px;height:80px;border:3px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1rem">
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="14" height="40" rx="2" fill="#e4a11d"/><rect x="20" y="4" width="16" height="18" rx="0" fill="#e4a11d"/><rect x="20" y="26" width="16" height="18" rx="0" fill="#e4a11d"/><rect x="18" y="22" width="2" height="4" fill="#1a1a2e"/></svg>
+</div>
+<h4 style="font-size:20px;letter-spacing:6px">THE<br><span style="color:var(--g)">BREAKDOWN</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:11px;color:var(--gr)">Complex stories. Clear analysis.</p>
+<div class="sticker countdown">⏰ Tomorrow</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "The Breakdown. Launching tomorrow. 🔔"</div>
+</div>
+
+</div>
+</div></section>
+
+<section id="launchday" style="background:rgba(22,33,62,.3)"><div class="si">
+<p class="sl">Day 0 — Tuesday</p>
+<h2 class="st">Launch Day Stories</h2>
+<div class="gl"></div>
+<p class="sd">The main event. 5 stories across launch day — announce, engage, convert, and connect.</p>
+<div class="sg">
+
+<div class="sc">
+<div class="sch"><h3>🚀 Launch Announcement</h3><span class="day">Tue 12 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">12:00 PM</div>
+<h4>WE'RE <span style="color:var(--g)">LIVE</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:14px;color:var(--gr)">The Breakdown is here.</p>
+<p style="font-size:11px;color:var(--gr);margin-top:.5rem">First analysis drops now. Swipe up.</p>
+<div class="sticker link">⬆ See First Post</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "We're live. First breakdown is up. Swipe up to read. 🚀"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📊 Carousel Highlight</h3><span class="day">Tue 12:30 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">12:30 PM</div>
+<div style="width:180px;height:240px;background:var(--c);border:2px solid var(--g);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;margin-bottom:.75rem">
+<div style="font-family:'Bebas Neue';font-size:10px;letter-spacing:2px;color:var(--g)">SLIDE 1/10</div>
+<div style="font-family:'Bebas Neue';font-size:18px;color:var(--w);text-align:center;margin-top:4px;line-height:1.2">INDIA BANNED<br>TELEGRAM</div>
+<div style="width:20px;height:2px;background:var(--g);margin:6px 0"></div>
+<div style="font-size:8px;color:var(--gr)">10 things the headlines missed</div>
+</div>
+<p style="font-size:11px;color:var(--gr)">Swipe through the full analysis ⬆</p>
+<div class="sticker link">⬆ Swipe Up</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Slide 1 of our first breakdown. Full carousel on our profile. 📱"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📊 Poll — Engage</h3><span class="day">Tue 2 PM</span></div>
+<div class="scb" style="background:linear-gradient(180deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">2:00 PM</div>
+<div style="width:48px;height:48px;border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem">
+<svg width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg>
+</div>
+<h4 style="font-size:22px">Should India<br>Ban <span style="color:var(--g)">Telegram</span>?</h4>
+<div class="gold-line"></div>
+<div class="sticker poll" style="position:static;transform:none;margin-top:.5rem">
+<div style="display:flex;gap:1.5rem;font-size:13px">
+<span style="color:var(--g)">● Yes</span>
+<span style="color:var(--gr)">● No</span>
+</div>
+</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "What's your take? Vote now — we'll share results in stories. 🗳️"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🎬 Reel Announcement</h3><span class="day">Tue 6 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0a0a14,#1a0a0a)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">6:00 PM</div>
+<h4>NEW <span style="color:var(--g)">REEL</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:14px;color:var(--gr)">30-second explainer</p>
+<p style="font-size:11px;color:var(--gr);margin-top:.3rem">Telegram ban in 30 seconds.</p>
+<div style="width:60px;height:60px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;margin-top:.75rem;font-size:24px">▶</div>
+<div class="sticker link">⬆ Watch Now</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Telegram ban explained in 30 seconds. Reel is live. ⚡"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🔗 YouTube Cross-Promo</h3><span class="day">Tue 6:30 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">6:30 PM</div>
+<h4 style="font-size:18px">FULL ANALYSIS<br><span style="color:var(--g)">ON YOUTUBE</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:12px;color:var(--gr)">Deep dive. Sources. Context.</p>
+<div style="width:160px;height:90px;background:var(--c);border:2px solid #333;border-radius:4px;display:flex;align-items:center;justify-content:center;margin:.5rem 0;font-size:11px;color:var(--gr)">▶ YouTube Video</div>
+<div class="sticker link">⬆ Watch Full Video</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Full Telegram breakdown on YouTube now. Link in bio. 🎥"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>💬 Question Box</h3><span class="day">Tue 8 PM</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a2e1a)">
+<div class="top-label">THE BREAKDOWN</div>
+<div class="time">8:00 PM</div>
+<h4 style="font-size:22px">ASK US<br><span style="color:var(--g)">ANYTHING</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:12px;color:var(--gr)">First day. First conversation.</p>
+<p style="font-size:11px;color:var(--gr);margin-top:.3rem">Drop your questions below 👇</p>
+<div class="sticker question">💬 Ask a Question</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Day 1 done. What do you want us to cover next? Drop it in the box. 💬"</div>
+</div>
+
+</div>
+
+<div class="cap"><strong>Launch day rhythm:</strong> Announce (12 PM) → Highlight (12:30) → Engage (2 PM) → Reel (6 PM) → YouTube (6:30) → Connect (8 PM). Every story has a purpose.</div>
+</div></section>
+
+<section id="engagement"><div class="si">
+<p class="sl">Days 1-3</p>
+<h2 class="st">Engagement Stories</h2>
+<div class="gl"></div>
+<p class="sd">Stories that drive conversation and build community. Post these between your main content drops.</p>
+<div class="sg">
+
+<div class="sc">
+<div class="sch"><h3>📊 Poll — Topics</h3><span class="day">Anytime</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:20px">What should we<br>cover <span style="color:var(--g)">next</span>?</h4>
+<div class="gold-line"></div>
+<div class="sticker poll" style="position:static;transform:none;margin-top:.5rem">
+<div style="display:flex;gap:1rem;font-size:11px;flex-wrap:wrap;justify-content:center">
+<span style="color:var(--g)">● China-Taiwan</span>
+<span style="color:var(--gr)">● RBI Policy</span>
+</div>
+<div style="display:flex;gap:1rem;font-size:11px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+<span style="color:var(--gr)">● Press Freedom</span>
+<span style="color:var(--gr)">● AI Regulation</span>
+</div>
+</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "You decide what we break down next. Vote now. 🗳️"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🔢 Emoji Slider</h3><span class="day">After a post</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:18px">How worried should<br>India be about<br><span style="color:var(--g)">Telegram ban</span>?</h4>
+<div class="gold-line"></div>
+<div class="sticker emoji-slider" style="position:static;transform:none;margin-top:.5rem">
+<span style="font-size:18px">😴</span>
+<span style="font-size:14px;color:var(--gr)">——————————</span>
+<span style="font-size:18px">😰</span>
+</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Slide to vote. We'll share the results. 📊"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>👋 Welcome New Followers</h3><span class="day">Daily</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a2e1a)">
+<div class="top-label">THE BREAKDOWN</div>
+<div style="width:48px;height:48px;border:2px solid var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem">
+<svg width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="12" height="32" rx="2" fill="#e4a11d"/><rect x="16" y="4" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="16" y="22" width="12" height="14" rx="0" fill="#e4a11d"/><rect x="14" y="18" width="2" height="4" fill="#1a1a2e"/></svg>
+</div>
+<h4 style="font-size:18px">WELCOME<br><span style="color:var(--g)">NEW HERE?</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:11px;color:var(--gr);line-height:1.6">We break down complex stories<br>into clear analysis.</p>
+<p style="font-size:11px;color:var(--g);margin-top:.5rem">Geopolitics · Tech · Economy · Media</p>
+<div class="sticker link">⬆ See Best Post</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "New here? Here's what we do. Check out our pinned post. 👆"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📰 News Share + Take</h3><span class="day">During breaking news</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div style="width:100%;height:80px;background:var(--c);border:1px solid var(--b);border-radius:4px;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem;font-size:10px;color:var(--gr);padding:8px;text-align:left;line-height:1.4">
+<span>📰 <strong style="color:var(--w)">Reuters:</strong> India blocks 18 Chinese apps citing national security concerns</span>
+</div>
+<h4 style="font-size:14px">OUR <span style="color:var(--g)">TAKE</span></h4>
+<p style="font-size:11px;color:var(--gr);margin-top:.3rem;line-height:1.5">This is the third round of bans in 18 months. The pattern? Every time before elections.</p>
+<div class="sticker link">⬆ Full Analysis</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Breaking: India blocks 18 more Chinese apps. Our take — there's an election pattern. 🇮🇳"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🏆 Milestone Shoutout</h3><span class="day">At 50/100 followers</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#2e1a0a)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:24px"><span style="color:var(--g)">100</span> FOLLOWERS</h4>
+<div class="gold-line"></div>
+<p style="font-size:13px;color:var(--gr)">Thank you.</p>
+<p style="font-size:11px;color:var(--gr);margin-top:.3rem">First 100 people to join The Breakdown.<br>Means the world.</p>
+<div style="display:flex;gap:4px;justify-content:center;margin-top:.5rem;font-size:20px">🙏🔥🚀</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "100 followers on Day 1. Thank you. This is just the beginning. 🚀"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📅 "Day X" Recap</h3><span class="day">End of each day</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:20px">DAY <span style="color:var(--g)">1</span> / DONE</h4>
+<div class="gold-line"></div>
+<div style="display:flex;gap:1.5rem;margin:.5rem 0">
+<div style="text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--w)">2</div><div style="font-size:8px;color:var(--gr);text-transform:uppercase">Posts</div></div>
+<div style="text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--w)">47</div><div style="font-size:8px;color:var(--gr);text-transform:uppercase">Likes</div></div>
+<div style="text-align:center"><div style="font-family:'Bebas Neue';font-size:20px;color:var(--w)">18</div><div style="font-size:8px;color:var(--gr);text-transform:uppercase">Followers</div></div>
+</div>
+<p style="font-size:11px;color:var(--gr)">See you tomorrow for Day 2. 🌙</p>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Day 1 in the books. See you tomorrow for more breakdowns. 🌙"</div>
+</div>
+
+</div>
+</div></section>
+
+<section id="content" style="background:rgba(22,33,62,.3)"><div class="si">
+<p class="sl">Ongoing</p>
+<h2 class="st">Content Stories</h2>
+<div class="gl"></div>
+<p class="sd">Stories that drive traffic to your main posts. Share these every time you publish a carousel, reel, or YouTube video.</p>
+<div class="sg">
+
+<div class="sc">
+<div class="sch"><h3>📱 Carousel Share (Generic)</h3><span class="day">Every carousel day</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<div style="width:160px;height:200px;background:var(--c);border:2px solid var(--g);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;margin-bottom:.5rem">
+<div style="font-family:'Bebas Neue';font-size:9px;letter-spacing:1px;color:var(--g)">NEW ANALYSIS</div>
+<div style="font-family:'Bebas Neue';font-size:16px;color:var(--w);text-align:center;margin-top:4px;line-height:1.2">[TOPIC]</div>
+<div style="width:16px;height:2px;background:var(--g);margin:4px 0"></div>
+<div style="font-size:7px;color:var(--gr)">Swipe for full breakdown</div>
+</div>
+<div class="sticker link">⬆ Read Now</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "New analysis out now. Swipe up to read the full breakdown. 📖"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🎬 Reel Share</h3><span class="day">Every reel day</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0a0a14,#1a0a0a)">
+<div class="top-label">THE BREAKDOWN</div>
+<div style="width:56px;height:56px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:.5rem">▶</div>
+<h4 style="font-size:16px">NEW <span style="color:var(--g)">REEL</span></h4>
+<p style="font-size:11px;color:var(--gr);margin-top:.3rem">[Topic] explained in 30 seconds</p>
+<div class="sticker link">⬆ Watch</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "New reel dropping now. [Topic] in 30 seconds. Link in profile. 🎬"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📺 YouTube Live Alert</h3><span class="day">Video days (Tue/Fri)</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:16px">FULL BREAKDOWN<br><span style="color:var(--g)">ON YOUTUBE</span></h4>
+<div class="gold-line"></div>
+<div style="width:140px;height:80px;background:var(--c);border:2px solid #333;border-radius:4px;display:flex;align-items:center;justify-content:center;margin:.4rem 0;font-size:10px;color:var(--gr)">▶ [TITLE]</div>
+<p style="font-size:10px;color:var(--gr)">Deep dive. Sources. Full context.</p>
+<div class="sticker link">⬆ Watch on YouTube</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Full breakdown now on YouTube. Link in bio. 🎥"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📬 Newsletter Promo</h3><span class="day">Every Tue & Fri</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a2e1a)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:18px">GET THE<br><span style="color:var(--g)">NEWSLETTER</span></h4>
+<div class="gold-line"></div>
+<p style="font-size:11px;color:var(--gr);line-height:1.5">Complex stories. Clear analysis.<br>Delivered to your inbox.</p>
+<p style="font-size:11px;color:var(--g);margin-top:.3rem">Every Tuesday &amp; Friday</p>
+<div class="sticker link">⬆ Subscribe Free</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Get The Breakdown in your inbox. Twice a week. Free. Link in bio. 📬"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>📌 Pin / Pinned Post</h3><span class="day">Ongoing</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:18px">📌 PINNED</h4>
+<div class="gold-line"></div>
+<p style="font-size:12px;color:var(--gr)">Our best analysis so far</p>
+<p style="font-size:11px;color:var(--g);margin-top:.3rem">[Post Title]</p>
+<div class="sticker link">⬆ Read</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Our pinned post — the best place to start if you're new here. 👆"</div>
+</div>
+
+<div class="sc">
+<div class="sch"><h3>🎯 What's Coming Next</h3><span class="day">Sunday / end of week</span></div>
+<div class="scb" style="background:linear-gradient(135deg,#0f0f1a,#1a1a2e)">
+<div class="top-label">THE BREAKDOWN</div>
+<h4 style="font-size:18px">THIS <span style="color:var(--g)">WEEK</span></h4>
+<div class="gold-line"></div>
+<div style="font-size:11px;color:var(--gr);text-align:left;line-height:1.8">
+<p><span style="color:var(--g)">●</span> Tue: [Topic 1]</p>
+<p><span style="color:var(--g)">●</span> Thu: [Topic 2] Reel</p>
+<p><span style="color:var(--g)">●</span> Fri: [Topic 3] Carousel</p>
+</div>
+<div class="sticker link">⬆ Follow for updates</div>
+<div class="bottom-mark"><svg width="20" height="20" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="10" height="32" rx="2" fill="rgba(255,255,255,.15)"/><rect x="14" y="4" width="10" height="14" rx="0" fill="rgba(228,161,29,.2)"/><rect x="14" y="22" width="10" height="14" rx="0" fill="rgba(255,255,255,.15)"/><rect x="12" y="18" width="2" height="4" fill="transparent"/></svg></div>
+</div>
+<div class="scf"><strong>Caption:</strong> "Here's what we're covering this week. Follow so you don't miss it. 📅"</div>
+</div>
+
+</div>
+</div></section>
+
+<section id="timeline"><div class="si">
+<p class="sl">Schedule</p>
+<h2 class="st">Launch Week Story Timeline</h2>
+<div class="gl"></div>
+<p class="sd">Every story, every time slot for launch week. Copy this schedule and follow it.</p>
+
+<div style="overflow-x:auto">
+<table class="stbl" style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1.5rem">
+<thead><tr>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Time</th>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Mon (Pre)</th>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Tue (Launch)</th>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Wed</th>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Thu</th>
+<th style="text-align:left;padding:10px 14px;background:var(--c);border-bottom:2px solid var(--g);font-family:'Bebas Neue';font-size:12px;letter-spacing:2px;color:var(--g)">Fri</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">10 AM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">12 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--w);background:rgba(228,161,29,.1)"><strong>🚀 Launch Announcement</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g)"><strong>Carousel Share</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g)"><strong>Carousel Share</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g)"><strong>Carousel Share</strong></td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">12:30 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>Carousel Highlight</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">2 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>📊 Poll Story</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>📊 Poll Story</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>Emoji Slider</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>Poll Story</strong></td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">4 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>Behind the Scenes</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">6 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🎬 Reel Drop</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🎬 Reel Share</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🎬 Reel Drop</strong></td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">6:30 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🔗 YouTube Promo</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)">—</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🔗 YouTube Promo</strong></td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">8 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--w);background:rgba(228,161,29,.1)"><strong>"Something Is Coming"</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>💬 Question Box</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>👋 Welcome New</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>💬 Question Box</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>Weekend Preview</strong></td></tr>
+<tr><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--g);font-family:'Bebas Neue'">9 PM</td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--w);background:rgba(228,161,29,.1)"><strong>Brand Reveal</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🌙 Day 1 Done</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🌙 Day 2 Done</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🌙 Day 3 Done</strong></td><td style="padding:8px 14px;border-bottom:1px solid var(--b);color:var(--gr)"><strong>🌙 Week 1 Done</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="cap"><strong>Golden rule:</strong> Stories disappear in 24 hours. Post them at consistent times so your audience knows when to check. The 8 PM "Day Done" story becomes a ritual — followers will expect it.</div>
+
+</div></section>
+
+<section style="background:rgba(22,33,62,.3)"><div class="si">
+<p class="sl">Reference</p>
+<h2 class="st">Story Design Specs</h2>
+<div class="gl"></div>
+<div class="stats">
+<div class="stat"><div class="num">9:16</div><div class="lbl">Aspect Ratio</div></div>
+<div class="stat"><div class="num">1080×1920</div><div class="lbl">Resolution (px)</div></div>
+<div class="stat"><div class="num">#0f0f1a</div><div class="lbl">Background Color</div></div>
+<div class="stat"><div class="num">#e4a11d</div><div class="lbl">Gold Accent</div></div>
+<div class="stat"><div class="num">15s</div><div class="lbl">Max Text Read Time</div></div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem">
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:6px">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Design Rules</h4>
+<ul style="font-size:11px;color:var(--gr);line-height:1.8;list-style:none">
+<li>✓ Dark background on every story</li>
+<li>✓ Gold accent on every frame</li>
+<li>✓ B mark bottom-right (faded)</li>
+<li>✓ One message per story</li>
+<li>✓ Max 2 lines of text</li>
+<li>✓ No cluttered stickers</li>
+</ul>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:6px">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Typography</h4>
+<ul style="font-size:11px;color:var(--gr);line-height:1.8;list-style:none">
+<li>✓ Titles: Bebas Neue, large</li>
+<li>✓ Body: Source Sans, 400 weight</li>
+<li>✓ Labels: Source Sans, uppercase</li>
+<li>✓ Max 3 font sizes per frame</li>
+<li>✓ Left-align or center</li>
+<li>✓ Never right-align</li>
+</ul>
+</div>
+<div style="background:var(--cb);border:1px solid var(--b);padding:1rem;border-radius:6px">
+<h4 style="font-family:'Bebas Neue';font-size:14px;color:var(--g);margin-bottom:.4rem">Tools</h4>
+<ul style="font-size:11px;color:var(--gr);line-height:1.8;list-style:none">
+<li>✓ Canva (1080×1920 template)</li>
+<li>✓ CapCut (for animated stories)</li>
+<li>✓ Instagram native stickers</li>
+<li>✓ Use "Create" mode in Stories</li>
+<li>✓ Save templates for reuse</li>
+<li>✓ Batch-create 1 week at a time</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<footer>
+<p class="fb">THE BREAKDOWN</p>
+<p>Complex stories. Clear analysis.</p>
+<p style="margin-top:.5rem;font-size:10px;color:var(--b)">Story Pack v1.0 — 12 ready-to-post templates</p>
+</footer>
+
+</body>
+</html>

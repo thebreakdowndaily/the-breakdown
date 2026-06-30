@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Breakdown — Logo Pack</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f5f5f0; padding: 40px; color: #1a1a2e; }
+  .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; margin: 40px 0; }
+  .logo-card { padding: 40px; border: 2px solid #d4d4c8; text-align: center; }
+  .logo-card h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-top: 20px; color: #e4a11d; }
+  .logo-card p { font-size: 12px; color: #666; margin-top: 8px; }
+  .dark-bg { background: #1a1a2e; }
+  .dark-bg h3 { color: #e4a11d; }
+  .dark-bg p { color: #aaa; }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
+  .subtitle { color: #666; font-size: 14px; margin-bottom: 40px; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+
+<h1>THE BREAKDOWN — Logo Pack</h1>
+<p class="subtitle">Open in browser. Right-click → Save as PNG/SVG. For print, screenshot at desired size.</p>
+
+<div class="logo-grid">
+
+<!-- LOGO 1: Primary (Light BG) -->
+<div class="logo-card">
+  <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- The "B" mark -->
+    <g transform="translate(10, 5)">
+      <!-- Left half (solid charcoal) -->
+      <rect x="0" y="0" width="20" height="90" rx="2" fill="#1a1a2e"/>
+      <!-- Right half top (gold) -->
+      <rect x="22" y="0" width="20" height="42" rx="0" fill="#e4a11d"/>
+      <!-- Right half bottom (charcoal) -->
+      <rect x="22" y="48" width="20" height="42" rx="0" fill="#1a1a2e"/>
+      <!-- Gap between halves -->
+      <rect x="20" y="42" width="2" height="6" fill="#f5f5f0"/>
+    </g>
+    <!-- "THE BREAKDOWN" wordmark -->
+    <text x="65" y="28" font-family="'Bebas Neue', Impact, sans-serif" font-size="14" font-weight="400" letter-spacing="4" fill="#1a1a2e">THE</text>
+    <text x="65" y="62" font-family="'Bebas Neue', Impact, sans-serif" font-size="38" font-weight="700" letter-spacing="2" fill="#1a1a2e">BREAKDOWN</text>
+    <!-- Gold accent line -->
+    <rect x="65" y="68" width="220" height="2" fill="#e4a11d"/>
+    <!-- Tagline -->
+    <text x="65" y="88" font-family="Georgia, serif" font-size="10" font-style="italic" fill="#666666">Complex stories. Clear analysis.</text>
+  </svg>
+  <h3>Primary Logo</h3>
+  <p>Light background — website, newsletter, print</p>
+</div>
+
+<!-- LOGO 2: Primary (Dark BG) -->
+<div class="logo-card dark-bg">
+  <svg width="300" height="100" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(10, 5)">
+      <rect x="0" y="0" width="20" height="90" rx="2" fill="#ffffff"/>
+      <rect x="22" y="0" width="20" height="42" rx="0" fill="#e4a11d"/>
+      <rect x="22" y="48" width="20" height="42" rx="0" fill="#ffffff"/>
+      <rect x="20" y="42" width="2" height="6" fill="#1a1a2e"/>
+    </g>
+    <text x="65" y="28" font-family="'Bebas Neue', Impact, sans-serif" font-size="14" font-weight="400" letter-spacing="4" fill="#ffffff">THE</text>
+    <text x="65" y="62" font-family="'Bebas Neue', Impact, sans-serif" font-size="38" font-weight="700" letter-spacing="2" fill="#ffffff">BREAKDOWN</text>
+    <rect x="65" y="68" width="220" height="2" fill="#e4a11d"/>
+    <text x="65" y="88" font-family="Georgia, serif" font-size="10" font-style="italic" fill="#aaaaaa">Complex stories. Clear analysis.</text>
+  </svg>
+  <h3>Primary Logo (Dark Mode)</h3>
+  <p>Dark background — YouTube banner, social media headers</p>
+</div>
+
+<!-- LOGO 3: Icon Only (Light) -->
+<div class="logo-card">
+  <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(25, 10)">
+      <rect x="0" y="0" width="30" height="100" rx="3" fill="#1a1a2e"/>
+      <rect x="34" y="0" width="30" height="46" rx="0" fill="#e4a11d"/>
+      <rect x="34" y="54" width="30" height="46" rx="0" fill="#1a1a2e"/>
+      <rect x="30" y="46" width="4" height="8" fill="#f5f5f0"/>
+    </g>
+  </svg>
+  <h3>Icon Mark (Light BG)</h3>
+  <p>Avatar, favicon, app icon, social profile</p>
+</div>
+
+<!-- LOGO 4: Icon Only (Dark) -->
+<div class="logo-card dark-bg">
+  <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(25, 10)">
+      <rect x="0" y="0" width="30" height="100" rx="3" fill="#ffffff"/>
+      <rect x="34" y="0" width="30" height="46" rx="0" fill="#e4a11d"/>
+      <rect x="34" y="54" width="30" height="46" rx="0" fill="#ffffff"/>
+      <rect x="30" y="46" width="4" height="8" fill="#1a1a2e"/>
+    </g>
+  </svg>
+  <h3>Icon Mark (Dark Mode)</h3>
+  <p>YouTube avatar, X profile, dark interfaces</p>
+</div>
+
+<!-- LOGO 5: Wordmark Only -->
+<div class="logo-card">
+  <svg width="400" height="50" viewBox="0 0 400 50" xmlns="http://www.w3.org/2000/svg">
+    <text x="0" y="20" font-family="'Bebas Neue', Impact, sans-serif" font-size="14" font-weight="400" letter-spacing="4" fill="#1a1a2e">THE</text>
+    <text x="0" y="48" font-family="'Bebas Neue', Impact, sans-serif" font-size="40" font-weight="700" letter-spacing="2" fill="#1a1a2e">BREAKDOWN</text>
+    <rect x="0" y="38" width="340" height="2" fill="#e4a11d"/>
+  </svg>
+  <h3>Wordmark Only (Light)</h3>
+  <p>Headers, banners, horizontal spaces</p>
+</div>
+
+<!-- LOGO 6: Wordmark Only (Dark) -->
+<div class="logo-card dark-bg">
+  <svg width="400" height="50" viewBox="0 0 400 50" xmlns="http://www.w3.org/2000/svg">
+    <text x="0" y="20" font-family="'Bebas Neue', Impact, sans-serif" font-size="14" font-weight="400" letter-spacing="4" fill="#ffffff">THE</text>
+    <text x="0" y="48" font-family="'Bebas Neue', Impact, sans-serif" font-size="40" font-weight="700" letter-spacing="2" fill="#ffffff">BREAKDOWN</text>
+    <rect x="0" y="38" width="340" height="2" fill="#e4a11d"/>
+  </svg>
+  <h3>Wordmark Only (Dark)</h3>
+  <p>Dark banners, social media headers</p>
+</div>
+
+<!-- LOGO 7: YouTube Banner -->
+<div class="logo-card" style="background:#1a1a2e; padding:0;">
+  <svg width="500" height="120" viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background texture: subtle map dots -->
+    <defs>
+      <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="0.5" fill="rgba(255,255,255,0.03)"/>
+      </pattern>
+    </defs>
+    <rect width="500" height="120" fill="#1a1a2e"/>
+    <rect width="500" height="120" fill="url(#dots)"/>
+    <!-- Top gold line -->
+    <rect x="0" y="0" width="500" height="2" fill="#e4a11d"/>
+    <!-- Logo -->
+    <g transform="translate(30, 25)">
+      <rect x="0" y="0" width="14" height="70" rx="2" fill="#ffffff"/>
+      <rect x="16" y="0" width="14" height="32" rx="0" fill="#e4a11d"/>
+      <rect x="16" y="38" width="14" height="32" rx="0" fill="#ffffff"/>
+      <rect x="14" y="32" width="2" height="6" fill="#1a1a2e"/>
+    </g>
+    <text x="60" y="40" font-family="'Bebas Neue', Impact, sans-serif" font-size="10" font-weight="400" letter-spacing="3" fill="#ffffff">THE</text>
+    <text x="60" y="72" font-family="'Bebas Neue', Impact, sans-serif" font-size="32" font-weight="700" letter-spacing="2" fill="#ffffff">BREAKDOWN</text>
+    <rect x="60" y="78" width="200" height="1.5" fill="#e4a11d"/>
+    <!-- Tagline -->
+    <text x="60" y="96" font-family="Georgia, serif" font-size="11" font-style="italic" fill="#e4a11d">Complex stories. Clear analysis.</text>
+    <!-- Category pills -->
+    <g transform="translate(310, 25)">
+      <rect x="0" y="0" width="80" height="24" rx="12" fill="none" stroke="#e4a11d" stroke-width="1"/>
+      <text x="40" y="16" font-family="Inter, sans-serif" font-size="8" text-anchor="middle" letter-spacing="1" fill="#e4a11d">GEOPOLITICS</text>
+      <rect x="0" y="32" width="70" height="24" rx="12" fill="none" stroke="#e4a11d" stroke-width="1"/>
+      <text x="35" y="48" font-family="Inter, sans-serif" font-size="8" text-anchor="middle" letter-spacing="1" fill="#e4a11d">TECHNOLOGY</text>
+      <rect x="0" y="64" width="65" height="24" rx="12" fill="none" stroke="#e4a11d" stroke-width="1"/>
+      <text x="32" y="80" font-family="Inter, sans-serif" font-size="8" text-anchor="middle" letter-spacing="1" fill="#e4a11d">ECONOMY</text>
+    </g>
+  </svg>
+  <h3>YouTube Banner (16:9)</h3>
+  <p>2560 x 1440 recommended upload size</p>
+</div>
+
+<!-- LOGO 8: Stacked -->
+<div class="logo-card">
+  <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Centered B mark -->
+    <g transform="translate(65, 15)">
+      <rect x="0" y="0" width="18" height="80" rx="2" fill="#1a1a2e"/>
+      <rect x="22" y="0" width="18" height="36" rx="0" fill="#e4a11d"/>
+      <rect x="22" y="44" width="18" height="36" rx="0" fill="#1a1a2e"/>
+      <rect x="18" y="36" width="4" height="8" fill="#f5f5f0"/>
+    </g>
+    <!-- Centered wordmark -->
+    <text x="100" y="120" font-family="'Bebas Neue', Impact, sans-serif" font-size="12" font-weight="400" letter-spacing="4" fill="#1a1a2e" text-anchor="middle">THE</text>
+    <text x="100" y="152" font-family="'Bebas Neue', Impact, sans-serif" font-size="34" font-weight="700" letter-spacing="2" fill="#1a1a2e" text-anchor="middle">BREAKDOWN</text>
+    <rect x="20" y="156" width="160" height="2" fill="#e4a11d"/>
+    <text x="100" y="180" font-family="Georgia, serif" font-size="10" font-style="italic" fill="#666" text-anchor="middle">Complex stories. Clear analysis.</text>
+  </svg>
+  <h3>Stacked Logo (Square)</h3>
+  <p>Instagram, favicon, square formats</p>
+</div>
+
+</div>
+</body>
+</html>

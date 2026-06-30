@@ -1,0 +1,59 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3840 2160">
+  <rect x="0" y="0" width="3840" height="2160" fill="#0B1120"/>
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="2160">
+      <stop offset="0%" stop-color="#F59E0B15"/>
+      <stop offset="100%" stop-color="#F59E0B00"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="3840" height="2160" fill="url(#g2)"/>
+  
+  <rect x="0" y="0" width="3840" height="80" fill="#111827" opacity="0.6"/>
+  <text x="60" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="600" fill="#94A3B8" letter-spacing="4">TAX BREAKDOWN · INDIA 2026</text>
+  <text x="3780" y="52" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F59E0B" text-anchor="end">2/10</text>
+  <line x1="60" y1="80" x2="3780" y2="80" stroke="#F59E0B" stroke-width="2" opacity="0.3"/>
+
+  <!-- Big number -->
+  <text x="200" y="400" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="220" font-weight="900" fill="#F59E0B">₹19</text>
+  <text x="440" y="340" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="32" font-weight="400" fill="#94A3B8">out of every ₹100</text>
+  <text x="440" y="390" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="32" font-weight="400" fill="#94A3B8">you pay in tax</text>
+
+  <!-- Title -->
+  <text x="200" y="550" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="56" font-weight="800" fill="#F8FAFC">Interest Payments on Past Debt</text>
+  <text x="200" y="610" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="#64748B">You're paying for yesterday's borrowings</text>
+  <line x1="200" y1="650" x2="600" y2="650" stroke="#F59E0B" stroke-width="3"/>
+
+  <!-- Bar visualization -->
+  <g transform="translate(200, 780)">
+    <!-- Full bar background -->
+    <rect x="0" y="40" width="3000" height="60" rx="6" fill="#1E293B"/>
+    <!-- Filled portion -->
+    <rect x="0" y="40" width="570" height="60" rx="6" fill="#F59E0B"/>
+    <text x="20" y="78" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#0B1120">₹19 — INTEREST</text>
+
+    <!-- Remaining -->
+    <rect x="570" y="40" width="2430" height="60" rx="6" fill="#1E293B" opacity="0.5"/>
+  </g>
+
+  <!-- Explanation cards -->
+  <g transform="translate(200, 980)">
+    <rect x="0" y="0" width="1100" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="40" y="45" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#F59E0B">WHY THIS MATTERS</text>
+    <text x="40" y="90" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#94A3B8">India's outstanding public debt exceeds ₹160 lakh crore.</text>
+    <text x="40" y="125" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#94A3B8">Interest payments are the single largest expenditure —</text>
+    <text x="40" y="160" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#94A3B8">more than defence, health, or education.</text>
+  </g>
+
+  <g transform="translate(1460, 980)">
+    <rect x="0" y="0" width="1100" height="200" rx="12" fill="#111827" stroke="#1E293B" stroke-width="1"/>
+    <text x="40" y="45" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#64748B">₹ IN PERSPECTIVE</text>
+    <text x="40" y="95" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="#F8FAFC">₹9.6 Lakh Crore</text>
+    <text x="40" y="135" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#94A3B8">Annual interest burden on the budget</text>
+    <text x="40" y="170" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="20" fill="#EF4444">↑ 15% YoY increase</text>
+  </g>
+
+  
+  <rect x="0" y="2100" width="3840" height="60" fill="#111827" opacity="0.4"/>
+  <text x="1920" y="2136" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16" fill="#64748B" text-anchor="middle" letter-spacing="2">NEWSJACK · EDITORIAL INFOGRAPHIC</text>
+</svg>

@@ -1,0 +1,54 @@
+{
+  "audit_date": "2026-06-26",
+  "total_stories": 22,
+  "standard": "editorial.css v4 + Editorial OS v1.0",
+  "dimensions": ["accuracy","evidence","neutrality","clarity","readability","seo","visual_quality","storytelling","originality","trustworthiness"],
+  "stories": [
+    {"slug":"anthropic-mythos-ai-2026","title":"Anthropic Mythos AI","overall":6.8,"seo":3,"trust":6},
+    {"slug":"canada-social-media-ban-under-16","title":"Canada Social Media Ban","overall":6.3,"seo":2,"trust":6},
+    {"slug":"china-lineshine-supercomputer-top500-2026","title":"China LineShine Supercomputer","overall":6.9,"seo":3,"trust":6},
+    {"slug":"doval-wang-india-china-lac-normalisation-june-2026","title":"Doval-Wang India-China Talks","overall":6.5,"seo":1,"trust":5},
+    {"slug":"drone-threat-intelligence-reset-jk-northeast-2026","title":"Drone Threat Intel Reset","overall":6.7,"seo":1,"trust":6},
+    {"slug":"el-nino-2026","title":"Super El Niño 2026","overall":6.7,"seo":1,"trust":7},
+    {"slug":"europe-heatwave-2026","title":"Europe Heatwave 2026","overall":6.6,"seo":3,"trust":6},
+    {"slug":"india-ai-governance-guidelines-impact-summit-2026","title":"India AI Governance Guidelines","overall":6.9,"seo":3,"trust":5},
+    {"slug":"india-digital-regulation-offensive-2026-dpdp-it-rules-crypto","title":"India Digital Regulation Offensive","overall":6.0,"seo":1,"trust":3},
+    {"slug":"india-us-trade-deal-2026","title":"India-US Trade Deal","overall":7.7,"seo":4,"trust":7},
+    {"slug":"kunal-shah-meta-story-2026","title":"Kunal Shah Meta-Story","overall":7.3,"seo":1,"trust":7},
+    {"slug":"lucknow-fire-tragedy","title":"Lucknow Fire Tragedy","overall":7.1,"seo":2,"trust":6},
+    {"slug":"modi-cabinet-reshuffle-2026","title":"Modi Cabinet Reshuffle 2026","overall":8.1,"seo":5,"trust":8},
+    {"slug":"mohan-yadav-ujjain-land","title":"Mohan Yadav Land Scam","overall":7.2,"seo":2,"trust":7},
+    {"slug":"neet-2026-the-exam-that-broke-india","title":"NEET 2026 Exam That Broke India","overall":7.3,"seo":2,"trust":7},
+    {"slug":"rbi-monsoon-warning-growth-inflation-outlook-june-2026","title":"RBI Monsoon Warning","overall":6.6,"seo":1,"trust":6},
+    {"slug":"reuters-digital-news-report-2026-india-trust-crisis","title":"Reuters Trust Crisis India","overall":6.6,"seo":1,"trust":5},
+    {"slug":"tata-electronics-ransomware","title":"Tata Ransomware 630GB","overall":6.6,"seo":1,"trust":6},
+    {"slug":"tmc-implosion-2026","title":"TMC Implosion 20 MPs to NDA","overall":8.9,"seo":10,"trust":9},
+    {"slug":"us-iran-80b-pentagon-war-cost","title":"Iran War $80B Cost","overall":7.0,"seo":2,"trust":7},
+    {"slug":"us-iran-peace-deal-2026","title":"US-Iran Peace Deal 14-Point","overall":6.9,"seo":2,"trust":7},
+    {"slug":"venezuela-earthquakes-2026","title":"Venezuela Earthquakes 235 Dead","overall":6.4,"seo":2,"trust":6}
+  ],
+  "aggregate": {
+    "overall_average": 6.9,
+    "seo_average": 2.3,
+    "trust_average": 6.2,
+    "v4_compliant": 1,
+    "v4_noncompliant": 21
+  },
+  "critical_issues": [
+    "21 of 22 stories use custom/inline CSS instead of editorial.css v4 — no shared design system",
+    "21 of 22 stories lack OG meta tags, Twitter cards, meta description — invisible on social media",
+    "16 of 22 stories lack proper <html><head><body> document structure",
+    "22 of 22 stories lack confidence level badges per Editorial OS §3.2",
+    "22 of 22 stories lack AI Disclosure statement (required per §5.4 if AI-assisted)",
+    "21 of 22 stories lack hero images using v4 .story-hero-media > img pattern",
+    "21 of 22 stories lack named author/byline",
+    "22 of 22 stories lack structured data (JSON-LD)"
+  ],
+  "medium_issues": [
+    "Stat grids universally use .stat-number names matched-by-convention but not powered by v4",
+    "Timelines universally use .timeline/.timeline-item instead of v4 .story-timeline/.story-timeline-item",
+    "Sources sections use .sources-box custom CSS instead of v4 .story-sources",
+    "No newsletter signup sections (.story-newsletter) for conversion",
+    "No reading progress bars (.reading-bar) in any story except TMC"
+  ]
+}

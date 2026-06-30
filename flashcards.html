@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC NET JRF — Flashcard Deck</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f1f5f9; padding: 20px; color: #1a1a1a; min-height: 100vh; }
+  .header { text-align: center; margin-bottom: 20px; }
+  .header h1 { font-size: 20pt; color: #b91c1c; }
+  .header p { font-size: 10pt; color: #6b7280; margin-top: 4px; }
+  .controls { text-align: center; margin-bottom: 16px; }
+  .controls button, .controls select { padding: 6px 14px; font-size: 9pt; border: none; border-radius: 4px; cursor: pointer; margin: 0 3px; }
+  .btn-shuffle { background: #1e40af; color: #fff; }
+  .btn-all { background: #b91c1c; color: #fff; }
+  .btn-p1 { background: #15803d; color: #fff; }
+  .btn-p2 { background: #854d0e; color: #fff; }
+  .counter { font-size: 9pt; color: #6b7280; margin-bottom: 10px; text-align: center; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; max-width: 1200px; margin: 0 auto; }
+  .card { perspective: 800px; height: 160px; cursor: pointer; }
+  .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s; transform-style: preserve-3d; }
+  .card.flipped .card-inner { transform: rotateY(180deg); }
+  .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-size: 9.5pt; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .card-front { background: #fff; border: 2px solid #e5e7eb; }
+  .card-front .tag { position: absolute; top: 6px; right: 8px; font-size: 6.5pt; padding: 2px 6px; border-radius: 3px; color: #fff; }
+  .tag-p1 { background: #15803d; }
+  .tag-p2 { background: #854d0e; }
+  .card-back { background: #b91c1c; color: #fff; transform: rotateY(180deg); font-weight: 600; font-size: 10pt; border: 2px solid #991b1b; }
+  .q-label { font-size: 7pt; color: #9ca3af; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>UGC NET JRF — Flashcard Deck</h1>
+  <p>Tap/Click card to flip | Ready for last-minute revision</p>
+</div>
+
+<div class="controls">
+  <button class="btn-p1" onclick="filterCards('p1')">Paper I Only</button>
+  <button class="btn-p2" onclick="filterCards('p2')">Paper II Only</button>
+  <button class="btn-all" onclick="filterCards('all')">All Cards</button>
+  <button class="btn-shuffle" onclick="shuffleCards()">Shuffle</button>
+  <select id="topicFilter" onchange="filterByTopic(this.value)" style="font-size:9pt;padding:6px 10px;border-radius:4px;border:1px solid #d1d5db;">
+    <option value="all">All Topics</option>
+    <option value="teaching">Teaching Aptitude</option>
+    <option value="research">Research Aptitude</option>
+    <option value="logical">Logical Reasoning</option>
+    <option value="ict">ICT / Higher Edu</option>
+    <option value="theories">Theories</option>
+    <option value="models">Models</option>
+    <option value="laws">Media Laws</option>
+    <option value="journalism">Journalism History</option>
+    <option value="devcom">Dev Comm / MacBride</option>
+    <option value="adpr">Advertising / PR</option>
+    <option value="scholars">Scholars</option>
+    <option value="agencies">News Agencies</option>
+  </select>
+</div>
+
+<div class="counter" id="counter"></div>
+<div class="card-grid" id="cardGrid"></div>
+
+<script>
+var cards = [
+  // PAPER I
+  { q: "Bloom's Revised Taxonomy levels (lowest to highest)", a: "Remember to Understand to Apply to Analyze to Evaluate to Create", p: "p1", t: "teaching" },
+  { q: "Three levels of teaching", a: "Memory to Understanding to Reflective", p: "p1", t: "teaching" },
+  { q: "Formative vs Summative evaluation", a: "Formative = DURING (feedback). Summative = AFTER (grade)", p: "p1", t: "teaching" },
+  { q: "Piaget's 4 stages of cognitive development", a: "Sensorimotor (0-2) to Preoperational (2-7) to Concrete Operational (7-11) to Formal Operational (11+)", p: "p1", t: "teaching" },
+  { q: "Vygotsky — ZPD stands for?", a: "Zone of Proximal Development — what a child can do with help", p: "p1", t: "teaching" },
+  { q: "Maslow's hierarchy of needs (bottom to top)", a: "Physiological to Safety to Love/Belonging to Esteem to Self-Actualization", p: "p1", t: "teaching" },
+  { q: "Inductive vs Deductive method", a: "Inductive = Specific to General. Deductive = General to Specific", p: "p1", t: "teaching" },
+  { q: "4 types of research by purpose", a: "Basic (knowledge) / Applied (solve) / Action (classroom) / Evaluative (assess)", p: "p1", t: "research" },
+  { q: "Probability sampling methods (SSSC)", a: "Simple Random / Stratified / Systematic / Cluster", p: "p1", t: "research" },
+  { q: "Non-probability sampling methods (CPSQ)", a: "Convenience / Purposive / Snowball / Quota", p: "p1", t: "research" },
+  { q: "Stratified vs Cluster sampling", a: "Stratified = random FROM each group. Cluster = random ENTIRE groups", p: "p1", t: "research" },
+  { q: "Null hypothesis (H0) vs Alternative hypothesis (H1)", a: "H0 = no relationship. H1 = relationship exists", p: "p1", t: "research" },
+  { q: "Type I vs Type II error", a: "Type I = reject TRUE H0. Type II = accept FALSE H0", p: "p1", t: "research" },
+  { q: "p-value less than 0.05 means", a: "Results are statistically significant", p: "p1", t: "research" },
+  { q: "Square of Opposition — A and E are?", a: "Contrary - both can't be true, both CAN be false", p: "p1", t: "logical" },
+  { q: "Square of Opposition — I and O are?", a: "Sub-contrary - both can't be false, both CAN be true", p: "p1", t: "logical" },
+  { q: "Square of Opposition — A-O and E-I are?", a: "Contradictory - if one is true, other MUST be false", p: "p1", t: "logical" },
+  { q: "Indian Logic — Vyapti means?", a: "Invariable concomitance / universal relation", p: "p1", t: "logical" },
+  { q: "Indian Logic — Hetu means?", a: "Reason / cause of inference", p: "p1", t: "logical" },
+  { q: "Indian Logic — Hetvabhas means?", a: "Fallacy of reason / invalid hetu", p: "p1", t: "logical" },
+  { q: "Indian Logic — Pratyaksha means?", a: "Direct perception (pramana)", p: "p1", t: "logical" },
+  { q: "Indian Logic — Anumana means?", a: "Inference", p: "p1", t: "logical" },
+  { q: "Ad Hominem fallacy", a: "Attack the person, not their argument", p: "p1", t: "logical" },
+  { q: "Straw Man fallacy", a: "Misrepresent someone's argument to attack it", p: "p1", t: "logical" },
+  { q: "False Dilemma fallacy", a: "Presenting only 2 options when more exist", p: "p1", t: "logical" },
+  { q: "Slippery Slope fallacy", a: "One step will inevitably lead to an extreme outcome", p: "p1", t: "logical" },
+  { q: "Hasty Generalization fallacy", a: "Small sample to broad conclusion", p: "p1", t: "logical" },
+  { q: "Network types in order", a: "PAN to LAN to MAN to WAN", p: "p1", t: "ict" },
+  { q: "RAM vs ROM", a: "RAM = Volatile (temporary). ROM = Non-volatile (permanent)", p: "p1", t: "ict" },
+  { q: "SWAYAM is?", a: "Government MOOC platform for online education", p: "p1", t: "ict" },
+  { q: "NEP 2020 school structure", a: "5+3+3+4: Foundational (3-8) to Prep (8-11) to Middle (11-14) to Secondary (14-18)", p: "p1", t: "ict" },
+  { q: "NEP 2020 — Key changes", a: "Multi-entry/exit in UG, M.Phil phased out, vocational from Class 6", p: "p1", t: "ict" },
+  { q: "UGC established?", a: "1956", p: "p1", t: "ict" },
+  { q: "NAAC established?", a: "1994", p: "p1", t: "ict" },
+  { q: "AICTE established?", a: "1987", p: "p1", t: "ict" },
+  { q: "Action Research scholar?", a: "Stephen Kemmis", p: "p1", t: "research" },
+  // PAPER II
+  { q: "Agenda Setting — Scholar(s)? Year?", a: "McCombs and Shaw, 1972", p: "p2", t: "theories" },
+  { q: "Cultivation Theory — Scholar? Key concept?", a: "Gerbner — Mean World Syndrome", p: "p2", t: "theories" },
+  { q: "Spiral of Silence — Scholar?", a: "Noelle-Neumann, 1974", p: "p2", t: "theories" },
+  { q: "Uses and Gratifications — Scholars?", a: "Katz, Blumler and Gurevitch, 1974", p: "p2", t: "theories" },
+  { q: "Two-Step Flow — Scholar?", a: "Lazarsfeld, 1948", p: "p2", t: "theories" },
+  { q: "Knowledge Gap — Scholars?", a: "Tichenor, Donohue and Olien, 1970", p: "p2", t: "theories" },
+  { q: "Diffusion of Innovations — Scholar?", a: "Rogers, 1962", p: "p2", t: "theories" },
+  { q: "Third-Person Effect — Scholar?", a: "Davison, 1983", p: "p2", t: "theories" },
+  { q: "Media Dependency Theory — Scholars?", a: "Ball-Rokeach and DeFleur", p: "p2", t: "theories" },
+  { q: "Propaganda Model — Scholars?", a: "Chomsky and Herman", p: "p2", t: "theories" },
+  { q: "Public Sphere — Scholar?", a: "Habermas", p: "p2", t: "theories" },
+  { q: "Gatekeeping — Scholar(s)?", a: "Lewin / White", p: "p2", t: "theories" },
+  { q: "Shannon-Weaver Model — Year? Type?", a: "1949, Linear model with Noise", p: "p2", t: "models" },
+  { q: "Berlo SMCR Model — Stands for?", a: "Source to Message to Channel to Receiver", p: "p2", t: "models" },
+  { q: "Osgood-Schramm Model — Year? Type?", a: "1954, Circular model", p: "p2", t: "models" },
+  { q: "Dance Helical Model — Year? Key idea?", a: "1967, Communication as continuous growth", p: "p2", t: "models" },
+  { q: "Barnlund Transactional Model — Year?", a: "1970, Simultaneous sending/receiving", p: "p2", t: "models" },
+  { q: "Lasswell Model — Formula?", a: "Who to Says What to In Which Channel to To Whom to With What Effect", p: "p2", t: "models" },
+  { q: "Normative Theories (4) — which scholar?", a: "Siebert, Peterson and Schramm", p: "p2", t: "theories" },
+  { q: "NWICO stands for? When?", a: "New World Information and Communication Order, 1970s", p: "p2", t: "devcom" },
+  { q: "MacBride Report — Year? Title?", a: "1980 — 'Many Voices, One World'", p: "p2", t: "devcom" },
+  { q: "SITE project — Year? What?", a: "1975-76, Satellite TV experiment in 6 states", p: "p2", t: "devcom" },
+  { q: "Kheda project — Year? Where?", a: "1979-85, Participatory rural TV, Gujarat", p: "p2", t: "devcom" },
+  { q: "Cinematograph Act — Year?", a: "1952", p: "p2", t: "laws" },
+  { q: "Working Journalists Act — Year?", a: "1955", p: "p2", t: "laws" },
+  { q: "Press Council Act — Year?", a: "1978 (statutory body)", p: "p2", t: "laws" },
+  { q: "IT Act — Year?", a: "2000", p: "p2", t: "laws" },
+  { q: "RTI Act — Year?", a: "2005", p: "p2", t: "laws" },
+  { q: "Copyright Act — Year?", a: "1957", p: "p2", t: "laws" },
+  { q: "AIDA model — Steps?", a: "Attention to Interest to Desire to Action", p: "p2", t: "adpr" },
+  { q: "DAGMAR — Full form?", a: "Defining Advertising Goals for Measured Advertising Results", p: "p2", t: "adpr" },
+  { q: "ELM — Scholar(s)? Routes?", a: "Petty and Cacioppo — Central route (logic) + Peripheral route (superficial)", p: "p2", t: "adpr" },
+  { q: "Grunig's 4 PR Models", a: "Press Agentry to Public Info to Two-Way Asymmetric to Two-Way Symmetric", p: "p2", t: "adpr" },
+  { q: "BARC — Function?", a: "TRP measurement (Broadcast Audience Research Council)", p: "p2", t: "adpr" },
+  { q: "ABC — Function?", a: "Audit circulation of newspapers (Audit Bureau of Circulations)", p: "p2", t: "adpr" },
+  { q: "PCI — Function?", a: "Press ethics (Press Council of India)", p: "p2", t: "adpr" },
+  { q: "CBFC — Function?", a: "Film certification (Central Board of Film Certification)", p: "p2", t: "adpr" },
+  { q: "First newspaper in India — Name? Year? Founder?", a: "Bengal Gazette, 1780, James Augustus Hicky", p: "p2", t: "journalism" },
+  { q: "First Bengali newspaper — Name? Year?", a: "Samachar Darpan, 1818", p: "p2", t: "journalism" },
+  { q: "Oldest surviving newspaper — Name? Year?", a: "Bombay Samachar, 1822", p: "p2", t: "journalism" },
+  { q: "Harijan — started by? Year?", a: "Mahatma Gandhi, 1933", p: "p2", t: "journalism" },
+  { q: "AP — Country?", a: "USA (Associated Press, 1846)", p: "p2", t: "agencies" },
+  { q: "AFP — Country?", a: "France (Agence France-Presse, 1835 as Havas)", p: "p2", t: "agencies" },
+  { q: "Reuters — Country?", a: "UK (1851)", p: "p2", t: "agencies" },
+  { q: "TASS — Country?", a: "Russia", p: "p2", t: "agencies" },
+  { q: "Xinhua — Country?", a: "China", p: "p2", t: "agencies" },
+  { q: "PTI — Country? Year?", a: "India, 1947", p: "p2", t: "agencies" },
+  { q: "McLuhan — Famous phrase?", a: "The medium is the message", p: "p2", t: "scholars" },
+  { q: "Lerner — Association?", a: "Modernization / Empathy", p: "p2", t: "scholars" },
+  { q: "Freire — Association?", a: "Participatory Communication / Conscientization", p: "p2", t: "scholars" },
+  { q: "Schramm — Association?", a: "Development Communication / Models", p: "p2", t: "scholars" },
+  { q: "Entman — Association?", a: "Framing (refined concept)", p: "p2", t: "scholars" },
+  { q: "Article 19(1)(a) — About?", a: "Freedom of speech and expression (with reasonable restrictions under 19(2))", p: "p2", t: "laws" },
+];
+
+var currentCards = cards.slice();
+
+function render() {
+  var grid = document.getElementById('cardGrid');
+  var counter = document.getElementById('counter');
+  grid.innerHTML = '';
+  for (var i = 0; i < currentCards.length; i++) {
+    var card = currentCards[i];
+    var div = document.createElement('div');
+    div.className = 'card';
+    var tagClass = card.p === 'p1' ? 'tag-p1' : 'tag-p2';
+    var tagText = card.p === 'p1' ? 'Paper I' : 'Paper II';
+    div.innerHTML =
+      '<div class="card-inner">' +
+        '<div class="card-front">' +
+          '<span class="tag ' + tagClass + '">' + tagText + '</span>' +
+          '<div class="q-label">Question</div>' +
+          card.q +
+        '</div>' +
+        '<div class="card-back">' + card.a + '</div>' +
+      '</div>';
+    div.addEventListener('click', function() { this.classList.toggle('flipped'); });
+    grid.appendChild(div);
+  }
+  counter.textContent = 'Showing ' + currentCards.length + ' of ' + cards.length + ' cards';
+}
+
+function filterCards(type) {
+  if (type === 'all') {
+    currentCards = cards.slice();
+  } else {
+    currentCards = [];
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].p === type) currentCards.push(cards[i]);
+    }
+  }
+  render();
+}
+
+function filterByTopic(topic) {
+  if (topic === 'all') {
+    currentCards = cards.slice();
+  } else {
+    currentCards = [];
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].t === topic) currentCards.push(cards[i]);
+    }
+  }
+  render();
+}
+
+function shuffleCards() {
+  for (var i = currentCards.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = currentCards[i];
+    currentCards[i] = currentCards[j];
+    currentCards[j] = temp;
+  }
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

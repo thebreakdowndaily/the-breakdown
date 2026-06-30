@@ -1,0 +1,47 @@
+{
+  "section": "about",
+  "label": "About Section",
+  "description": "Edit the About section content and coverage pillars.",
+  "fields": [
+    {
+      "key": "about-heading",
+      "label": "Heading",
+      "type": "text",
+      "value": "Complex Stories. Clear Analysis.",
+      "hint": "Main heading for the About section"
+    },
+    {
+      "key": "about-p1",
+      "label": "Paragraph 1",
+      "type": "textarea",
+      "value": "The Breakdown is a news analysis platform that goes beyond headlines. We break down geopolitics, technology, economy, and media with forensic precision.",
+      "hint": "First paragraph about The Breakdown"
+    },
+    {
+      "key": "about-p2",
+      "label": "Paragraph 2",
+      "type": "textarea",
+      "value": "No pundits. No hype. No partisan angles. Just the analysis you need to understand what is actually happening and why it matters.",
+      "hint": "Second paragraph"
+    },
+    {
+      "key": "about-p3",
+      "label": "Paragraph 3",
+      "type": "textarea",
+      "value": "Every story gets the same treatment: context, stakes, what both sides are missing, and what to watch next.",
+      "hint": "Third paragraph"
+    },
+    {
+      "key": "pillars",
+      "label": "Coverage Pillars",
+      "type": "json",
+      "value": [
+        {"icon": "Geopolitics", "name": "World Affairs", "desc": "35% of coverage. Diplomacy, conflict, alliances."},
+        {"icon": "Tech", "name": "Technology / AI", "desc": "25% of coverage. Platforms, privacy, regulation."},
+        {"icon": "Economy", "name": "Economy", "desc": "20% of coverage. Trade, tariffs, markets."},
+        {"icon": "Media", "name": "Media / Press", "desc": "12% of coverage. Press freedom, platform bans."}
+      ],
+      "hint": "Four coverage pillars displayed as cards in the About section"
+    }
+  ]
+}
