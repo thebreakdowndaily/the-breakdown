@@ -28,7 +28,7 @@ export function WorldMapWrapper({ stories, onCountryChange }: WorldMapWrapperPro
   const filteredStories = selectedCountry
     ? stories.filter(s => {
         const q = selectedCountry.toLowerCase()
-        return s.title.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q)
+        return (s.title || '').toLowerCase().includes(q) || (s.summary || '').toLowerCase().includes(q)
       })
     : stories
 

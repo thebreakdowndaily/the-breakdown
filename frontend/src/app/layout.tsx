@@ -5,6 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { TopBar } from '@/components/layout/top-bar'
 import { Footer } from '@/components/layout/footer'
 import { SWRegister } from '@/components/pwa/sw-register'
+import { ErrorBoundary } from '@/components/layout/error-boundary'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,9 +43,7 @@ export const metadata: Metadata = {
     site: '@thebreakdowndaily',
     creator: '@thebreakdowndaily',
   },
-  other: {
-    'theme-color': '#0a0a0f',
-  },
+  other: {},
 }
 
 export default function RootLayout({
@@ -60,9 +59,10 @@ export default function RootLayout({
         ) : null}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var e=localStorage.getItem("theme");if(e==="dark"||(!e&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(t){}})();`
+            __html: `(function(){try{var e=localStorage.getItem("theme");if(e==="dark"||(!e&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}})();`
           }}
         />
+        <meta name="theme-color" content="#0a0a0f" />
       </head>
       <body className="min-h-full flex flex-col">
         <script
@@ -104,7 +104,7 @@ export default function RootLayout({
           <TopBar />
           <SWRegister />
           <main id="main-content" className="flex-1 focus:outline-none" tabIndex={-1}>
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </main>
           <Footer />
         </TooltipProvider>

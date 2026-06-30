@@ -11,11 +11,13 @@ export function NewsletterForm() {
   const [message, setMessage] = useState('')
 
   useEffect(() => {
-    const saved = localStorage.getItem('tbd-newsletter-email')
-    if (saved) {
-      setStatus('subscribed')
-      setMessage('You are already subscribed.')
-    }
+    try {
+      const saved = localStorage.getItem('tbd-newsletter-email')
+      if (saved) {
+        setStatus('subscribed')
+        setMessage('You are already subscribed.')
+      }
+    } catch {}
   }, [])
 
   function handleSubmit(e: React.FormEvent) {

@@ -3,7 +3,14 @@
 import dynamic from 'next/dynamic'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-const ECharts = dynamic(() => import('echarts-for-react'), { ssr: false })
+const ECharts = dynamic(() => import('echarts-for-react'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] rounded-lg bg-muted/20 animate-pulse flex items-center justify-center text-muted-foreground text-sm">
+      Loading chart…
+    </div>
+  ),
+})
 
 interface ChartProps {
   title: string

@@ -5,22 +5,12 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 
-const binary =
-  path.resolve(
-    root,
-    "node_modules",
-    "@pagefind",
-    "windows-x64",
-    "bin",
-    "pagefind_extended.exe",
-  );
-
 const site = path.resolve(root, "out");
 const outputSubdir = "pagefind";
 
 try {
   execSync(
-    `"${binary}" --site "${site}" --output-subdir "${outputSubdir}"`,
+    `npx pagefind --site "${site}" --output-subdir "${outputSubdir}"`,
     { stdio: "inherit", cwd: root },
   );
   console.log("\nPagefind indexing complete.");

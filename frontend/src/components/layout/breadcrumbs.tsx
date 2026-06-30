@@ -22,8 +22,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     segments.forEach((segment, index) => {
       const href = '/' + segments.slice(0, index + 1).join('/')
       const label = segment
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (c) => c.toUpperCase())
+        .split('-')
+        .map(w => /^[a-z]{2,3}$/.test(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ')
       crumbs.push({
         label,
         href: index < segments.length - 1 ? href : undefined,

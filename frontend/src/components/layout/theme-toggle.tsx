@@ -10,13 +10,15 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>('system')
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') as Theme | null
-    if (saved) {
-      setTheme(saved)
-      applyTheme(saved)
-    } else {
-      applyTheme('system')
-    }
+    try {
+      const saved = localStorage.getItem('theme') as Theme | null
+      if (saved) {
+        setTheme(saved)
+        applyTheme(saved)
+      } else {
+        applyTheme('system')
+      }
+    } catch {}
   }, [])
 
   function applyTheme(t: Theme) {
@@ -36,7 +38,7 @@ export function ThemeToggle() {
   function cycleTheme() {
     const next = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'
     setTheme(next)
-    localStorage.setItem('theme', next)
+    try { localStorage.setItem('theme', next) } catch {}
     applyTheme(next)
   }
 

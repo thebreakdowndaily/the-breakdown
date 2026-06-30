@@ -12,9 +12,13 @@ export default function AdminPage() {
       .catch(() => setStatus('offline'))
   }, [])
 
+  useEffect(() => {
+    if (status === 'online') {
+      window.location.href = '/admin-spa/'
+    }
+  }, [status])
+
   if (status === 'online') {
-    // Redirect to the admin SPA served from Cloudflare Pages static files
-    window.location.href = '/admin-spa/'
     return null
   }
 

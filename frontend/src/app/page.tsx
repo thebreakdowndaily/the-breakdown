@@ -23,9 +23,11 @@ const EDITOR_PICKS = [
 
 export default function HomePage() {
   // Derive featured story from pipeline: most recent published story
-  const featured = [...ALL_STORIES]
-    .sort((a, b) => (b.publishedAt ? new Date(b.publishedAt).getTime() : 0) - (a.publishedAt ? new Date(a.publishedAt).getTime() : 0))
-    .find(s => s.slug && s.title) || ALL_STORIES[0]
+  const featured = ALL_STORIES.length > 0
+    ? ([...ALL_STORIES]
+        .sort((a, b) => (b.publishedAt ? new Date(b.publishedAt).getTime() : 0) - (a.publishedAt ? new Date(a.publishedAt).getTime() : 0))
+        .find(s => s.slug && s.title) || ALL_STORIES[0])
+    : null
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -47,36 +49,40 @@ export default function HomePage() {
       </section>
 
       {/* Hero — Question driven by featured story */}
-      <section className="mb-12">
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Featured Story</p>
-            <h1 className="text-3xl md:text-5xl font-bold font-heading leading-tight max-w-3xl">
-              {featured.title}
-            </h1>
-          </div>
-          <Link href={`/story/${featured.slug}`}>
-            <Badge variant="outline" className="text-xs cursor-pointer hover:bg-muted transition-colors">Read →</Badge>
-          </Link>
-        </div>
-      </section>
-
-      {/* Featured Investigation — pipeline-derived */}
-      <section className="mb-16">
-        <div className="relative rounded-xl border bg-card overflow-hidden">
-          <div className="p-8 md:p-12 max-w-2xl">
-            <Badge className="mb-4">{featured.category}</Badge>
-            <h2 className="text-2xl md:text-3xl font-bold font-heading mb-4">{featured.title}</h2>
-            <p className="text-muted-foreground mb-6">{featured.summary || 'Read the full analysis.'}</p>
-            <Link
-              href={`/story/${featured.slug}`}
-              className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none h-8 gap-1.5 px-2.5 bg-primary text-primary-foreground hover:bg-primary/80"
-            >
-              Read Investigation
+      {featured && (
+        <section className="mb-12">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Featured Story</p>
+              <h1 className="text-3xl md:text-5xl font-bold font-heading leading-tight max-w-3xl">
+                {featured.title}
+              </h1>
+            </div>
+            <Link href={`/story/${featured.slug}`}>
+              <Badge variant="outline" className="text-xs cursor-pointer hover:bg-muted transition-colors">Read →</Badge>
             </Link>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Featured Investigation — pipeline-derived */}
+      {featured && (
+        <section className="mb-16">
+          <div className="relative rounded-xl border bg-card overflow-hidden">
+            <div className="p-8 md:p-12 max-w-2xl">
+              <Badge className="mb-4">{featured.category}</Badge>
+              <h2 className="text-2xl md:text-3xl font-bold font-heading mb-4">{featured.title}</h2>
+              <p className="text-muted-foreground mb-6">{featured.summary || 'Read the full analysis.'}</p>
+              <Link
+                href={`/story/${featured.slug}`}
+                className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none h-8 gap-1.5 px-2.5 bg-primary text-primary-foreground hover:bg-primary/80"
+              >
+                Read Investigation
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Market Dashboard */}
       <section className="mb-16">
