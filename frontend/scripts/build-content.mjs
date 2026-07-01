@@ -206,6 +206,8 @@ const SECTION_TYPE_MAP = {
   'key outcomes': 'executive-summary',
   'key findings': 'executive-summary',
   'the lede': 'executive-summary',
+  'hero & summary': 'executive-summary',
+  'the opening': 'executive-summary',
   // Quick Facts
   'quick facts': 'quick-facts',
   'key data points': 'quick-facts',
@@ -339,6 +341,7 @@ const SECTION_TYPE_MAP = {
   'sources': 'sources',
   'references': 'sources',
   'footnotes': 'sources',
+  'primary sources': 'sources',
   // Knowledge / Related
   'related': 'knowledge',
   'knowledge graph': 'knowledge',
@@ -487,12 +490,24 @@ const PREFIX_MAP = [
   ['evidence:', 'evidence'],
 ]
 
+/**
+ * Strip numbering prefixes from headings like "1. ", "1)", "1.", "(1) ", "A. ", "I. "
+ * Also strips leading numbering-only patterns like "1" at start when followed by uppercase
+ */
+function stripNumberingPrefix(heading) {
+  return heading.replace(/^[\d]+[\.\)]\s*/, '')       // "1. " "1) " "1."
+    .replace(/^\([\d]+\)\s*/, '')                     // "(1) "
+    .replace(/^[A-Z][\.\)]\s*/, '')                    // "A. " "A) "
+    .replace(/^[IVXivx]+[\.\)]\s*/, '')                // "I. " "II. " "IV. "
+    .replace(/^\[[\d]+\]\s*/, '')                      // "[1] "
+    .trim()
+}
+
 function markdownToSections(markdown) {
   const sections = []
   const lines = markdown.split('\n')
   let currentSection = null
   let currentBody = []
-  let skippedHeadingNames = []
 
   for (const line of lines) {
     const h2Match = line.match(/^##\s+(.+)/)
@@ -503,21 +518,22 @@ function markdownToSections(markdown) {
       }
       
       currentBody = []
-      const heading = h2Match[1].toLowerCase().trim()
-      const headingTitle = h2Match[1].trim()
+      const rawHeading = h2Match[1].trim()
+      const heading = rawHeading.toLowerCase()
+      const stripped = stripNumberingPrefix(heading)
       
       // Skip excluded headings — their content goes into the body
-      if (EXCLUDED_HEADINGS.has(heading)) {
+      if (EXCLUDED_HEADINGS.has(stripped) || EXCLUDED_HEADINGS.has(heading)) {
         currentSection = null
         continue
       }
       
-      let type = SECTION_TYPE_MAP[heading]
+      let type = SECTION_TYPE_MAP[stripped] || SECTION_TYPE_MAP[heading]
       
-      // If no exact match, try prefix-based matching
+      // If no exact match, try prefix-based matching (use stripped version)
       if (!type) {
         for (const [prefix, sectionType] of PREFIX_MAP) {
-          if (heading.startsWith(prefix)) {
+          if (stripped.startsWith(prefix) || heading.startsWith(prefix)) {
             type = sectionType
             break
           }
@@ -526,7 +542,7 @@ function markdownToSections(markdown) {
       
       currentSection = {
         type: type || 'explained',  // Default to 'explained' for any unmapped heading
-        title: headingTitle,
+        title: rawHeading,
         body: '',
       }
     } else {

@@ -17,9 +17,9 @@
     {
       "symbol": "FTSE",
       "name": "FTSE 100",
-      "price": 10444,
-      "change": -53.55,
-      "changePercent": -0.5
+      "price": 10451,
+      "change": -46.52,
+      "changePercent": -0.4
     },
     {
       "symbol": "SHCOMP",
@@ -43,5 +43,5 @@
       "changePercent": 0.6
     }
   ],
-  "updatedAt": 1782910832637
+  "updatedAt": 1782911331817
 }
