@@ -8,7 +8,7 @@ import { gdpLineChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
   { label: 'Nominal GDP', value: '$4.1T', change: '+7.8%', trend: 'up' as const },
-  { label: 'Real GDP Growth', value: '6.4%', change: '+1.2pp', trend: 'up' as const },
+  { label: 'Real GDP Growth', value: '7.7%', change: '+0.3pp', trend: 'up' as const },
   { label: 'GDP per Capita', value: '$2,850', change: '+14.9%', trend: 'up' as const },
   { label: 'World Rank (Nominal)', value: '5th', change: '—', trend: 'neutral' as const },
   { label: 'PPP GDP', value: '$14.5T', change: '+8.1%', trend: 'up' as const },
@@ -17,7 +17,7 @@ const metrics = [
 
 export default function GDPLabPage() {
   return (
-    <LabLayout title="GDP" description="Gross Domestic Product — growth trajectories, sectoral composition, quarterly momentum, and India's position in the global output hierarchy." metrics={metrics}>
+    <LabLayout title="GDP" description="Gross Domestic Product — growth trajectories, sectoral composition, quarterly momentum, and India's position in the global output hierarchy. Note: Historical data uses 2011-12 base series; superseded by 2022-23 base year rebasing (Feb 2026)." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         <LabChart title="Real GDP Growth & Per Capita Income Trajectory" option={gdpLineChart} height={380}
           dataTable={{

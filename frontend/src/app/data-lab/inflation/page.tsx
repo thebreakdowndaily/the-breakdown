@@ -7,12 +7,12 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { inflationChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'CPI (Headline)', value: '4.8%', change: '-0.6pp', trend: 'down' as const },
-  { label: 'WPI', value: '2.0%', change: '+2.7pp', trend: 'up' as const },
+  { label: 'CPI (Headline)', value: '3.93%', change: '-0.87pp', trend: 'down' as const },
+  { label: 'WPI', value: '9.68%', change: '+7.68pp', trend: 'up' as const },
   { label: 'Core CPI (ex-Food & Fuel)', value: '3.9%', change: '-0.3pp', trend: 'down' as const },
-  { label: 'Food & Beverages CPI', value: '5.2%', change: '+1.1pp', trend: 'up' as const },
+  { label: 'Consumer Food CPI (CFPI)', value: '4.78%', change: '-0.42pp', trend: 'down' as const },
   { label: 'Fuel & Light CPI', value: '1.8%', change: '-2.4pp', trend: 'down' as const },
-  { label: 'RBI Repo Rate', value: '6.50%', change: 'unchanged', trend: 'neutral' as const },
+  { label: 'RBI Repo Rate', value: '5.25%', change: '-1.25pp', trend: 'down' as const },
 ]
 
 export default function InflationLabPage() {

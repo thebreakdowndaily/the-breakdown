@@ -21,7 +21,7 @@ El NiÃ±o is defined by persistently above-average sea-surface temperatures in 
 
 ## The Forecast
 
-Columbia University's International Research Institute places the likelihood of El NiÃ±o persisting through June-August at 80 per cent, rising to 90 per cent through November. The probability that the NiÃ±o-3.4 index exceeds +2.0Â°C — the Super El NiÃ±o threshold — is 63 per cent. The World Meteorological Organisation expects the event to strengthen through the Northern Hemisphere autumn and winter, peaking between November 2026 and February 2027. El NiÃ±o conditions are projected to persist into early 2027, with lag effects on global weather and agriculture extending well beyond.
+The World Meteorological Organisation (WMO) places the likelihood of El NiÃ±o persisting through June-August at 80 per cent, rising to 90 per cent through November. The probability that the NiÃ±o-3.4 index exceeds +2.0Â°C — the Super El NiÃ±o threshold — is 63 per cent. The World Meteorological Organisation expects the event to strengthen through the Northern Hemisphere autumn and winter, peaking between November 2026 and February 2027. El NiÃ±o conditions are projected to persist into early 2027, with lag effects on global weather and agriculture extending well beyond.
 
 ## The Economic Toll
 

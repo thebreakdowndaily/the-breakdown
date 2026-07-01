@@ -1,6 +1,6 @@
 ---
 title: "Mythos: The AI That Found a 27-Year-Old Bug in 31 Minutes"
-summary: "Anthropic's Mythos model discovered 10,000+ zero-day vulnerabilities, produced a Firefox exploit within one hour of patch analysis, and found a dormant 27-year-old software bug. Released June 9, suspended June 12. The $80B+ IPO-bound company judged its own AI too dangerous for public use."
+summary: "Anthropic's Mythos model discovered 10,000+ zero-day vulnerabilities, produced a Firefox exploit within one hour of patch analysis, and found a dormant 27-year-old software bug. Released June 9, suspended June 12. The $965B company judged its own AI too dangerous for public use."
 category: "Technology"
 tags:
   - "Anthropic"
@@ -23,11 +23,11 @@ author: "The Breakdown Desk"
 
 ## Cold Open
 
-Mythos Preview produced its first Firefox exploit in one hour. It generated 18 out of 21 working Windows kernel exploits in under six hours. It unearthed a software vulnerability that had been embedded in a critical system for 27 years. On April 7, 2026, Anthropic released this model exclusively through Project Glasswing, a restricted-access partnership with 12 companies and the US government. On June 9, it launched two variants simultaneously — Fable 5 for the general public and Mythos 5 for Glasswing partners — and confidentially filed for an IPO that same day. By June 12, it had suspended access to both. The model is the most capable cybersecurity AI ever built. It is also the first whose creators decided it could not be trusted in anyone's hands.
+Mythos Preview produced its first Firefox exploit in one hour. It generated 18 out of 21 working Windows kernel exploits in under six hours. It unearthed a software vulnerability that had been embedded in a critical system for 27 years. On April 7, 2026, Anthropic released this model exclusively through Project Glasswing, a restricted-access partnership with 12 companies and the US government. On June 9, it launched two variants simultaneously — Fable 5 for the general public and Mythos 5 for Glasswing partners — and had confidentially filed for an IPO on June 1. By June 12, it had suspended access to both. The model is the most capable cybersecurity AI ever built. It is also the first whose creators decided it could not be trusted in anyone's hands.
 
 ## The Model
 
-Mythos sits a full capability tier above Opus, the previous ceiling of Anthropic's Claude product line. Project Glasswing was established as a controlled test environment: approved security researchers and government agencies could probe Mythos Preview's abilities while attempting to contain its outputs. The dual-model launch on June 9 was intended as a template for responsible deployment — a filtered version for the public and an unrestricted version for verified partners. The IPO filing on the same day revealed the commercial stakes. Anthropic is pursuing a valuation north of $80 billion, and Mythos is the product that justifies the number. Three days later, the template collapsed.
+Mythos sits a full capability tier above Opus, the previous ceiling of Anthropic's Claude product line. Project Glasswing was established as a controlled test environment: approved security researchers and government agencies could probe Mythos Preview's abilities while attempting to contain its outputs. The dual-model launch on June 9 was intended as a template for responsible deployment — a filtered version for the public and an unrestricted version for verified partners. The IPO filing on the same day revealed the commercial stakes. Anthropic's post-money Series H valuation reached $965 billion, and Mythos is the product that justifies the number. Three days later, the template collapsed.
 
 ## Technical Capabilities
 

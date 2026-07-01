@@ -7,7 +7,7 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { militaryChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'Defence Budget (BE 2024-25)', value: '₹6.2L Cr', change: '+4.8%', trend: 'up' as const },
+  { label: 'Defence Budget (BE 2025-26)', value: '₹6.8L Cr', change: '+9.8%', trend: 'up' as const },
   { label: 'Active Armed Forces', value: '14.6L', change: '+0.5%', trend: 'up' as const },
   { label: 'Defence Spending % of GDP', value: '2.1%', change: '-0.1pp', trend: 'down' as const },
   { label: 'Global Military Strength Rank', value: '4th', change: '—', trend: 'neutral' as const },
@@ -50,11 +50,11 @@ export default function MilitaryLabPage() {
       }} height={320} />
 
       <LabContext title="Defence-to-GDP Ratio at a Two-Decade Low" variant="warning">
-        Defence spending as a share of GDP has declined from 2.4% (2012) to 2.1% (2024-25) — the lowest in 20 years and well below the 3% recommended by successive Parliamentary Standing Committees. In absolute terms, China's defence budget is approximately 4x India's, even at Beijing's official (likely understated) 1.7% of GDP. The capital-to-revenue ratio within India's defence budget has improved (28% capital, up from 22% in 2019) but the overall resource envelope is shrinking relative to the economy. The most acute gaps are in naval surface combatants, submarine fleet age, and air force squadron strength — currently at 31 squadrons against a sanctioned requirement of 42.
+        Defence spending as a share of GDP has declined from 2.4% (2012) to 2.1% (2024-25) — the lowest in 20 years and well below the 3% recommended by successive Parliamentary Standing Committees. In absolute terms, China's defence budget is approximately 3x India's, even at Beijing's official (likely understated) 1.7% of GDP. The capital-to-revenue ratio within India's defence budget has improved (28% capital, up from 22% in 2019) but the overall resource envelope is shrinking relative to the economy. The most acute gaps are in naval surface combatants, submarine fleet age, and air force squadron strength — currently at 31 squadrons against a sanctioned requirement of 42.
       </LabContext>
 
       <LabContext title="Defence Exports — From Buyer to Builder" variant="insight">
-        Defence exports surged 32% year-on-year to ₹21,000 crore (~$2.5B), driven by BrahMos missiles, Akash air-defence systems, radars, and light combat aircraft. India now ships to over 85 countries, up from ~30 a decade ago. The government's export target of ₹35,000 crore by 2028–29 will require scaling private-sector participation — currently, private firms account for ~40% of defence production. The biggest headwind is the length of the export clearance process: average approval times of 6–9 months compare poorly with global benchmarks, discouraging international OEMs from using India as a defence manufacturing hub.
+        Defence exports surged 32% year-on-year to ₹21,000 crore (~$2.5B), driven by BrahMos missiles, Akash air-defence systems, radars, and light combat aircraft. India now ships to over 85 countries, up from ~30 a decade ago. The government's export target of ₹50,000 crore by 2029 will require scaling private-sector participation — currently, private firms account for ~40% of defence production. The biggest headwind is the length of the export clearance process: average approval times of 6–9 months compare poorly with global benchmarks, discouraging international OEMs from using India as a defence manufacturing hub.
       </LabContext>
 
       <LabSources sources={[
@@ -62,7 +62,7 @@ export default function MilitaryLabPage() {
         'SIPRI — Military Expenditure Database, 2024',
         'Department of Defence Production — Defence Exports Data, FY 2023–24',
         'International Institute for Strategic Studies — The Military Balance, 2024',
-        'Parliamentary Standing Committee on Defence — Demands for Grants 2024–25',
+        'Parliamentary Standing Committee on Defence — Demands for Grants 2025–26',
       ]} />
     </LabLayout>
   )

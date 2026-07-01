@@ -1,6 +1,6 @@
 ---
-title: "India Blocked Telegram for 354 Million Users in 48 Hours — Here Is What the Headlines Missed"
-summary: "India ordered a nationwide block on Telegram under Section 69A on June 16, ahead of the June 21 NEET-UG retest, citing cheating networks selling fake exam papers. A separate order forces Telegram to disable message-editing in India until June 30. Both orders expire within days, but the precedent — blocking an entire platform of 354 million users for exam fraud — has no sunset on its legal implications."
+title: "India Blocked Telegram for 150 Million+ Users in 48 Hours — Here Is What the Headlines Missed"
+summary: "India ordered a nationwide block on Telegram under Section 69A on June 16, ahead of the June 21 NEET-UG retest, citing cheating networks selling fake exam papers. A separate order forces Telegram to disable message-editing in India until June 30. Both orders expire within days, but the precedent — blocking an entire platform of 150 million+ monthly active users in India for exam fraud — has no sunset on its legal implications."
 category: "Tech / Policy"
 tags:
   - "India"
@@ -21,7 +21,7 @@ author: "The Breakdown Desk"
 
 ## Cold Open
 
-On June 16, the Indian government ordered a nationwide block on Telegram under Section 69A of the IT Act, acting on NTA recommendations ahead of the June 21 NEET-UG retest. The ban — which runs until June 22 — targets cheating networks using the platform to sell fake exam papers. A second, less-noticed order forces Telegram to disable its message-editing feature in India until June 30. Both orders will expire within days, but the legal architecture used to block a platform serving 354 million users for exam fraud sets a precedent with no expiration date.
+On June 16, the Indian government ordered a nationwide block on Telegram under Section 69A of the IT Act, acting on NTA recommendations ahead of the June 21 NEET-UG retest. The ban — which runs until June 22 — targets cheating networks using the platform to sell fake exam papers. A second, less-noticed order forces Telegram to disable its message-editing feature in India until June 30. Both orders will expire within days, but the legal architecture used to block a platform serving 150 million+ monthly active users in India for exam fraud sets a precedent with no expiration date.
 
 ## The Ban
 
@@ -29,7 +29,7 @@ The government's order blocks Telegram entirely until June 22. The message-editi
 
 ## What the Headlines Missed
 
-Section 69A was designed for terrorism and national security content, not platform-wide blocks for exam fraud. The Supreme Court's Shreya Singhal judgment (2015) upheld 69A only because it was "narrowly tailored"; blocking an entire platform used by 354 million people — roughly one-quarter of India's population — stretches that tailoring past its legal seams. The real problem in the NEET leak chain is not Telegram: the original May 3 exam was cancelled because of insider leaks in the printing and logistics supply chain. Telegram was a distribution channel, not the source. Blocking the platform does not secure the supply chain; it punishes 354 million users for a vulnerability the government has not fixed.
+Section 69A was designed for terrorism and national security content, not platform-wide blocks for exam fraud. The Supreme Court's Shreya Singhal judgment (2015) upheld 69A only because it was "narrowly tailored"; blocking an entire platform used by 150 million+ people — roughly one-quarter of India's population — stretches that tailoring past its legal seams. The real problem in the NEET leak chain is not Telegram: the original May 3 exam was cancelled because of insider leaks in the printing and logistics supply chain. Telegram was a distribution channel, not the source. Blocking the platform does not secure the supply chain; it punishes 150 million+ users for a vulnerability the government has not fixed.
 
 ## Students Caught in the Middle
 
@@ -37,4 +37,4 @@ Millions of NEET aspirants depend on Telegram for study groups, doubt-clearing, 
 
 ## The Bigger Picture
 
-The government is treating the symptom — Telegram as distribution channel — rather than the disease — insider leaks in the exam printing and logistics chain. The ban is politically necessary to show action but legally and practically questionable. Digital rights groups IFF and SFLC.in called it disproportionate, unconstitutional, and a band-aid solution. The uncomfortable question the ban raises is broader than NEET: if the government can block an entire platform serving 354 million people using a provision designed for counter-terrorism, what stops it from doing so again for other reasons?
+The government is treating the symptom — Telegram as distribution channel — rather than the disease — insider leaks in the exam printing and logistics chain. The ban is politically necessary to show action but legally and practically questionable. Digital rights groups IFF and SFLC.in called it disproportionate, unconstitutional, and a band-aid solution. The uncomfortable question the ban raises is broader than NEET: if the government can block an entire platform serving 150 million+ people using a provision designed for counter-terrorism, what stops it from doing so again for other reasons?

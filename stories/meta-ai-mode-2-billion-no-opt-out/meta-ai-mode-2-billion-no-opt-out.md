@@ -1,6 +1,6 @@
 ---
 title: "Meta Just Made AI Search Default for 2 Billion Users — With No Opt-Out and No Consent"
-summary: "On June 17, Meta switched Facebook, Instagram, and WhatsApp search to AI-generated answers powered by Llama 4 — affecting 2 billion users. No consent prompt, no opt-out mechanism, no advance notice. Users who want traditional search must navigate a multi-step setting buried in the menu. Privacy advocates call it the largest unconsented AI deployment in history."
+summary: "On June 17, Meta switched Facebook, Instagram, and WhatsApp search to AI-generated answers powered by Muse Spark — affecting 2 billion users. No consent prompt, no opt-out mechanism, no advance notice. Users who want traditional search must navigate a multi-step setting buried in the menu. Privacy advocates call it the largest unconsented AI deployment in history."
 category: "Tech / AI"
 tags:
   - "Meta"
@@ -21,7 +21,7 @@ author: "The Breakdown Desk"
 
 ## Cold Open
 
-On June 17, Meta replaced traditional search with AI-generated answers across Facebook, Instagram, and WhatsApp — affecting roughly 2 billion users with no consent prompt, no opt-out mechanism, and no advance notice. Powered by Meta's Llama 4 model, the feature synthesises information from public posts, web content, and Meta's knowledge graph to generate text, answer questions, and recommend content without leaving the app. It is the largest AI deployment in history, and most users never consented to it.
+On June 17, Meta replaced traditional search with AI-generated answers across Facebook, Instagram, and WhatsApp — affecting roughly 2 billion users with no consent prompt, no opt-out mechanism, and no advance notice. Powered by Meta's Muse Spark model, the feature synthesises information from public posts, web content, and Meta's knowledge graph to generate text, answer questions, and recommend content without leaving the app. It is the largest AI deployment in history, and most users never consented to it.
 
 ## What Changed
 

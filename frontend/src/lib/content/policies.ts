@@ -60,13 +60,13 @@ const POLICIES_DATA: Policy[] = [
     category: 'Technology & Law',
     status: 'Implementation',
     budget: '—',
-    description: 'Passed in August 2023, the DPDP Act is India\'s first cross-sectoral data protection regime — seven years after the Supreme Court recognised privacy as a fundamental right. It applies to all digital personal data processed in India, and to offshore processing involving profiling of Indian citizens. Enforcement awaits final rules and a functional Data Protection Board.',
+    description: 'Passed in August 2023, the DPDP Act is India\'s first cross-sectoral data protection regime — six years after the Supreme Court recognised privacy as a fundamental right. It applies to all digital personal data processed in India, and to offshore processing involving profiling of Indian citizens. Enforcement awaits final rules and a functional Data Protection Board.',
     timeline: [
       { date: 'Aug 2017', milestone: 'Supreme Court unanimously declares Right to Privacy a fundamental right under Article 21 (Puttaswamy judgment).' },
       { date: 'Jul 2018', milestone: 'Justice Srikrishna Committee submits draft Data Protection Bill, recommending a GDPR-style framework.' },
       { date: 'Dec 2019', milestone: 'Personal Data Protection Bill 2019 introduced — includes data localization and social media provisions later dropped.' },
       { date: 'Aug 2023', milestone: 'DPDP Act 2023 passed after the 2019 Bill is withdrawn; narrower scope, fewer compliance burdens.' },
-      { date: 'Jan 2024', milestone: 'Draft DPDP Rules released for 45-day public consultation; significant ambiguities remain on consent managers.' },
+      { date: 'Jan 2025', milestone: 'Draft DPDP Rules released for 45-day public consultation; significant ambiguities remain on consent managers.' },
       { date: '2025', milestone: 'Expected enforcement pending final rules, Data Protection Board appointments, and appellate tribunal setup.' },
     ],
     keyProvisions: [
@@ -75,7 +75,7 @@ const POLICIES_DATA: Policy[] = [
       'Significant data fiduciaries (based on volume, sensitivity, and risk) face additional obligations — data audit, DPIA, and independent auditor',
       'Cross-border data transfer permitted to any jurisdiction, subject to central government notification and contractual safeguards',
       'Data Protection Board of India — a quasi-judicial body with powers to impose penalties, issue directions, and adjudicate disputes',
-      'Penalties up to ₹250 Cr for breach notification failures; up to ₹500 Cr for other violations; no criminal liability for fiduciaries',
+      'Maximum penalty of ₹250 Cr across all violations; no criminal liability for fiduciaries',
       'Data principals granted rights to access, correction, erasure, grievance redressal, and a right to nominate a proxy',
     ],
     impactMetrics: [
@@ -101,7 +101,7 @@ const POLICIES_DATA: Policy[] = [
     description: 'Launched in 2020 as a post-COVID manufacturing stimulus, PLI schemes now span 14 sectors with a combined outlay of ₹1.97 lakh Cr. The design is simple: firms receive 3-15% of incremental sales as incentive, conditional on meeting investment and production thresholds. Electronics has emerged as the standout success — mobile phone exports tripled within three years of the scheme\'s launch.',
     timeline: [
       { date: 'Mar 2020', milestone: 'Union Cabinet approves first PLI scheme for mobile phones and electronics — 4-6% incentive on incremental sales.' },
-      { date: 'Nov 2020', milestone: 'PLI expanded to 10 additional sectors — automobiles, pharma, textiles, food processing, solar, and ACC batteries.' },
+      { date: 'Nov 2020', milestone: 'PLI expanded to 13 sectors — automobiles, pharma, textiles, food processing, solar, and ACC batteries.' },
       { date: 'Apr 2021', milestone: 'Pharmaceutical PLI notified: ₹15,000 Cr for bulk drugs, ₹3,420 Cr for medical devices, targeting import substitution.' },
       { date: 'Sep 2021', milestone: 'Cabinet extends PLI to drones, auto components, and textiles with differentiated incentive rates for MSMEs.' },
       { date: '2023', milestone: 'First disbursement tranche released; electronics manufacturing crosses $100B; Apple exports from India reach $7B.' },
@@ -118,9 +118,9 @@ const POLICIES_DATA: Policy[] = [
     impactMetrics: [
       { label: 'Total Outlay', value: '₹1.97 Lakh Cr' },
       { label: 'Sectors Covered', value: '14' },
-      { label: 'Jobs Created (Estimated)', value: '60 Lakh' },
-      { label: 'Additional Production', value: '₹35 Lakh Cr' },
-      { label: 'Export Boost', value: '₹10 Lakh Cr' },
+      { label: 'Jobs Created (Actual Dec 2025)', value: '14.39 Lakh (target: 60 Lakh)' },
+      { label: 'Additional Production (Actual)', value: '₹20.41 Lakh Cr (target: ₹35 Lakh Cr)' },
+      { label: 'Export Boost (Actual)', value: '₹8.3 Lakh Cr (target: ₹10 Lakh Cr)' },
     ],
     globalComparison: [
       { country: 'Vietnam', status: 'Active', notes: 'CIT 20%, FTAs with EU/Korea/Japan, labour costs 50% below China — major FDI beneficiary in electronics' },
@@ -135,7 +135,7 @@ const POLICIES_DATA: Policy[] = [
     category: 'Energy & Climate',
     status: 'Announced',
     budget: '₹20,000 Cr',
-    description: 'Announced in the Union Budget 2024-25, the Nuclear Energy Mission targets a threefold expansion of India\'s nuclear capacity — from 7.4 GW to 22 GW by 2032. The strategy hinges on fleet-deployment of indigenous 700 MW PHWRs and Bharat Small Reactors (220 MW). India\'s nuclear share at 3% of generation is among the lowest of major economies, and past cost overruns (Kudankulam: 3x original budget) underscore execution risk.',
+    description: 'Announced in the Union Budget 2024-25, the Nuclear Energy Mission targets a threefold expansion of India\'s nuclear capacity — from ~8.2 GW (8,180 MW) to 22 GW by 2032. The strategy hinges on fleet-deployment of indigenous 700 MW PHWRs and Bharat Small Reactors (220 MW). India\'s nuclear share at 3% of generation is among the lowest of major economies, and past cost overruns (Kudankulam: 3x original budget) underscore execution risk.',
     timeline: [
       { date: '2023', milestone: 'Government announces fleet-mode deployment of 10 PHWR-700 units — 7,000 MW added across 5 sites in parallel.' },
       { date: '2024', milestone: 'Budget 2024-25 allocates ₹20,000 Cr; Atomic Energy Act amended to allow PSU joint ventures.' },
@@ -153,7 +153,7 @@ const POLICIES_DATA: Policy[] = [
       'Amended Atomic Energy Act (2024) allows private sector participation in component manufacturing and plant operation via PSU JVs',
     ],
     impactMetrics: [
-      { label: 'Current Capacity', value: '7.4 GW' },
+      { label: 'Current Capacity', value: '~8.2 GW' },
       { label: '2032 Target', value: '22 GW' },
       { label: 'Nuclear Share (Current)', value: '3%' },
       { label: 'Nuclear Share (Target)', value: '9%' },
@@ -172,18 +172,18 @@ const POLICIES_DATA: Policy[] = [
     category: 'Science & Technology',
     status: 'Active',
     budget: '₹6,003 Cr',
-    description: 'Approved in April 2023 with a ₹6,003 Cr outlay (2023-2031), the NQM is India\'s entry into the global quantum race. The mission targets a 1,000-qubit quantum computer by 2030 — a goal that, if met, would place India in the top tier globally. Four thematic hubs have been established at IISc, IITs, and TIFR. India\'s quantum patent share (0.8%) remains negligible, but the mission aims to develop indigenous capability in cryogenics, control electronics, and photonics.',
+    description: 'Approved in April 2023 with a ₹6,003 Cr outlay (2023-2031), the NQM is India\'s entry into the global quantum race. The mission targets a 1,000-qubit quantum computer by 2030 — a goal that, if met, would place India in the top tier globally. Four thematic hubs have been established at IISc, IIT Bombay, IIT Madras, and IIT Delhi. India\'s quantum patent share (0.8%) remains negligible, but the mission aims to develop indigenous capability in cryogenics, control electronics, and photonics.',
     timeline: [
       { date: '2020', milestone: 'Budget 2020 announces ₹8,000 Cr for National Mission on Quantum Technologies and Applications (NM-QTA).' },
       { date: 'Apr 2023', milestone: 'Cabinet approves NQM with a revised ₹6,003 Cr outlay; 4 thematic hubs designated.' },
-      { date: 'Jun 2023', milestone: 'Hubs operationalised: Quantum Computing (IISc), Communication (IIT Madras), Sensing (TIFR), Materials (IIT Bombay).' },
+      { date: 'Jun 2023', milestone: 'Hubs operationalised: Quantum Computing (IISc), Communication (IIT Madras), Sensing (IIT Bombay), Materials (IIT Delhi).' },
       { date: '2024', milestone: 'First indigenously built 20-qubit superconducting quantum processor demonstrated at TIFR.' },
       { date: '2026', milestone: 'Target: 50-qubit quantum processor, 100 km terrestrial quantum communication link.' },
       { date: '2030', milestone: 'Target: 1,000-qubit quantum computer, satellite-based QKD (Quantum Key Distribution).' },
     ],
     keyProvisions: [
       'Milestone-based quantum computing targets: 8-qubit prototype (Year 1), 50-qubits (Year 3), 1,000-qubits (Year 7) — superconducting and photonic architectures',
-      '4 Thematic Hubs: Quantum Computing (IISc), Quantum Communication (IIT Madras), Quantum Sensing (TIFR), Quantum Materials (IIT Bombay) — ₹200 Cr each',
+      '4 Thematic Hubs: Quantum Computing (IISc), Quantum Communication (IIT Madras), Quantum Sensing (IIT Bombay), Quantum Materials (IIT Delhi) — ₹200 Cr each',
       'Satellite-based QKD development in partnership with ISRO; terrestrial QKD network linking multiple cities over 100 km',
       'Quantum sensors for defence (magnetometers, gravimeters), healthcare (MRI enhancement), and mining (mineral detection)',
       'Indigenous cryogenic systems (dilution refrigerators, cryostats), microwave electronics, and single-photon detectors',
@@ -247,7 +247,7 @@ const POLICIES_DATA: Policy[] = [
     category: 'Water & Infrastructure',
     status: 'Active',
     budget: '₹3.6 Lakh Cr',
-    description: 'Launched in 2019, JJM is the world\'s largest rural drinking water programme — aiming to deliver 55 litres per capita per day of potable tap water to every one of India\'s 19.4 crore rural households. Coverage rose from 17% (2019) to 74% (2025), with 14.5 crore new connections. The original 2024 completion target was revised to 2028 after arsenic and fluoride contamination in 1.4 crore habitations required source remediation before pipeline installation.',
+    description: 'Launched in 2019, JJM is the world\'s largest rural drinking water programme — aiming to deliver 55 litres per capita per day of potable tap water to every one of India\'s 19.4 crore rural households. Coverage rose from 17% (2019) to 79.74% (2025), with 15.44 crore new connections. The original 2024 completion target was revised to 2028 after arsenic and fluoride contamination in 1.4 crore habitations required source remediation before pipeline installation.',
     timeline: [
       { date: 'Aug 2019', milestone: 'PM announces JJM from Red Fort; target: functional tap connections to all rural households by 2024.' },
       { date: '2020', milestone: 'Mission launches with priority on water quality-affected districts; ISO 24521 certification for service-level benchmarks.' },
@@ -266,8 +266,8 @@ const POLICIES_DATA: Policy[] = [
     ],
     impactMetrics: [
       { label: 'Total Budget', value: '₹3.6 Lakh Cr' },
-      { label: 'Households Covered', value: '14.5+ Cr' },
-      { label: 'Coverage Increase', value: '17% to 74%' },
+      { label: 'Households Covered', value: '15.44+ Cr' },
+      { label: 'Coverage Increase', value: '17% to 79.74%' },
       { label: 'Villages Covered', value: '15+ Lakh' },
       { label: 'Daily Water Provided', value: '66,000 Lakh litres' },
     ],
@@ -284,7 +284,7 @@ const POLICIES_DATA: Policy[] = [
     category: 'Health & Social Welfare',
     status: 'Active',
     budget: '₹7,200 Cr (2024-25)',
-    description: 'Ayushman Bharat — the world\'s largest government-funded health insurance programme — covers 50+ crore beneficiaries with ₹5 lakh per family per year in secondary and tertiary care. Launched in 2018, PM-JAY has authorised 5.5 crore hospital admissions (¥1.1 lakh Cr in claims) through 27,000+ empanelled hospitals. The 2024 expansion added senior citizens (70+) regardless of income. A parallel pillar — 1.8 lakh Health & Wellness Centres — delivers free primary care and essential diagnostics.',
+    description: 'Ayushman Bharat — the world\'s largest government-funded health insurance programme — covers 50+ crore beneficiaries with ₹5 lakh per family per year in secondary and tertiary care. Launched in 2018, PM-JAY has authorised 9.19 crore hospital admissions (₹1,29,386 Cr in claims) through 31,000+ empanelled hospitals. The 2024 expansion added senior citizens (70+) regardless of income. A parallel pillar — 1.8 lakh Health & Wellness Centres — delivers free primary care and essential diagnostics.',
     timeline: [
       { date: 'Feb 2018', milestone: 'Budget 2018 announces PM-JAY (₹5 Lakh/family/yr) and 1.5 Lakh HWC target.' },
       { date: 'Sep 2018', milestone: 'PM-JAY launched; covers bottom 40% of population (SECCI data); universal portability across states.' },
@@ -304,8 +304,8 @@ const POLICIES_DATA: Policy[] = [
     impactMetrics: [
       { label: 'Coverage', value: '50+ Cr beneficiaries' },
       { label: 'Annual Budget', value: '₹7,200 Cr' },
-      { label: 'Hospital Admissions', value: '5.5+ Cr' },
-      { label: 'Empanelled Hospitals', value: '27,000+' },
+      { label: 'Hospital Admissions', value: '9.19+ Cr' },
+      { label: 'Empanelled Hospitals', value: '31,000+' },
       { label: 'HWCs Established', value: '1.8 Lakh' },
     ],
     globalComparison: [
@@ -321,17 +321,17 @@ const POLICIES_DATA: Policy[] = [
     category: 'Technology & Innovation',
     status: 'Active',
     budget: '₹10,372 Cr',
-    description: 'Approved in March 2024 with a ₹10,372 Cr outlay (2024-2030), the IndiaAI Mission aims to build sovereign AI compute infrastructure, develop foundational models, and catalyse applied AI across governance, healthcare, and agriculture. The mission procures 10,000+ GPUs under a public-private partnership — the single largest AI compute investment by any developing economy.',
+    description: 'Approved in March 2024 with a ₹10,372 Cr outlay (2024-2030), the IndiaAI Mission aims to build sovereign AI compute infrastructure, develop foundational models, and catalyse applied AI across governance, healthcare, and agriculture. The mission procures 38,000+ GPUs under a public-private partnership — the single largest AI compute investment by any developing economy.',
     timeline: [
       { date: 'Mar 2024', milestone: 'Cabinet approves IndiaAI Mission with ₹10,372 Cr; 7 pillars: compute, data, models, skilling, startups, applications, safety.' },
-      { date: 'May 2024', milestone: 'IndiaAI Compute Facility tendered: 10,000+ GPUs (NVIDIA H100 equivalent) via PPP model with 40% capex subsidy.' },
+      { date: 'May 2024', milestone: 'IndiaAI Compute Facility tendered: 38,000+ GPUs (NVIDIA H100 equivalent) via PPP model with 40% capex subsidy.' },
       { date: 'Sep 2024', milestone: 'IndiaAI Dataset Platform launched: 100+ government datasets curated, anonymised, and made accessible for model training.' },
       { date: 'Jan 2025', milestone: 'First tranche of GPU capacity (2,000 GPUs) operational at C-DAC facilities; 50 startups onboarded for subsidised compute.' },
       { date: '2026', milestone: 'Target: IndiaAI foundational model (1B-parameter) trained on Indic datasets; 10 sector-specific AI applications deployed.' },
       { date: '2030', milestone: 'Target: India among top 5 in AI patents; 100+ AI-first startups; AI workforce of 500,000 trained professionals.' },
     ],
     keyProvisions: [
-      'AI compute infrastructure: 10,000+ GPUs via PPP with VFX/empaneled cloud providers; 40% usage subsidy for Indian startups and researchers',
+      'AI compute infrastructure: 38,000+ GPUs via PPP with VFX/empaneled cloud providers; 40% usage subsidy for Indian startups and researchers',
       'IndiaAI Dataset Platform: single-window access to government datasets from 20+ ministries; privacy-compliant via synthetic data generation',
       'IndiaAI Innovation Centre: development of indigenous foundational models optimised for Indic languages (22 scheduled + 10 more)',
       'IndiaAI Skilling: 500,000 AI professionals trained through 5,000+ courses; AI labs in 100+ higher education institutions',
@@ -340,7 +340,7 @@ const POLICIES_DATA: Policy[] = [
     ],
     impactMetrics: [
       { label: 'Total Outlay', value: '₹10,372 Cr' },
-      { label: 'GPU Procurement', value: '10,000+' },
+      { label: 'GPU Procurement', value: '38,000+' },
       { label: 'AI Skilling Target', value: '5 Lakh professionals' },
       { label: 'Startup Fund', value: '₹2,000 Cr FoF' },
       { label: 'Timeframe', value: '2024-2030' },

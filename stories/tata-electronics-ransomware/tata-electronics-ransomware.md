@@ -28,7 +28,7 @@ Indian manufacturing firms spend less than 2 per cent of revenue on IT security,
 
 ## Response and Recovery
 
-Tata has not disclosed when the attack occurred, how attackers gained access, or whether customers were affected. There is a critical gap between detection — "a few weeks ago," per Tata — and public disclosure on June 22, during which the data was already on the dark web. India's Computer Emergency Response Team has not responded to media inquiries. For the 75,000-plus Tata employees whose passport data and personal information are now in criminal hands, the risk of identity theft is real. The 630 gigabytes on the dark web may or may not contain authentic secrets, but the damage to trust — between Tata and its clients, between India and global manufacturers — is already done.
+Tata has not disclosed when the attack occurred, how attackers gained access, or whether customers were affected. There is a critical gap between detection — "a few weeks ago," per Tata — and public disclosure on June 22, during which the data was already on the dark web. India's Computer Emergency Response Team has not responded to media inquiries. For the 50,000-plus Tata employees whose passport data and personal information are now in criminal hands, the risk of identity theft is real. The 630 gigabytes on the dark web may or may not contain authentic secrets, but the damage to trust — between Tata and its clients, between India and global manufacturers — is already done.
 
 ---
 

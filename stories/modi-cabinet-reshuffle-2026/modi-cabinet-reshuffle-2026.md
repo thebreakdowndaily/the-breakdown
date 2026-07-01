@@ -29,7 +29,7 @@ This time the stakes are considerably higher: the reshuffle is widely expected t
 
 ## The Reshuffle
 
-The process began in mid-June. On June 16, Harsh Malhotra was appointed president of the Delhi BJP unit, requiring his eventual removal from the Union council. On June 18, the BJP announced its Rajya Sabha candidate list, notably excluding Ravneet Bittu and George Kurian — signalling their ministerial careers were drawing to a close. Their Rajya Sabha terms expired on June 21. On June 24, the Union Cabinet met in what was widely interpreted as a preparatory session for the broader reorganisation. The reshuffle is expected to be formally announced before the Monsoon Session of Parliament in July.
+The process began in mid-June. On May 28, Harsh Malhotra was appointed president of the Delhi BJP unit, requiring his eventual removal from the Union council. On June 18, the BJP announced its Rajya Sabha candidate list, notably excluding Ravneet Bittu and George Kurian — signalling their ministerial careers were drawing to a close. Their Rajya Sabha terms expired on June 21. On June 24, the Union Cabinet met in what was widely interpreted as a preparatory session for the broader reorganisation. The reshuffle is expected to be formally announced before the Monsoon Session of Parliament in July.
 
 ## Key Appointments
 

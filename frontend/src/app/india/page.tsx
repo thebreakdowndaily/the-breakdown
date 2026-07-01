@@ -13,14 +13,14 @@ export const metadata: Metadata = generatePageMetadata({
 })
 
 const INDIA_SECTORS = [
-  { label: 'GDP Growth', value: '6.4%', detail: 'FY26 Advance Estimate' },
-  { label: 'Industrial Output (IIP)', value: '4.8%', detail: 'Apr 2026, YoY' },
-  { label: 'GST Collection', value: '₹1.87L Cr', detail: 'May 2026' },
-  { label: 'PMI Manufacturing', value: '58.3', detail: 'Expansion, 6-mo high' },
-  { label: 'Exports', value: '$39.2B', detail: 'May 2026' },
-  { label: 'Forex Reserves', value: '$645B', detail: 'As of Jun 19' },
-  { label: 'Unemployment Rate', value: '7.8%', detail: 'May 2026' },
-  { label: 'Power Demand', value: '162 GW', detail: 'Peak, +9% YoY' },
+  { label: 'GDP Growth', value: '7.7%', detail: 'FY26 Provisional Estimate (MoSPI)' },
+  { label: 'Industrial Output (IIP)', value: '4.9%', detail: 'Apr 2026, YoY (MoSPI)' },
+  { label: 'GST Collection', value: '₹1.94L Cr', detail: 'May 2026 (Govt data)' },
+  { label: 'PMI Manufacturing', value: '54.2', detail: 'S&P Global, Jun 2026' },
+  { label: 'Exports', value: '$45.2B', detail: 'May 2026 (Commerce Min)' },
+  { label: 'Forex Reserves', value: '$672.6B', detail: 'As of Jun 19 (RBI)' },
+  { label: 'Unemployment Rate', value: '5.5%', detail: 'May 2026 (PLFS)' },
+  { label: 'Peak Power Demand', value: '265.4 GW', detail: 'May 2026 record' },
 ]
 
 export default function IndiaPage() {

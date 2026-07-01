@@ -1,6 +1,6 @@
 ---
 title: "Twin Quakes in 39 Seconds: 7.2 Then 7.5 — Venezuela's Strongest in 126 Years"
-summary: "Twin earthquakes of 7.2 and 7.5 magnitude struck 35 km northeast of Caracas on June 24, 2026, killing at least 32 and injuring 700+. Second quake was the largest in Venezuela since 1900. Power knocked out across the capital. Tsunami alert issued and withdrawn. The strongest test of a collapsed state in modern history."
+summary: "Twin earthquakes of 7.2 and 7.5 magnitude struck 35 km northeast of Caracas on June 24, 2026, killing at least 1,719 and injuring 5,000+. The death toll was revised upward significantly as rescue operations continued. Second quake was the largest in Venezuela since 1900. Power knocked out across the capital. Tsunami alert issued and withdrawn. The strongest test of a collapsed state in modern history."
 category: "Geopolitics"
 tags:
   - "Venezuela"
@@ -14,13 +14,13 @@ published_at: "2026-06-25T10:00:00Z"
 reading_time: 11
 fact_check_image: /images/stories/venezuela-earthquakes-2026.jpg
 hero: /images/stories/venezuela-earthquakes-2026.jpg
-caption: "Twin earthquakes of 7.2 and 7.5 magnitude struck Venezuela in 39 seconds, killing at least 32 â€” the strongest quake in 126 years"
+caption: "Twin earthquakes of 7.2 and 7.5 magnitude struck Venezuela in 39 seconds, killing at least 1,719 â€” the strongest quake in 126 years"
 author: "The Breakdown Desk"
 ---
 
 ## Cold Open
 
-On June 24, 2026, at 3:47 PM local time, a 7.2 magnitude earthquake struck 35 kilometres northeast of Caracas. Thirty-nine seconds later, a 7.5 magnitude tremor hit the same area — the strongest earthquake in Venezuela in 126 years. Buildings collapsed across Caracas, La Guaira, and MaiquetÃ­a. Power was knocked out across the capital and surrounding states. Tsunami alerts were issued for the Caribbean coast and then withdrawn. At least 32 people are confirmed dead. More than 700 are injured. Those numbers will rise as rescue teams reach areas inaccessible due to collapsed roads and damaged bridges.
+On June 24, 2026, at 3:47 PM local time, a 7.2 magnitude earthquake struck 35 kilometres northeast of Caracas. Thirty-nine seconds later, a 7.5 magnitude tremor hit the same area — the strongest earthquake in Venezuela in 126 years. Buildings collapsed across Caracas, La Guaira, and MaiquetÃ­a. Power was knocked out across the capital and surrounding states. Tsunami alerts were issued for the Caribbean coast and then withdrawn. At least 1,719 people are confirmed dead. More than 5,000 are injured. The initial count of 32 dead was revised upward significantly as rescue operations continued.
 
 ## Why This Story Matters
 
@@ -37,7 +37,7 @@ Venezuela sits on the boundary between the Caribbean and South American tectonic
 | Magnitude 1 | 7.2 (USGS confirmed) |
 | Magnitude 2 | 7.5 (USGS confirmed) |
 | Time between quakes | 39 seconds |
-| Dead (confirmed) | 32+ |
+| Dead (confirmed) | 1,719+ (revised up from initial 32) |
 | Injured | 700+ |
 | Strongest since | 1900 (126 years) |
 | Epicentre | 35 km northeast of Caracas |
