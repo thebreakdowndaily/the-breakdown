@@ -17,9 +17,9 @@
     {
       "symbol": "FTSE",
       "name": "FTSE 100",
-      "price": 10506,
-      "change": 9.35,
-      "changePercent": 0.1
+      "price": 10500,
+      "change": 3.29,
+      "changePercent": 0
     },
     {
       "symbol": "SHCOMP",
@@ -31,17 +31,17 @@
     {
       "symbol": "SENSEX",
       "name": "SENSEX",
-      "price": 76957,
-      "change": 478.75,
-      "changePercent": 0.6
+      "price": 77007,
+      "change": 528.77,
+      "changePercent": 0.7
     },
     {
       "symbol": "NIFTY",
       "name": "NIFTY 50",
-      "price": 24030,
-      "change": 164.3,
+      "price": 24025,
+      "change": 158.75,
       "changePercent": 0.7
     }
   ],
-  "updatedAt": 1782893714198
+  "updatedAt": 1782894033977
 }
