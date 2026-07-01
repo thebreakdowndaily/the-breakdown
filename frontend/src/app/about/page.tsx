@@ -276,7 +276,7 @@ export default function AboutPage() {
           <a href="https://linkedin.com/company/thebreakdownin" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
             LinkedIn
           </a>
-          <a href="https://instagram.com/thebreakdownin" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+          <a href="https://instagram.com/thebreakdowndaily" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
             Instagram
           </a>
         </div>

@@ -50,7 +50,7 @@ export const SITE_CONFIG = {
           },
           {
             "label": "Instagram",
-            "url": "https://instagram.com/thebreakdownin"
+            "url": "https://instagram.com/thebreakdowndaily"
           },
           {
             "label": "Newsletter",
@@ -120,7 +120,7 @@ export const SITE_CONFIG = {
       },
       {
         "platform": "Instagram",
-        "url": "https://instagram.com/thebreakdownin",
+        "url": "https://instagram.com/thebreakdowndaily",
         "icon": "📸"
       }
     ]

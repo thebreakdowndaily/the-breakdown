@@ -20,7 +20,7 @@
           "items": [
             {"label": "YouTube Videos", "url": "https://youtube.com/@thebreakdownin"},
             {"label": "X (Twitter)", "url": "https://x.com/thebreakdownin"},
-            {"label": "Instagram", "url": "https://instagram.com/thebreakdownin"},
+            {"label": "Instagram", "url": "https://instagram.com/thebreakdowndaily"},
             {"label": "Newsletter", "url": "#newsletter"}
           ]
         },
@@ -60,7 +60,7 @@
         {"platform": "YouTube", "url": "https://youtube.com/@thebreakdownin", "icon": "▶️"},
         {"platform": "X", "url": "https://x.com/thebreakdownin", "icon": "𝕏"},
         {"platform": "LinkedIn", "url": "https://linkedin.com/company/thebreakdownin", "icon": "💼"},
-        {"platform": "Instagram", "url": "https://instagram.com/thebreakdownin", "icon": "📸"}
+        {"platform": "Instagram", "url": "https://instagram.com/thebreakdowndaily", "icon": "📸"}
       ],
       "hint": "Social media links displayed in the footer"
     }

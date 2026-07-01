@@ -94,7 +94,7 @@ export default function RootLayout({
                   "description": "India's first Visual Intelligence Platform.",
                   "foundingDate": "2026",
                   "sameAs": [
-                    "https://www.instagram.com/thebreakdownin",
+                    "https://www.instagram.com/thebreakdowndaily",
                     "https://x.com/thebreakdownin",
                     "https://www.youtube.com/@thebreakdownin",
                     "https://www.linkedin.com/company/thebreakdownin"

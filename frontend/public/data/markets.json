@@ -10,9 +10,9 @@
     {
       "symbol": "N225",
       "name": "Nikkei 225",
-      "price": 70564,
-      "change": 502.01,
-      "changePercent": 0.7
+      "price": 70455,
+      "change": 392.84,
+      "changePercent": 0.6
     },
     {
       "symbol": "FTSE",
@@ -24,24 +24,24 @@
     {
       "symbol": "SHCOMP",
       "name": "Shanghai Composite",
-      "price": 4111,
-      "change": 84.09,
-      "changePercent": 2.1
+      "price": 4103,
+      "change": 75.87,
+      "changePercent": 1.9
     },
     {
       "symbol": "SENSEX",
       "name": "SENSEX",
-      "price": 76942,
-      "change": 463.58,
+      "price": 76938,
+      "change": 459.06,
       "changePercent": 0.6
     },
     {
       "symbol": "NIFTY",
       "name": "NIFTY 50",
-      "price": 24011,
-      "change": 145.65,
-      "changePercent": 0.6
+      "price": 24046,
+      "change": 179.85,
+      "changePercent": 0.8
     }
   ],
-  "updatedAt": 1782887254820
+  "updatedAt": 1782887983131
 }
