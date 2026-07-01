@@ -16,7 +16,9 @@ export const MAIN_NAV: NavItem[] = [
   { label: 'Policy Lab', href: '/policy-lab' },
   { label: 'Timelines', href: '/timelines' },
   { label: 'Country Profiles', href: '/country-profiles' },
-  { label: 'Search Index', href: '/search' },
+  { label: 'Topics', href: '/tag' },
+  { label: 'Reading List', href: '/reading-list' },
+  { label: 'Search', href: '/search' },
   { label: 'Transparency', href: '/transparency' },
 ]
 

@@ -24,9 +24,11 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs'
 import { ReadingProgress } from '@/components/story/reading-progress'
 import { ShareButtons } from '@/components/story/share-buttons'
 import { BookmarkButton } from '@/components/story/bookmark-button'
+import { NewsletterForm } from '@/components/dashboard/newsletter-form'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { slugifyTag } from '@/lib/utils'
 
 const SECTION_LABELS: Record<string, string> = {
   'executive-summary': 'Executive Summary',
@@ -240,6 +242,22 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
         />
       </div>
 
+      {/* Tags */}
+      {report.tags && report.tags.length > 0 && (
+        <div className="max-w-4xl mx-auto mt-6 flex flex-wrap items-center gap-2 print:hidden">
+          <span className="text-xs text-muted-foreground font-medium">Topics:</span>
+          {report.tags.map(tag => (
+            <Link
+              key={tag}
+              href={`/tag/${slugifyTag(tag)}`}
+              className="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-[11px] hover:bg-muted hover:border-primary/30 transition-all"
+            >
+              {tag}
+            </Link>
+          ))}
+        </div>
+      )}
+
       <div
         data-pagefind-meta="title"
         data-pagefind-meta-category={report.category}
@@ -375,6 +393,15 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
           </div>
         </section>
       )}
+
+      {/* Newsletter CTA */}
+      <section className="max-w-md mx-auto mt-16 pt-8 border-t print:hidden">
+        <h2 className="text-lg font-bold font-heading text-center mb-2">Stay Informed</h2>
+        <p className="text-sm text-muted-foreground text-center mb-6">
+          Get notified when new intelligence reports are published.
+        </p>
+        <NewsletterForm />
+      </section>
 
       {showBackToTop && (
         <Button

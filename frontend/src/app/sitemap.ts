@@ -5,6 +5,8 @@ import { getAllPolicySlugs } from '@/lib/content/policies'
 import { getAllTimelineSlugs } from '@/lib/content/timelines'
 import { getAllCountryCodes } from '@/lib/content/countries'
 import { ENTITIES } from '@/lib/content/knowledge'
+import { ALL_STORIES } from '@/lib/content/generated/stories'
+import { getAllTags, slugifyTag } from '@/lib/utils'
 
 export const dynamic = 'force-static'
 
@@ -125,6 +127,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     countryEntries = []
   }
 
+  // Tag archive pages
+  let tagEntries: MetadataRoute.Sitemap = []
+  try {
+    const tags = getAllTags(ALL_STORIES)
+    tagEntries = tags.map((tag) => ({
+      url: `${SITE_URL}/tag/${slugifyTag(tag)}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    }))
+    tagEntries.push({
+      url: `${SITE_URL}/tag`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.5,
+    })
+  } catch {
+    tagEntries = []
+  }
+
   // Knowledge Graph entity pages
   let knowledgeEntries: MetadataRoute.Sitemap = []
   try {
@@ -145,5 +165,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...timelineEntries,
     ...countryEntries,
     ...knowledgeEntries,
+    ...tagEntries,
   ]
 }

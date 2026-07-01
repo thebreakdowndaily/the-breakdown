@@ -1,4 +1,6 @@
 import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
+import { categoryPath } from '@/lib/utils'
 
 interface ReportHeaderProps {
   title: string
@@ -21,7 +23,9 @@ export function ReportHeader({ title, category, date, author, summary, imageUrl,
         </div>
       )}
       <div className="relative z-10 p-8 md:p-12">
-        <Badge className="mb-4">{category}</Badge>
+        <Link href={categoryPath(category)} className="inline-block mb-4">
+          <Badge className="cursor-pointer hover:opacity-80 transition-opacity">{category}</Badge>
+        </Link>
         <h1 className="text-3xl md:text-5xl font-bold font-heading leading-tight text-primary-foreground mb-4">
           {title}
         </h1>

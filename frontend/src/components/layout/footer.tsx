@@ -19,8 +19,8 @@ const sections = [
   { title: 'Tools', links: [
     { label: 'Timelines', href: '/timelines' },
     { label: 'Country Profiles', href: '/country-profiles' },
-    { label: 'Search Index', href: '/search' },
-    { label: 'AI Query', href: '/search' },
+    { label: 'Topics', href: '/tag' },
+    { label: 'Search', href: '/search' },
     { label: 'Reading List', href: '/reading-list' },
     { label: 'RSS Feed', href: '/feed.xml' },
   ]},
