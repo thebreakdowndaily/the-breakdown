@@ -1,9 +1,13 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronRight, Lightbulb, Building2, Users, Banknote, Globe } from 'lucide-react'
+import { ChevronRight, Lightbulb, Building2, Users, Banknote, Globe, TrendingUp, History, ListChecks, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import { FIX_STORIES, getFixStory } from '@/lib/content/fix'
+import { FixProgressBar } from '@/components/the-fix/fix-progress-bar'
+import { FixTimeline } from '@/components/the-fix/fix-timeline'
+import { CitizenChecklist } from '@/components/the-fix/citizen-checklist'
 import type { Metadata } from 'next'
 
 interface FixDetailPageProps {
@@ -59,11 +63,29 @@ export default async function FixDetailPage({ params }: FixDetailPageProps) {
     { title: 'Global Comparison', icon: Globe, content: story.globalComparison, color: 'border-l-cyan-500' },
   ]
 
+  const hasProgress = story.progress && story.progress.length > 0
+  const hasMilestones = story.milestones && story.milestones.length > 0
+  const hasCitizenActions = story.citizenActions && story.citizenActions.length > 0
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8" data-pagefind-body>
+      {/* Pagefind metadata */}
+      <div
+        data-pagefind-meta="title"
+        data-pagefind-meta-category={story.category}
+        data-pagefind-meta-status={story.status}
+        data-pagefind-meta-priority={story.priority}
+        className="hidden"
+      >
+        {story.title}
+      </div>
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
-        <Link href="/the-fix" className="hover:text-foreground transition-colors">The Fix</Link>
+        <Link href="/the-fix" className="hover:text-foreground transition-colors inline-flex items-center gap-1">
+          <ArrowLeft className="w-3 h-3" />
+          The Fix
+        </Link>
         <ChevronRight className="w-3.5 h-3.5" />
         <span className="text-foreground font-medium truncate max-w-[300px]">{story.title}</span>
       </nav>
@@ -90,6 +112,36 @@ export default async function FixDetailPage({ params }: FixDetailPageProps) {
         ))}
       </div>
 
+      {/* Progress Bars — animated visualization */}
+      {hasProgress && (
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-4 h-4 text-primary" />
+            <h2 className="text-base font-bold font-heading">Progress Towards Targets</h2>
+          </div>
+          <Card>
+            <CardContent className="p-5">
+              <FixProgressBar progress={story.progress!} />
+            </CardContent>
+          </Card>
+        </section>
+      )}
+
+      {/* Milestone Timeline */}
+      {hasMilestones && (
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <History className="w-4 h-4 text-primary" />
+            <h2 className="text-base font-bold font-heading">Implementation Timeline</h2>
+          </div>
+          <Card>
+            <CardContent className="p-5">
+              <FixTimeline milestones={story.milestones!} />
+            </CardContent>
+          </Card>
+        </section>
+      )}
+
       {/* 5-Column Analysis */}
       <div className="space-y-6">
         {columns.map((col) => {
@@ -109,6 +161,22 @@ export default async function FixDetailPage({ params }: FixDetailPageProps) {
           )
         })}
       </div>
+
+      {/* Citizen Action Checklist — interactive */}
+      {hasCitizenActions && (
+        <section className="mt-10">
+          <Separator className="mb-6" />
+          <div className="flex items-center gap-2 mb-4">
+            <ListChecks className="w-4 h-4 text-primary" />
+            <h2 className="text-base font-bold font-heading">What You Can Do</h2>
+          </div>
+          <Card>
+            <CardContent className="p-5">
+              <CitizenChecklist citizenActions={story.citizenActions!} slug={story.slug} />
+            </CardContent>
+          </Card>
+        </section>
+      )}
 
       {/* Related Fixes */}
       <div className="mt-12 pt-8 border-t">

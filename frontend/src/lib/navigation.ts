@@ -7,7 +7,7 @@ export interface NavItem {
 export const MAIN_NAV: NavItem[] = [
   { label: 'Intelligence Reports', href: '/intelligence' },
   { label: 'Explainers', href: '/explained' },
-  { label: 'Solutions Lab', href: '/the-fix' },
+  { label: 'The Fix', href: '/the-fix' },
   { label: 'Data Lab', href: '/data-lab' },
   { label: 'Accountability', href: '/accountability' },
   { label: 'India', href: '/india' },

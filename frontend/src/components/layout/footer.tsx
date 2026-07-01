@@ -6,7 +6,7 @@ const sections = [
   { title: 'Formats', links: [
     { label: 'Intelligence Reports', href: '/intelligence' },
     { label: 'Explainers', href: '/explained' },
-    { label: 'Solutions Lab', href: '/the-fix' },
+    { label: 'The Fix', href: '/the-fix' },
     { label: 'Data Lab', href: '/data-lab' },
     { label: 'Accountability Tracker', href: '/accountability' },
   ]},

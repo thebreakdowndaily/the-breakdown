@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { FIX_STORIES } from '@/lib/content/fix'
+import { FixFilterList } from '@/components/the-fix/fix-filter-list'
 import { generatePageMetadata } from '@/lib/seo/metadata'
 
 export const metadata: Metadata = generatePageMetadata({
@@ -10,28 +10,6 @@ export const metadata: Metadata = generatePageMetadata({
   description: 'Evidence-based prescriptions for India\'s toughest problems. Each fix story applies a 5-column analytical framework — system analysis, government action, citizen action, budget, and global comparison — from health and education to infrastructure and energy.',
   path: '/the-fix',
 })
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Health: 'bg-red-500/10 text-red-600 border-red-200',
-  Education: 'bg-blue-500/10 text-blue-600 border-blue-200',
-  Energy: 'bg-amber-500/10 text-amber-600 border-amber-200',
-  Economy: 'bg-purple-500/10 text-purple-600 border-purple-200',
-  Infrastructure: 'bg-cyan-500/10 text-cyan-600 border-cyan-200',
-  Environment: 'bg-green-500/10 text-green-600 border-green-200',
-}
-
-const STATUS_COLORS: Record<string, 'default' | 'secondary' | 'outline' | 'destructive'> = {
-  'In Progress': 'default',
-  Proposed: 'secondary',
-  Implemented: 'default',
-  'Under Review': 'outline',
-}
-
-const PRIORITY_COLORS: Record<string, string> = {
-  High: 'text-red-500 border-red-200 bg-red-500/10',
-  Medium: 'text-amber-500 border-amber-200 bg-amber-500/10',
-  Low: 'text-green-500 border-green-200 bg-green-500/10',
-}
 
 export default function TheFixPage() {
   return (
@@ -80,52 +58,7 @@ export default function TheFixPage() {
         </Card>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {FIX_STORIES.map((story) => (
-          <Card key={story.slug} className="flex flex-col">
-            <CardHeader>
-              <div className="flex items-start justify-between mb-2">
-                <Badge variant="outline" className={CATEGORY_COLORS[story.category]}>{story.category}</Badge>
-                <Badge variant={STATUS_COLORS[story.status]}>{story.status}</Badge>
-              </div>
-              <CardTitle className="text-lg">{story.title}</CardTitle>
-              <CardDescription className="text-sm mt-1">{story.summary}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="mb-4">
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${PRIORITY_COLORS[story.priority]}`}>
-                  {story.priority} Priority
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                {story.metrics.map((m) => (
-                  <div key={m.label} className="bg-muted/50 rounded-lg p-2.5">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">{m.label}</p>
-                    <p className="text-sm font-bold font-heading mt-0.5">{m.value}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground border-t pt-3 mt-auto">
-                <span>System Analysis</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span>Govt Action</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span>Budget</span>
-                <span className="text-muted-foreground/40">·</span>
-                <span>Global</span>
-              </div>
-            </CardContent>
-            <div className="px-(--card-spacing) pb-(--card-spacing)">
-              <Link
-                href={`/the-fix/${story.slug}`}
-                className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none h-8 gap-1.5 px-2.5 bg-primary text-primary-foreground hover:bg-primary/80"
-              >
-                View Fix
-              </Link>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <FixFilterList />
     </div>
   )
 }
