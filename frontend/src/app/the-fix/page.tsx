@@ -7,7 +7,7 @@ import { generatePageMetadata } from '@/lib/seo/metadata'
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'The Fix',
-  description: 'Evidence-based solutions for India\'s toughest challenges. System analysis, government action, citizen action, budget, and global comparison.',
+  description: 'Evidence-based prescriptions for India\'s toughest problems. Each fix story applies a 5-column analytical framework — system analysis, government action, citizen action, budget, and global comparison — from health and education to infrastructure and energy.',
   path: '/the-fix',
 })
 
@@ -36,18 +36,14 @@ const PRIORITY_COLORS: Record<string, string> = {
 export default function TheFixPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Hero */}
       <section className="mb-12">
         <div className="relative rounded-xl border bg-card overflow-hidden">
           <div className="p-8 md:p-12 max-w-3xl">
             <Badge className="mb-4">Evidence-Based Solutions</Badge>
             <h1 className="text-3xl md:text-5xl font-bold font-heading mb-4">The Fix</h1>
-            <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              Every problem deserves a solution — backed by evidence. The Fix dissects India&apos;s toughest challenges through a
-              5-column analysis framework: <strong>System Analysis</strong> (root cause), <strong>Government Action</strong> (policy response),
-              <strong>Citizen Action</strong> (what you can do), <strong>Budget</strong> (cost &amp; funding), and
-              <strong>Global Comparison</strong> (how others solved it).
-            </p>
+             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+               Diagnosis is cheap. What India needs is evidence-based, costed prescriptions. The Fix applies a 5-column analytical framework — <strong>System Analysis</strong> (root cause and structural constraints), <strong>Government Action</strong> (policy response and funding), <strong>Citizen Action</strong> (what individuals and communities can do), <strong>Budget</strong> (cost breakdown and fiscal sustainability), and <strong>Global Comparison</strong> (how peer countries solved it) — to every major challenge, from nuclear energy and education to water and judicial reform.
+             </p>
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
               {['System Analysis', 'Government Action', 'Citizen Action', 'Budget', 'Global Comparison'].map((col) => (
                 <span key={col} className="px-3 py-1 rounded-full border bg-muted/50 font-medium">{col}</span>
@@ -57,7 +53,6 @@ export default function TheFixPage() {
         </div>
       </section>
 
-      {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
         <Card>
           <CardContent className="p-4 text-center">
@@ -85,7 +80,6 @@ export default function TheFixPage() {
         </Card>
       </div>
 
-      {/* Fix Stories Grid */}
       <div className="grid md:grid-cols-2 gap-6">
         {FIX_STORIES.map((story) => (
           <Card key={story.slug} className="flex flex-col">

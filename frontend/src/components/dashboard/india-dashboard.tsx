@@ -24,7 +24,7 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'GDP Growth',
     value: '6.4%',
-    detail: 'FY26 Advance Estimate',
+    detail: 'FY26 Advance Estimate, MoSPI',
     trend: 'up',
     color: 'bg-blue-500',
     change: '+0.3pp',
@@ -33,7 +33,7 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'Industrial Output (IIP)',
     value: '4.8%',
-    detail: 'Apr 2026, YoY',
+    detail: 'Apr 2026, manufacturing-led expansion',
     trend: 'up',
     color: 'bg-indigo-500',
     change: '+0.6pp',
@@ -42,7 +42,7 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'GST Collection',
     value: '₹1.87L Cr',
-    detail: 'May 2026',
+    detail: 'May 2026, 8.2% YoY growth sustained',
     trend: 'up',
     color: 'bg-amber-500',
     change: '+8.2% YoY',
@@ -51,16 +51,16 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'PMI Manufacturing',
     value: '58.3',
-    detail: 'Expansion, 6-mo high',
+    detail: 'Expansion territory, 6-month high',
     trend: 'up',
     color: 'bg-emerald-500',
     change: '+1.2',
     sparkline: [54.9, 55.8, 56.3, 57.1, 57.8, 58.3, 58.1, 58.3],
   },
   {
-    label: 'Exports',
+    label: 'Merchandise Exports',
     value: '$39.2B',
-    detail: 'May 2026',
+    detail: 'May 2026, engineering & pharma lead',
     trend: 'up',
     color: 'bg-cyan-500',
     change: '+5.1% YoY',
@@ -69,7 +69,7 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'Forex Reserves',
     value: '$645B',
-    detail: 'As of Jun 19',
+    detail: 'As of Jun 19, import cover strengthened',
     trend: 'up',
     color: 'bg-green-500',
     change: '+$12B',
@@ -78,16 +78,16 @@ const INDIA_METRICS: Metric[] = [
   {
     label: 'Unemployment Rate',
     value: '7.8%',
-    detail: 'May 2026',
+    detail: 'May 2026, urban-rural divergence persists',
     trend: 'down',
     color: 'bg-red-500',
     change: '-0.3pp',
     sparkline: [9.1, 8.7, 8.4, 8.2, 8.0, 7.9, 7.8, 7.8],
   },
   {
-    label: 'Power Demand',
+    label: 'Peak Power Demand',
     value: '162 GW',
-    detail: 'Peak, +9% YoY',
+    detail: 'June, driven by heatwave & industrial load',
     trend: 'up',
     color: 'bg-orange-500',
     change: '+13 GW',
@@ -134,13 +134,13 @@ export function IndiaDashboard() {
     <section>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold font-heading">India Dashboard</h2>
+          <h2 className="text-xl font-bold font-heading">India Macro Dashboard</h2>
           <Badge variant="outline" className="text-[10px] text-green-500 border-green-500/30">
             <span className="size-1.5 rounded-full bg-green-500 inline-block mr-1 animate-pulse" />
-            live data
+            real-time indicators
           </Badge>
         </div>
-        <Link href="/data-lab" className="text-sm text-muted-foreground hover:text-foreground">All Indicators →</Link>
+        <Link href="/data-lab" className="text-sm text-muted-foreground hover:text-foreground">Full Economic Dataset →</Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {INDIA_METRICS.map(m => (

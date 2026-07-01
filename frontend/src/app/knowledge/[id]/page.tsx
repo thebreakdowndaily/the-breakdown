@@ -98,7 +98,7 @@ export default async function KnowledgePage({ params }: KnowledgePageProps) {
         {/* Entity Details */}
         <Card className="mb-10">
           <CardHeader>
-            <CardTitle className="text-xl font-heading">Overview</CardTitle>
+            <CardTitle className="text-xl font-heading">Intelligence Brief</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground leading-relaxed">{entity.details}</p>
@@ -108,7 +108,7 @@ export default async function KnowledgePage({ params }: KnowledgePageProps) {
         {/* Connections Graph */}
         {graphNodes.length > 1 && (
           <section className="mb-10">
-            <h2 className="text-xl font-bold font-heading mb-4">Entity Connections</h2>
+            <h2 className="text-xl font-bold font-heading mb-4">Connection Map</h2>
             <EntityGraph
               centerId={entity.id}
               nodes={graphNodes}
@@ -147,7 +147,7 @@ export default async function KnowledgePage({ params }: KnowledgePageProps) {
         <section className="mb-10">
           <h2 className="text-xl font-bold font-heading mb-4">Related Stories</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            Stories mentioning <strong>{entity.name}</strong>
+            Analysis referencing <strong>{entity.name}</strong>
           </p>
           <RelatedStoriesForEntity entityName={entity.name} />
         </section>
@@ -177,7 +177,7 @@ export default async function KnowledgePage({ params }: KnowledgePageProps) {
         {/* Back link */}
         <div className="mt-12 pt-8 border-t text-center">
           <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4">
-            Explore the full Knowledge Graph →
+            Browse the full Knowledge Graph →
           </Link>
         </div>
       </div>

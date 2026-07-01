@@ -28,10 +28,9 @@ export default function WorldPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">World</h1>
-        <p className="text-muted-foreground mt-2">Global intelligence, conflicts, diplomacy, and trade. Every country, tracked.</p>
+        <p className="text-muted-foreground mt-2">Global intelligence tracking across conflicts, diplomacy, trade corridors, and shifting alliances. Every country profiled, every trend mapped against verified data.</p>
       </div>
 
-      {/* Featured Story */}
       {featured && (
         <div className="mb-8">
           <Link href={`/story/${featured.slug}`} className="block group">
@@ -65,7 +64,6 @@ export default function WorldPage() {
         </div>
       )}
 
-      {/* Recent Stories Grid */}
       {rest.length > 0 && (
         <div className="mb-10">
           <h2 className="text-lg font-bold font-heading mb-4">Latest Global Reports</h2>
@@ -98,13 +96,11 @@ export default function WorldPage() {
         </div>
       )}
 
-      {/* Interactive Map */}
       <div className="mb-10">
         <h2 className="text-lg font-bold font-heading mb-4">Global Map</h2>
         <WorldMapWrapper stories={allStories} />
       </div>
 
-      {/* Country Profiles Quick Access */}
       <div className="mb-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold font-heading">Country Profiles</h2>

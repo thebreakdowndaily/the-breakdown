@@ -27,10 +27,10 @@ export function KnowledgeGraph() {
     <section>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold font-heading">Knowledge Graph</h2>
-          <Badge variant="outline" className="text-[10px]">{ENTITIES.length} entities</Badge>
+          <h2 className="text-xl font-bold font-heading">Knowledge Graph — Entity Intelligence</h2>
+          <Badge variant="outline" className="text-[10px]">{ENTITIES.length} entities under monitoring</Badge>
         </div>
-        <Link href="/knowledge" className="text-sm text-muted-foreground hover:text-foreground">Explore Knowledge Graph →</Link>
+        <Link href="/knowledge" className="text-sm text-muted-foreground hover:text-foreground">Browse Entity Network →</Link>
       </div>
       <FadeIn>
         <Card>
@@ -92,7 +92,7 @@ export function KnowledgeGraph() {
               href="/knowledge"
               className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4"
             >
-              Explore the full Knowledge Graph with connections, timelines, and sources →
+              Explore the full entity graph with relationships, timelines, and source attribution →
             </Link>
           </div>
         </CardContent>

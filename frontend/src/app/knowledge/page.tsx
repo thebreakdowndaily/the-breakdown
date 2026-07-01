@@ -17,7 +17,7 @@ const ENTITY_COLORS: Record<string, string> = {
 
 export const metadata: Metadata = {
   title: 'Knowledge Graph — The Breakdown OS',
-  description: 'Explore entities, concepts, and connections — people, organisations, policies, technologies, events, and countries covered by The Breakdown.',
+  description: 'Every entity tracked by The Breakdown — people, organisations, policies, technologies, events, and countries with intelligence briefs and connections.',
 }
 
 export default function KnowledgeIndexPage() {
@@ -25,7 +25,6 @@ export default function KnowledgeIndexPage() {
     <main className="min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-12">
         <Breadcrumbs />
-        {/* Breadcrumb */}
         <nav className="mb-8 text-sm text-muted-foreground">
           <Link href="/" className="hover:text-foreground">Home</Link>
           <span className="mx-2">/</span>
@@ -34,10 +33,9 @@ export default function KnowledgeIndexPage() {
 
         <h1 className="text-3xl md:text-4xl font-bold font-heading mb-4">Knowledge Graph</h1>
         <p className="text-lg text-muted-foreground mb-8 max-w-2xl">
-          Explore the entities, concepts, and connections that power our analysis — from people and policies to technologies and events.
+          A structured index of every entity tracked by The Breakdown. Each entry links to an intelligence brief, connection map, timelines, and related analysis — covering people, policies, technologies, events, and countries.
         </p>
 
-        {/* Group entities by type */}
         {['Person', 'Organization', 'Technology', 'Policy', 'Event', 'Country'].map((type) => {
           const entities = ENTITIES.filter(e => e.type === type)
           if (entities.length === 0) return null

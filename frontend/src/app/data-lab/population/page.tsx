@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { populationChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'Total Population', value: '144.5 Cr', change: '+0.8%', trend: 'up' as const },
+  { label: 'Total Population (2024 est.)', value: '144.5 Cr', change: '+0.8%', trend: 'up' as const },
   { label: 'Median Age', value: '28.7 yrs', change: '+0.3', trend: 'up' as const },
-  { label: 'Urban Population', value: '36.2%', change: '+1.1pp', trend: 'up' as const },
-  { label: 'Sex Ratio', value: '1,020', change: '+2', trend: 'up' as const },
+  { label: 'Urbanisation Rate', value: '36.2%', change: '+1.1pp', trend: 'up' as const },
+  { label: 'Sex Ratio (F per 1,000 M)', value: '1,020', change: '+2', trend: 'up' as const },
   { label: 'Population Density', value: '481/km²', change: '+4', trend: 'up' as const },
-  { label: 'Literacy Rate', value: '77.7%', change: '+3.2pp', trend: 'up' as const },
+  { label: 'Working-Age Share (15-64)', value: '68.3%', change: '+0.4pp', trend: 'up' as const },
 ]
 
 export default function PopulationLabPage() {
   return (
-    <LabLayout title="Population" description="Demographics, age distribution, urbanization, density trends." metrics={metrics}>
+    <LabLayout title="Population" description="Demographic structure, age pyramid dynamics, urbanisation trajectory, density patterns, and the implications of India's demographic dividend for labour markets and public services." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="Age Distribution (Population Pyramid)" option={populationChart} height={380} />
-        <LabChart title="Urbanization Trend" option={{
+        <LabChart title="Population Age Pyramid (2024)" option={populationChart} height={380} />
+        <LabChart title="Urbanisation Trend — Historical & Projected" option={{
           color: ['#FF9933', '#138808'],
           tooltip: { trigger: 'axis' },
           legend: { data: ['Urban %', 'Rural %'], bottom: 0 },
@@ -33,7 +33,7 @@ export default function PopulationLabPage() {
           ],
         }} height={380} />
       </div>
-      <LabChart title="State-wise Population (Top 10)" option={{
+      <LabChart title="Population by State — Top 10 Most Populous" option={{
         color: ['#FF9933'],
         tooltip: { trigger: 'axis' },
         grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
@@ -47,28 +47,21 @@ export default function PopulationLabPage() {
         }],
       }} height={320} />
 
-      <LabContext title="The Demographic Window Is Open — But Not Forever" variant="insight">
-        India has one of the youngest populations globally, with a median age of 28.7 years compared to
-        China's 39.2 and Japan's 48.6. This demographic dividend — a high working-age share — is projected
-        to last until the mid-2050s. To reap the full benefit, India needs to create ~10 million jobs per
-        year while improving education quality, skill training, and labour force participation — especially
-        for women, where the rate (37%) lags well below the global average (47%).
+      <LabContext title="The Demographic Dividend Clock Is Ticking" variant="insight">
+        India's median age of 28.7 makes it one of the youngest major economies — 10.5 years younger than China and 20 years younger than Japan. The working-age share (15–64) of 68.3% is near its peak and will remain favourable until the mid-2050s. But a favourable age structure is not automatic growth: the dividend is conditional on employment. India needs to create ~10 million formal jobs annually just to absorb new entrants, while female labour force participation (37%) remains 10 percentage points below the global average. Countries that squandered their demographic window — much of Latin America and the Middle East — show that a young population without sufficient employment is a fiscal liability, not an asset.
       </LabContext>
 
-      <LabContext title="Urbanisation Is Accelerating — Infrastructure Must Keep Pace" variant="info">
-        India's urban population has risen from 18% in 1960 to an estimated 36% in 2024, and is projected
-        to reach 42% by 2041 — adding roughly 260 million people to cities. This urban transition, if poorly
-        managed, will strain housing, transport, water, and sanitation. The Smart Cities Mission and AMRUT
-        are steps in the right direction, but capital expenditure on urban infrastructure as a share of GDP
-        remains below what comparable economies invested during their rapid urbanisation phases.
+      <LabContext title="Urbanisation — 260 Million More City Dwellers by 2041" variant="info">
+        India's urban population has grown from 18% (1960) to an estimated 36% (2024) and is projected to reach 42% by 2041 — adding roughly 260 million people to cities, equivalent to the entire current population of Indonesia. The infrastructure challenge is immense: urban housing shortage is estimated at 19 million units, 30% of urban households lack piped water, and only ~70% of municipal solid waste is collected. Capital expenditure on urban infrastructure as a share of GDP (~0.5%) remains far below what China (2–3% during its 2000–2015 urbanisation phase) or even Brazil (1.5%) invested at comparable stages of urban transition.
       </LabContext>
 
       <LabSources sources={[
-        'Registrar General of India — Census 2011, projected estimates 2024',
-        'United Nations — World Population Prospects 2024 Revision',
-        'United Nations — World Urbanization Prospects 2024',
-        'NITI Aayog — Population Projections for India 2011–2036',
+        'Registrar General of India — Census 2011 and Population Projections, 2024',
+        'United Nations — World Population Prospects, 2024 Revision',
+        'United Nations — World Urbanization Prospects, 2024',
+        'NITI Aayog — Population Projections for India, 2011–2036',
         'World Bank — Urban Development Data for India, 2024',
+        'Ministry of Housing and Urban Affairs — Urban Infrastructure Gap Analysis, 2024',
       ]} />
     </LabLayout>
   )

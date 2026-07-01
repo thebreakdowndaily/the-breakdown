@@ -28,10 +28,9 @@ export default function AITechnologyPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">AI & Technology</h1>
-        <p className="text-muted-foreground mt-2">Tracking the frontier. AI governance, deep tech, digital infrastructure, and cybersecurity.</p>
+        <p className="text-muted-foreground mt-2">Tracking the frontier of technological change: AI governance, deep tech, digital public infrastructure, and cybersecurity. Coverage spans regulation, investment flows, adoption metrics, and geopolitical implications.</p>
       </div>
 
-      {/* Tech Topic Links */}
       <div className="grid md:grid-cols-3 gap-4 mb-10">
         {TECH_TOPICS.map(t => (
           <Link key={t.title} href={t.href}>
@@ -45,12 +44,11 @@ export default function AITechnologyPage() {
         ))}
       </div>
 
-      {/* Tech Stories */}
       <div>
         <h2 className="text-lg font-bold font-heading mb-4">Technology Stories</h2>
         {stories.length === 0 ? (
           <div className="rounded-xl border bg-muted/30 h-[200px] flex items-center justify-center">
-            <p className="text-muted-foreground">No technology stories yet.</p>
+            <p className="text-muted-foreground">No technology stories yet. New analysis is in production.</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

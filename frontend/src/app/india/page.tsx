@@ -36,10 +36,9 @@ export default function IndiaPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">India Dashboard</h1>
-        <p className="text-muted-foreground mt-2">Comprehensive tracking of India&#39;s economy, infrastructure, policy, technology, and governance.</p>
+        <p className="text-muted-foreground mt-2">Real-time tracking of India's economic momentum, policy shifts, infrastructure buildout, and governance outcomes. Every data point sourced from official publications.</p>
       </div>
 
-      {/* Key Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         {INDIA_SECTORS.map(m => (
           <Card key={m.label} size="sm">
@@ -54,7 +53,6 @@ export default function IndiaPage() {
         ))}
       </div>
 
-      {/* India Stories */}
       <div className="mb-6">
         <h2 className="text-xl font-bold font-heading mb-4">India Stories</h2>
         {stories.length === 0 ? (
@@ -119,7 +117,6 @@ export default function IndiaPage() {
         )}
       </div>
 
-      {/* Links to Key Sections */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
         {[
           { title: 'Data Lab', href: '/data-lab', desc: 'GDP, inflation, budget & more' },

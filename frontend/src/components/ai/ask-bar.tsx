@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Search } from 'lucide-react'
 
-const ACTIONS = ['Explain', 'Compare', 'Summarize', 'Visualize', 'Generate Timeline', 'Generate Map', 'Find Sources']
+const ACTIONS = ['Deep Dive', 'Cross-Reference', 'Executive Brief', 'Data Visualisation', 'Event Timeline', 'Geopolitical Map', 'Source Trace']
 
 export function AskBar() {
   const router = useRouter()
@@ -28,18 +28,18 @@ export function AskBar() {
   return (
     <Card>
       <CardContent className="p-6">
-        <h2 className="text-lg font-bold font-heading mb-1">Ask The Breakdown</h2>
-        <p className="text-sm text-muted-foreground mb-4">Get answers with sources, timelines, and visualizations.</p>
+        <h2 className="text-lg font-bold font-heading mb-1">Query Intelligence Engine</h2>
+        <p className="text-sm text-muted-foreground mb-4">Evidence-backed answers with source attribution and data visualisation.</p>
         <form onSubmit={handleSubmit} className="flex gap-2 mb-3">
           <Input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Ask about any topic..."
+            placeholder="Query reports, data, entities..."
             className="flex-1"
           />
           <Button type="submit" disabled={!query.trim()}>
             <Search className="size-3.5 mr-1.5" />
-            Ask
+            Analyse
           </Button>
         </form>
         <div className="flex flex-wrap gap-1.5">

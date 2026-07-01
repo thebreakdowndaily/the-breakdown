@@ -25,12 +25,12 @@ interface MarketData {
 // ----- Static Data (fallback + core content) -----
 
 const CONFLICTS = [
-  { flag: '🇺🇦', name: 'Ukraine-Russia War', lat: 49.5, lng: 31.0, casualties: '500K+', status: 'Active' as const, color: '#dc2626' },
-  { flag: '🇮🇳', name: 'India-China Border Standoff', lat: 33.5, lng: 78.5, casualties: '45+', status: 'Stalemate' as const, color: '#f59e0b' },
-  { flag: '🇮🇱', name: 'Middle East Conflict', lat: 31.0, lng: 35.0, casualties: '40K+', status: 'Ceasefire Talks' as const, color: '#f59e0b' },
-  { flag: '🇹🇼', name: 'Taiwan Strait Tensions', lat: 25.0, lng: 121.0, casualties: '—', status: 'Elevated' as const, color: '#f59e0b' },
-  { flag: '🇸🇩', name: 'Sudan Civil War', lat: 15.5, lng: 30.0, casualties: '20K+', status: 'Active' as const, color: '#dc2626' },
-  { flag: '🇲🇲', name: 'Myanmar Civil War', lat: 22.0, lng: 96.0, casualties: '50K+', status: 'Active' as const, color: '#dc2626' },
+  { flag: '🇺🇦', name: 'Ukraine-Russia War', lat: 49.5, lng: 31.0, casualties: '500K+', status: 'Active Conflict' as const, color: '#dc2626' },
+  { flag: '🇮🇳', name: 'India-China Border Standoff', lat: 33.5, lng: 78.5, casualties: '45+', status: 'Strategic Stalemate' as const, color: '#f59e0b' },
+  { flag: '🇮🇱', name: 'Middle East Crisis', lat: 31.0, lng: 35.0, casualties: '40K+', status: 'Ceasefire Talks' as const, color: '#f59e0b' },
+  { flag: '🇹🇼', name: 'Taiwan Strait Tensions', lat: 25.0, lng: 121.0, casualties: '—', status: 'Elevated Alert' as const, color: '#f59e0b' },
+  { flag: '🇸🇩', name: 'Sudan Civil War', lat: 15.5, lng: 30.0, casualties: '20K+', status: 'Active Conflict' as const, color: '#dc2626' },
+  { flag: '🇲🇲', name: 'Myanmar Civil War', lat: 22.0, lng: 96.0, casualties: '50K+', status: 'Active Conflict' as const, color: '#dc2626' },
 ]
 
 const DIPLOMACY = [
@@ -64,7 +64,7 @@ const SituationMap = dynamic(() => import('./situation-map').then(m => m.Situati
   ssr: false,
   loading: () => (
     <div className="h-[320px] rounded-xl border bg-muted/20 flex items-center justify-center text-muted-foreground text-sm">
-      Loading interactive map…
+      Rendering live geopolitical map…
     </div>
   ),
 })
@@ -131,8 +131,8 @@ export function GlobalSituationRoom() {
   return (
     <section>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold font-heading">Global Situation Room</h2>
-        <Link href="/world" className="text-sm text-muted-foreground hover:text-foreground">Full Map →</Link>
+        <h2 className="text-xl font-bold font-heading">Global Situation Monitor</h2>
+        <Link href="/world" className="text-sm text-muted-foreground hover:text-foreground">Interactive Geopolitical Map →</Link>
       </div>
 
       {/* Interactive World Map */}
@@ -148,8 +148,8 @@ export function GlobalSituationRoom() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-[var(--saffron)]" />
-              Active Conflicts
-              <Badge variant="outline" className="ml-auto text-[10px]">{CONFLICTS.length} tracked</Badge>
+              Active Conflict Zones
+              <Badge variant="outline" className="ml-auto text-[10px]">{CONFLICTS.length} active</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
@@ -168,7 +168,7 @@ export function GlobalSituationRoom() {
               ))}
             </div>
             <Link href="/world" className="block mt-3 text-xs text-muted-foreground hover:text-foreground">
-              View All Conflicts →
+              Full Conflict Assessment →
             </Link>
           </CardContent>
         </Card>
@@ -178,8 +178,8 @@ export function GlobalSituationRoom() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-blue-500" />
-              Diplomatic Trackers
-              <Badge variant="outline" className="ml-auto text-[10px]">{DIPLOMACY.length} upcoming</Badge>
+              Diplomatic Calendar
+              <Badge variant="outline" className="ml-auto text-[10px]">{DIPLOMACY.length} scheduled</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
@@ -196,7 +196,7 @@ export function GlobalSituationRoom() {
               ))}
             </div>
             <Link href="/world" className="block mt-3 text-xs text-muted-foreground hover:text-foreground">
-              View All Diplomatic Events →
+              Full Diplomatic Schedule →
             </Link>
           </CardContent>
         </Card>
@@ -208,10 +208,10 @@ export function GlobalSituationRoom() {
               <span className="size-2 rounded-full bg-green-500" />
               Global Markets
               {marketError ? (
-                <Badge variant="outline" className="ml-auto text-[10px] text-amber-500">cached</Badge>
+                <Badge variant="outline" className="ml-auto text-[10px] text-amber-500">snapshot</Badge>
               ) : (
                 <Badge variant="outline" className="ml-auto text-[10px] text-green-500">
-                  {marketTs ? `live ${new Date(marketTs).toLocaleTimeString()}` : 'loading…'}
+                  {marketTs ? `live ${new Date(marketTs).toLocaleTimeString()}` : 'updating…'}
                 </Badge>
               )}
             </CardTitle>
@@ -242,7 +242,7 @@ export function GlobalSituationRoom() {
               ))}
             </div>
             <Link href="/data-lab" className="block mt-3 text-xs text-muted-foreground hover:text-foreground">
-              View All Markets & Economic Data →
+              Full Market Dashboard →
             </Link>
           </CardContent>
         </Card>
@@ -252,8 +252,8 @@ export function GlobalSituationRoom() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm">
               <span className="size-2 rounded-full bg-amber-500" />
-              Weather & Climate
-              <Badge variant="outline" className="ml-auto text-[10px]">IMD • global</Badge>
+              Climate & Extreme Weather
+              <Badge variant="outline" className="ml-auto text-[10px]">IMD • global monitoring</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
@@ -269,7 +269,7 @@ export function GlobalSituationRoom() {
               ))}
             </div>
             <Link href="/search?q=climate+weather+india+2026" className="block mt-3 text-xs text-muted-foreground hover:text-foreground">
-              View All Climate Data →
+              Full Climate Briefing →
             </Link>
           </CardContent>
         </Card>

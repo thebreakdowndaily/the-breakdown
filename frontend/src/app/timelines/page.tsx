@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs'
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Timelines',
-  description: 'Every story has a history. Interactive timelines for India\'s nuclear programme, space exploration, digital transformation, and more.',
+  description: 'Chronological analysis of India\'s defining arcs — nuclear programme, human spaceflight, digital transformation, US relations, and border tensions. Events, dates, and strategic context.',
   path: '/timelines',
 })
 
@@ -27,7 +27,7 @@ export default function TimelinesPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">Timelines</h1>
-        <p className="text-muted-foreground mt-2">Every story has a history. Interactive timelines for every major topic.</p>
+        <p className="text-muted-foreground mt-2">Every inflection point has a sequence. These timelines trace the decisions, crises, and breakthroughs that shaped India's trajectory — from nuclear weapons and spaceflight to digital governance and Great-Power rivalry. Data-driven historiography for the policy age.</p>
       </div>
 
       <div className="relative mb-8">

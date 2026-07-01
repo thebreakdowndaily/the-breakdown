@@ -30,9 +30,9 @@ interface QuickNumber {
 }
 
 const ECONOMIC_INDICATORS: QuickNumber[] = [
-  { label: 'GDP Growth', value: '6.4%', change: '+0.3pp', positive: true },
-  { label: 'Inflation', value: '4.2%', change: '-0.5pp', positive: true },
-  { label: 'Repo Rate', value: '6.00%', change: 'unchanged', positive: null },
+  { label: 'GDP Growth (FY26)', value: '6.4%', change: '+0.3pp', positive: true },
+  { label: 'CPI Inflation', value: '4.2%', change: '-0.5pp', positive: true },
+  { label: 'RBI Repo Rate', value: '6.00%', change: 'held steady', positive: null },
 ]
 
 const NIFTY_FALLBACK: QuickNumber = {

@@ -18,7 +18,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
   const breadcrumbs: BreadcrumbItem[] = items ?? (() => {
     const segments = pathname.split('/').filter(Boolean)
-    const crumbs: BreadcrumbItem[] = [{ label: 'Home', href: '/' }]
+    const crumbs: BreadcrumbItem[] = [{ label: 'The Breakdown', href: '/' }]
     segments.forEach((segment, index) => {
       const href = '/' + segments.slice(0, index + 1).join('/')
       const label = segment

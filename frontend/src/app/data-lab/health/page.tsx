@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { healthChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'Life Expectancy', value: '70.5 yrs', change: '+2.0', trend: 'up' as const },
-  { label: 'Infant Mortality (per 1000)', value: '25.5', change: '-3.2', trend: 'down' as const },
-  { label: 'Health Budget', value: '₹4.5L Cr', change: '+12.5%', trend: 'up' as const },
-  { label: 'Doctor Density (per 1000)', value: '1.2', change: '+0.1', trend: 'up' as const },
-  { label: 'Hospital Beds (per 1000)', value: '1.7', change: '+0.1', trend: 'up' as const },
-  { label: 'Maternal Mortality Ratio', value: '97', change: '-8', trend: 'down' as const },
+  { label: 'Life Expectancy at Birth', value: '70.5 yrs', change: '+2.0', trend: 'up' as const },
+  { label: 'Infant Mortality (per 1,000 live births)', value: '25.5', change: '-3.2', trend: 'down' as const },
+  { label: 'Health Budget (BE 2024-25)', value: '₹4.5L Cr', change: '+12.5%', trend: 'up' as const },
+  { label: 'Doctor Density (per 1,000)', value: '1.2', change: '+0.1', trend: 'up' as const },
+  { label: 'Hospital Beds (per 1,000)', value: '1.7', change: '+0.1', trend: 'up' as const },
+  { label: 'Maternal Mortality (per 100k births)', value: '97', change: '-8', trend: 'down' as const },
 ]
 
 export default function HealthLabPage() {
   return (
-    <LabLayout title="Health" description="Healthcare spending, outcomes, infrastructure, global benchmarks." metrics={metrics}>
+    <LabLayout title="Health" description="Healthcare expenditure, epidemiological transition, infrastructure gaps, outcome disparities across states, and India's progress towards universal health coverage benchmarks." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="Health Outcomes & Infrastructure" option={healthChart} height={380} />
-        <LabChart title="Disease Burden (DALYs per 100k)" option={{
+        <LabChart title="Health Outcomes & Infrastructure Indicators" option={healthChart} height={380} />
+        <LabChart title="Disease Burden by Category — DALYs per 100k" option={{
           color: ['#dc2626', '#ea580c', '#ca8a04', '#138808', '#2563eb'],
           tooltip: { trigger: 'axis' },
           legend: { data: ['Cardiovascular', 'Respiratory', 'Communicable', 'Maternal & Child', 'Injuries'], bottom: 0 },
@@ -36,7 +36,7 @@ export default function HealthLabPage() {
           ],
         }} height={380} />
       </div>
-      <LabChart title="State-wise Healthcare Spending" option={{
+      <LabChart title="Health Spending as % of State Budget — Top & Bottom Performers" option={{
         color: ['#FF9933', '#138808'],
         tooltip: { trigger: 'axis' },
         grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
@@ -50,27 +50,21 @@ export default function HealthLabPage() {
         }],
       }} height={320} />
 
-      <LabContext title="Communicable Diseases Are Declining, Lifestyle Diseases Rising" variant="insight">
-        The disease burden in India is undergoing a rapid epidemiological transition. Communicable diseases,
-        maternal conditions, and child health have seen consistent declines (3,500 → 1,700 DALYs per 100k
-        since 2015). However, cardiovascular disease has risen steadily — now the single largest contributor
-        to India's disease burden at 5,700+ DALYs per 100k. This shift demands a corresponding reallocation
-        of health spending from infectious disease programmes to preventive cardiac care and diabetes management.
+      <LabContext title="Epidemiological Transition — India's Disease Burden Is Shifting Under Its Feet" variant="insight">
+        India's disease burden is undergoing a classic epidemiological transition. Communicable, maternal, and child-health conditions have halved from 3,500 to 1,700 DALYs per 100k since 2015, reflecting gains in sanitation, immunisation, and maternal care. But non-communicable diseases (NCDs) are rising fast: cardiovascular disease (5,700+ DALYs per 100k) is now the single largest contributor, followed by respiratory conditions and diabetes. This dual burden — unfinished infectious-disease control alongside surging NCDs — requires a corresponding reallocation of public health budgets. Currently, NCDs receive ~35% of the health budget despite accounting for ~65% of the disease burden.
       </LabContext>
 
-      <LabContext title="Health Spending — Wide State Disparities" variant="warning">
-        Kerala allocates 7.5% of its state budget to health — nearly double the 4.5% in Bihar. States with
-        higher health spending also achieve better outcomes: Kerala's infant mortality rate (6 per 1000) is
-        one-fourth of the national average. The National Health Policy 2017 target of 2.5% of GDP on health
-        by 2025 has not been met — current public health spending stands at ~1.8% of GDP.
+      <LabContext title="Health Spending — The 2.5% GDP Target Has Not Been Met" variant="warning">
+        Public health expenditure (Centre + States) stands at ~1.8% of GDP, well short of the National Health Policy 2017 target of 2.5% by 2025. The gap matters because out-of-pocket expenditure still accounts for ~47% of total health spending — among the highest in the world for a middle-income country. Wide state-level disparities persist: Kerala allocates 7.5% of its state budget to health and achieves an infant mortality rate of 6 per 1,000 live births; Bihar spends 4.5% with an IMR of 38 per 1,000. The implication is clear: health outcomes track fiscal prioritisation, and the states with the worst outcomes spend the least.
       </LabContext>
 
       <LabSources sources={[
-        'Ministry of Health and Family Welfare — National Health Accounts, 2022–23',
+        'Ministry of Health and Family Welfare — National Health Accounts Estimates, 2022–23',
         'World Health Organization — Global Health Estimates, 2024',
-        'Institute for Health Metrics and Evaluation — GBD India Compare, 2024',
+        'Institute for Health Metrics and Evaluation — Global Burden of Disease India Compare, 2024',
         'NITI Aayog — Healthy States, Progressive India Report, 2023',
-        'National Family Health Survey (NFHS-5) — 2019–21',
+        'National Family Health Survey (NFHS-5), 2019–21',
+        'World Bank — World Development Indicators: Health expenditure data, 2024',
       ]} />
     </LabLayout>
   )

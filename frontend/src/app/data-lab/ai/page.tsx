@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { aiChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'AI Investment (2024)', value: '$9.2B', change: '+23%', trend: 'up' as const },
-  { label: 'AI Patents Filed', value: '5,000+', change: '+32%', trend: 'up' as const },
+  { label: 'AI Private Investment (2024)', value: '$9.2B', change: '+23%', trend: 'up' as const },
+  { label: 'AI-Related Patents Filed', value: '5,000+', change: '+32%', trend: 'up' as const },
   { label: 'AI Talent Pool', value: '7.2L', change: '+24%', trend: 'up' as const },
-  { label: 'AI Startups', value: '2,100+', change: '+18%', trend: 'up' as const },
-  { label: 'Global AI Index Rank', value: '7th', change: '+2', trend: 'up' as const },
-  { label: 'Govt AI Budget', value: '₹10,000 Cr', change: '+50%', trend: 'up' as const },
+  { label: 'AI-Focused Startups', value: '2,100+', change: '+18%', trend: 'up' as const },
+  { label: 'Global AI Readiness Rank', value: '7th', change: '+2', trend: 'up' as const },
+  { label: 'National AI Mission Outlay', value: '₹10,000 Cr', change: '+50%', trend: 'up' as const },
 ]
 
 export default function AILabPage() {
   return (
-    <LabLayout title="AI & Technology" description="AI investment, patents, adoption, talent, policy readiness index." metrics={metrics}>
+    <LabLayout title="AI & Technology" description="Artificial intelligence investment flows, patenting activity, sectoral adoption rates, talent pool dynamics, and India's readiness across infrastructure, government strategy, and R&D." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="AI Investment & Patents" option={aiChart} height={380} />
-        <LabChart title="AI Adoption by Sector" option={{
+        <LabChart title="AI Investment Inflows & Patent Filings" option={aiChart} height={380} />
+        <LabChart title="Enterprise AI Adoption Rate by Sector" option={{
           color: ['#FF9933', '#138808', '#2563eb', '#7c3aed', '#ea580c'],
           tooltip: { trigger: 'axis' },
           legend: { data: ['Financial Services', 'Healthcare', 'Manufacturing', 'Retail', 'Agriculture'], bottom: 0 },
@@ -36,7 +36,7 @@ export default function AILabPage() {
           ],
         }} height={380} />
       </div>
-      <LabChart title="Global AI Readiness Index 2024" option={{
+      <LabChart title="AI Readiness Score — India vs USA vs China (2024)" option={{
         color: ['#FF9933', '#2563eb', '#138808', '#dc2626', '#7c3aed', '#ea580c'],
         tooltip: { trigger: 'axis' },
         grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
@@ -49,28 +49,21 @@ export default function AILabPage() {
         ],
       }} height={320} />
 
-      <LabContext title="India Ranks 7th Globally — But Gaps Remain" variant="info">
-        India ranks 7th in the Global AI Readiness Index, up from 9th in 2023. Strong scores in government
-        strategy (72) and talent availability (65) reflect initiatives like INDIAai, the National AI Portal,
-        and the government's US-India AI Initiative. However, infrastructure (58) and data availability (50)
-        lag significantly — suggesting that compute capacity, data governance frameworks, and cloud
-        infrastructure need urgent attention.
+      <LabContext title="AI Readiness — Strong on Strategy, Weak on Compute and Data" variant="info">
+        India ranks 7th in the Global AI Readiness Index (up from 9th in 2023), driven by strong government-strategy scores (72) and talent availability (65) — reflecting the INDIAai programme, the National AI Portal, and bilateral AI partnerships with the US. However, the infrastructure sub-index (58) and data-availability sub-index (50) are the weakest pillars. India has an estimated ~2,000 GPUs available for AI training against a projected need of 10,000+. The IndiaAI Mission's ₹10,000 Cr allocation includes compute procurement, but without a comprehensive data governance law (the Digital Personal Data Protection Act, 2023, is limited in scope), the data pipeline for training large language models will remain constrained.
       </LabContext>
 
-      <LabContext title="Retail Leads AI Adoption — Agriculture Lags" variant="insight">
-        Retail and financial services have seen the fastest AI adoption, driven by e-commerce, fraud detection,
-        and customer analytics. Agriculture, despite employing ~45% of India's workforce, has the lowest AI
-        adoption rate (35% in 2024). Emerging applications in precision farming, crop yield prediction, and
-        supply chain optimisation have the potential to transform the sector — but require affordable
-        deployment models for smallholder farmers.
+      <LabContext title="The AI Adoption Frontier — Retail Surges, Agriculture Stalls" variant="insight">
+        Enterprise AI adoption in India ranges from 72% in retail (e-commerce recommendation engines, demand forecasting) and 68% in financial services (fraud detection, algorithmic credit scoring) to just 35% in agriculture — the sector employing the largest share of India's workforce. The gap reflects structural barriers: small landholdings (86% of farmers are marginal or small), low digital literacy in rural areas, and the absence of affordable AI-as-a-service models for precision agriculture. Government initiatives like the AI for Agriculture dashboard and ICRISAT's crop-yield prediction pilots show promise, but scaling AI to 126 million smallholder farms requires a fundamentally different deployment architecture than the cloud-API model that works for urban enterprises.
       </LabContext>
 
       <LabSources sources={[
         'NITI Aayog — National Strategy for Artificial Intelligence, 2024 Update',
-        'Global AI Index — Tortoise Media, 2024',
-        'Stanford HAI — AI Index Annual Report, 2024',
-        'Ministry of Electronics and IT — India AI Programme Progress Report, 2024',
+        'Tortoise Media — Global AI Index, 2024',
+        'Stanford Institute for Human-Centered AI — AI Index Annual Report, 2024',
+        'Ministry of Electronics and IT — IndiaAI Programme Progress Report, 2024',
         'NASSCOM — India AI Landscape Report, 2024',
+        'International Monetary Fund — AI Preparedness Index, 2024',
       ]} />
     </LabLayout>
   )

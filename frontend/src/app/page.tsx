@@ -21,7 +21,6 @@ const EDITOR_PICKS = [
 ]
 
 export default function HomePage() {
-  // Derive featured story from pipeline: most recent published story
   const featured = ALL_STORIES.length > 0
     ? ([...ALL_STORIES]
         .sort((a, b) => (b.publishedAt ? new Date(b.publishedAt).getTime() : 0) - (a.publishedAt ? new Date(a.publishedAt).getTime() : 0))
@@ -30,12 +29,10 @@ export default function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Ticker */}
       <div className="mb-8">
         <Ticker />
       </div>
 
-      {/* Brand Hero */}
       <section className="mb-12 text-center pb-8 border-b">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold font-heading leading-tight mb-4">
@@ -47,12 +44,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Hero — Question driven by featured story */}
       {featured && (
         <section className="mb-12">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Featured Story</p>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Lead Investigation</p>
               <h2 className="text-3xl md:text-5xl font-bold font-heading leading-tight max-w-3xl">
                 {featured.title}
               </h2>
@@ -64,7 +60,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Featured Investigation — pipeline-derived */}
       {featured && (
         <section className="mb-16">
           <div className="relative rounded-xl border bg-card overflow-hidden">
@@ -83,7 +78,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Market Dashboard */}
       <FadeIn>
         <section className="mb-16">
           <div className="flex items-center justify-between mb-4">
@@ -94,40 +88,34 @@ export default function HomePage() {
         </section>
       </FadeIn>
 
-      {/* Global Situation Room */}
       <FadeIn>
         <section className="mb-16">
           <GlobalSituationRoom />
         </section>
       </FadeIn>
 
-      {/* India Dashboard */}
       <FadeIn delay={100}>
         <section className="mb-16">
           <IndiaDashboard />
         </section>
       </FadeIn>
 
-      {/* Data Lab Preview */}
       <FadeIn delay={200}>
         <section className="mb-16">
           <DataLabPreview />
         </section>
       </FadeIn>
 
-      {/* Knowledge Graph */}
       <section className="mb-16">
         <KnowledgeGraph />
       </section>
 
-      {/* Timeline of the Day */}
       <FadeIn delay={100}>
         <section className="mb-16">
           <DashboardTimeline />
         </section>
       </FadeIn>
 
-      {/* Editor's Picks */}
       <FadeIn delay={100}>
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
@@ -150,7 +138,6 @@ export default function HomePage() {
         </section>
       </FadeIn>
 
-      {/* Latest Stories */}
       <FadeIn delay={200}>
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
@@ -176,12 +163,10 @@ export default function HomePage() {
         </section>
       </FadeIn>
 
-      {/* Newsletter */}
       <section className="mb-16 max-w-md mx-auto">
         <NewsletterForm />
       </section>
 
-      {/* Ask The Breakdown */}
       <section className="mb-16">
         <AskBar />
       </section>

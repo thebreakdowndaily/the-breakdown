@@ -8,7 +8,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs'
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'Policy Lab',
-  description: 'Policy analysis, budget tracking, legislation tracker, and impact assessment. Evidence-based policy research on India\'s key initiatives.',
+  description: 'Systematic policy analysis — budget tracking, legislative timelines, impact metrics, and global comparisons for India\'s flagship initiatives in energy, technology, health, and governance.',
   path: '/policy-lab',
 })
 
@@ -26,7 +26,7 @@ export default function PolicyLabPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">Policy Lab</h1>
-        <p className="text-muted-foreground mt-2">Policy analysis, budget tracking, legislation tracker, and impact assessment.</p>
+        <p className="text-muted-foreground mt-2">Evidence-based forensic analysis of India's flagship policy initiatives — from budget outlay and legislative design to implementation milestones and measurable outcomes. Each policy is tracked across four dimensions: provisions, timeline, impact, and global context.</p>
       </div>
 
       <div className="space-y-4">

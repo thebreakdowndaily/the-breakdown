@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: StoryPageProps): Promise<Metadata> {
   const { slug } = await params
   const report = await getReport(slug)
-  if (!report) return { title: 'Story Not Found' }
+  if (!report) return { title: 'Report Not Found — The Breakdown' }
   return {
     title: `${report.title} — The Breakdown OS`,
     description: report.summary,
@@ -54,7 +54,7 @@ function storyJsonLd(report: Awaited<ReturnType<typeof getReport>>) {
         dateModified: report.publishedAt,
         author: {
           '@type': 'Person',
-          name: report.author || 'The Breakdown Desk',
+          name: report.author || 'Editorial Intelligence Unit',
         },
         publisher: {
           '@type': 'Organization',
@@ -72,7 +72,7 @@ function storyJsonLd(report: Awaited<ReturnType<typeof getReport>>) {
         name: 'The Breakdown',
         url: SITE_URL,
         logo: `${SITE_URL}/og-image.svg`,
-        description: "India's first Visual Intelligence Platform. Intelligence Reports, Data Lab, The Fix, Accountability, and global situation analysis.",
+        description: "India's first Visual Intelligence Platform. Evidence-driven intelligence reports, data lab, policy analysis, accountability tracking, and global situational awareness.",
         foundingDate: '2025',
       },
     ],

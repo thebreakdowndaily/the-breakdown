@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { inflationChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'CPI Inflation', value: '4.8%', change: '-0.6pp', trend: 'down' as const },
-  { label: 'WPI Inflation', value: '2.0%', change: '+2.7pp', trend: 'up' as const },
-  { label: 'Core CPI', value: '3.9%', change: '-0.3pp', trend: 'down' as const },
-  { label: 'Food Inflation', value: '5.2%', change: '+1.1pp', trend: 'up' as const },
-  { label: 'Fuel Inflation', value: '1.8%', change: '-2.4pp', trend: 'down' as const },
+  { label: 'CPI (Headline)', value: '4.8%', change: '-0.6pp', trend: 'down' as const },
+  { label: 'WPI', value: '2.0%', change: '+2.7pp', trend: 'up' as const },
+  { label: 'Core CPI (ex-Food & Fuel)', value: '3.9%', change: '-0.3pp', trend: 'down' as const },
+  { label: 'Food & Beverages CPI', value: '5.2%', change: '+1.1pp', trend: 'up' as const },
+  { label: 'Fuel & Light CPI', value: '1.8%', change: '-2.4pp', trend: 'down' as const },
   { label: 'RBI Repo Rate', value: '6.50%', change: 'unchanged', trend: 'neutral' as const },
 ]
 
 export default function InflationLabPage() {
   return (
-    <LabLayout title="Inflation" description="CPI, WPI, core inflation, food inflation, global comparison." metrics={metrics}>
+    <LabLayout title="Inflation" description="Consumer and wholesale price trends, core inflation dynamics, food-price stickiness, and India's position relative to global inflation cycles." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="CPI vs WPI Trend" option={inflationChart} height={380} />
-        <LabChart title="CPI Breakdown by Category" option={{
+        <LabChart title="CPI vs WPI — Persistent Wedge" option={inflationChart} height={380} />
+        <LabChart title="CPI Inflation by Major Sub-Groups" option={{
           color: ['#FF9933', '#138808', '#2563eb', '#dc2626', '#7c3aed'],
           tooltip: { trigger: 'axis' },
           legend: { data: ['Food', 'Housing', 'Fuel & Light', 'Transport', 'Health'], bottom: 0 },
@@ -36,7 +36,7 @@ export default function InflationLabPage() {
           ],
         }} height={380} />
       </div>
-      <LabChart title="Global Inflation Comparison" option={{
+      <LabChart title="Headline CPI — India vs Major Economies" option={{
         color: ['#FF9933', '#2563eb', '#dc2626', '#138808'],
         tooltip: { trigger: 'axis' },
         legend: { data: ['India', 'USA', 'UK', 'China'], bottom: 0 },
@@ -51,25 +51,20 @@ export default function InflationLabPage() {
         ],
       }} height={320} />
 
-      <LabContext title="Food Inflation Remains Sticky" variant="warning">
-        Food inflation has consistently stayed above 5%, driven by volatile vegetable prices, pulses, and
-        edible oils. This matters because food accounts for ~46% of the CPI basket. Until supply-side
-        interventions improve cold-chain infrastructure and reduce post-harvest losses, food inflation is
-        likely to remain the primary upside risk to the RBI's 4% target.
+      <LabContext title="Food Inflation — The Persistent Anchor Keeping CPI Elevated" variant="warning">
+        Food & beverages inflation has remained above 5% for most of FY24–25, driven by erratic rainfall, vegetable price spikes, and elevated pulse and edible-oil costs. With a 45.9% weight in the CPI basket, food is the single largest determinant of headline inflation. Core CPI (ex-food and fuel) has cooled to 3.9%, signalling that demand-side pressure is contained. The implication: until cold-chain infrastructure, perishable logistics, and MSP reform reduce structural food-price volatility, headline CPI will remain structurally above the RBI's 4% target even when core is benign.
       </LabContext>
 
-      <LabContext title="India vs Global Inflation — A Resilient Position" variant="insight">
-        India's CPI inflation has remained lower than the US and UK since 2022, despite the country's higher
-        food weight in the basket. The RBI's proactive rate hikes (250 bps between May 2022 and Feb 2023) and
-        the government's supply-side measures (export bans, duty cuts, buffer stock releases) helped contain
-        the spillover from global commodity shocks.
+      <LabContext title="India's Inflation Resilience — Supply Management, Not Demand Cooling" variant="insight">
+        India's headline CPI has undershot both the US and UK since 2022, despite a heavier food weighting in its basket — a vulnerability that should theoretically amplify global commodity pass-through. The explanation lies in aggressive fiscal supply management: export restrictions on wheat, sugar, and onions; customs duty cuts on edible oils and pulses; and targeted open-market releases of buffer stocks. India's relative insulation from the 2022 energy price shock also owes to administered retail fuel pricing. The RBI's 250 bps of cumulative rate hikes (May 2022–Feb 2023) anchored expectations, but the real story is that India tamed inflation through supply-side activism rather than demand destruction.
       </LabContext>
 
       <LabSources sources={[
-        'Ministry of Statistics and Programme Implementation — Consumer Price Index Releases, 2024',
-        'Reserve Bank of India — Monetary Policy Reports, 2024–25',
+        'Ministry of Statistics and Programme Implementation — Consumer Price Index Monthly Releases, 2024–25',
+        'Reserve Bank of India — Monetary Policy Report, December 2024',
         'International Monetary Fund — World Economic Outlook, October 2024',
-        'World Bank — Commodity Markets Outlook, 2024',
+        'World Bank — Commodity Markets Outlook, Q4 2024',
+        'Office of the Economic Adviser — Wholesale Price Index Monthly Data, 2024–25',
       ]} />
     </LabLayout>
   )

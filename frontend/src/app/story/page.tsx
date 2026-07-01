@@ -58,7 +58,7 @@ export default function StoryIndexPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">All Reports</h1>
         <p className="text-muted-foreground mt-2">
-          Intelligence reports, investigations, and analysis.
+          Evidence-based intelligence reports, investigations, and analysis.
           <span className="ml-2 text-xs text-muted-foreground/60">
             ({ALL_STORIES.length} reports)
           </span>
@@ -181,12 +181,12 @@ export default function StoryIndexPage() {
 
       {reports.length === 0 && (
         <div className="text-center py-20">
-          <p className="text-muted-foreground mb-2">No reports found in this category.</p>
+          <p className="text-muted-foreground mb-2">No reports match the selected filter.</p>
           <button
             onClick={() => setFilter('All')}
             className="text-sm text-primary hover:underline"
           >
-            View all reports
+            Browse all reports
           </button>
         </div>
       )}

@@ -55,7 +55,6 @@ const PRODUCTS = [
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      {/* Hero */}
       <div className="mb-12 pb-12 border-b">
         <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
           <span className="text-xl font-bold font-heading text-primary">TB</span>
@@ -65,27 +64,25 @@ export default function AboutPage() {
         </h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
           India&rsquo;s first Visual Intelligence Platform. We help you{' '}
-          <strong className="text-foreground">understand the world, not just the news</strong>.
+          <strong className="text-foreground">understand the world, not just follow the news</strong>.
         </p>
       </div>
 
-      {/* Mission */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Mission</h2>
         <div className="space-y-4 text-muted-foreground leading-relaxed">
           <p>
-            Every article is an Intelligence Report. Every topic has a dashboard. Every policy has a timeline. Every country has a profile.
+            The information age has become the misinformation age. The Breakdown exists to reverse that — by treating every article as an Intelligence Report, every topic as a dashboard, every policy as a timeline, and every country as a quantified profile.
           </p>
           <p>
-            We combine journalistic rigour with data science to deliver evidence-based analysis of India&rsquo;s most important stories — from nuclear energy to AI governance, from potholes to space exploration.
+            We combine journalistic rigour with data science to deliver evidence-based analysis of India&rsquo;s most consequential stories — from nuclear energy and AI governance to infrastructure and electoral politics. No punditry. No partisan framing. No editorial shortcuts.
           </p>
           <p>
-            In an age of information overload, our mission is to cut through the noise with structured, visual, and actionable intelligence.
+            In an age of algorithmic noise, our mission is to restore clarity through structure, verification, and visual intelligence.
           </p>
         </div>
       </section>
 
-      {/* Coverage */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Coverage</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -107,7 +104,6 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* Editorial Team */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Editorial Team</h2>
         <div className="p-4 rounded-xl border border-border/50 bg-card space-y-3">
@@ -120,7 +116,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Methodology */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Methodology</h2>
         <div className="grid sm:grid-cols-3 gap-4">
@@ -137,7 +132,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Transparency & Ethics */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Transparency &amp; Ethics</h2>
         <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
@@ -182,7 +176,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Privacy */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Privacy</h2>
         <div className="p-4 rounded-xl border border-border/50 bg-card">
@@ -204,7 +197,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Legal Entity */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Legal &amp; Registration</h2>
         <div className="p-4 rounded-xl border border-border/50 bg-card">
@@ -222,7 +214,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Products */}
       <section className="mb-12">
         <h2 className="text-xl font-bold font-heading mb-4">Products</h2>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -246,7 +237,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Contact */}
       <section className="p-6 rounded-xl border border-border/50 bg-muted/30">
         <h2 className="text-xl font-bold font-heading mb-2">Get in touch</h2>
         <p className="text-sm text-muted-foreground mb-4">

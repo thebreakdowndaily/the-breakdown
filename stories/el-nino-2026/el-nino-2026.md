@@ -1,9 +1,9 @@
 ---
-title: "El NiÃ±o 2026: Super El NiÃ±o Forecast â€” $342 Billion Food Shock Looms"
+title: "63% Chance of Super El NiÃ±o: $342B Agricultural Shock, 500M Farmers at Risk"
 published_at: "2026-06-25T10:00:00Z"
 slug: "el-nino-2026"
 tags: ["el-nino", "climate", "weather", "food security", "agriculture", "enso"]
-summary: "El NiÃ±o conditions have developed in the tropical Pacific with a 63% chance of a very strong event. Projected $342B in agricultural losses, 500M smallholder farmers at risk, and global food price shocks."
+summary: "NOAA declared El NiÃ±o on June 11, 2026. The probability of a 'very strong' Super El NiÃ±o is 63%. Projected agricultural losses: $342B. Ocean heat content in the equatorial Pacific is nearly double 2023 levels. The 1997-98 event cost $5.7T over five years."
 category: "Climate"
 fact_check_image: /images/stories/el-nino-2026.jpg
 hero: /images/stories/el-nino-2026.jpg
@@ -13,46 +13,34 @@ author: "The Breakdown Desk"
 
 ## Cold Open
 
-On 11 June 2026, the National Oceanic and Atmospheric Administration's Climate Prediction Center issued an official El NiÃ±o Advisory, declaring that El NiÃ±o conditions had developed across the tropical Pacific. The announcement, which followed weeks of rapidly warming sea-surface temperatures in the equatorial Pacific, triggered a cascade of warnings from meteorological agencies, food security analysts, and humanitarian organisations. This is not just another El NiÃ±o â€” forecasters are now putting the odds of a "very strong" event â€” one that rivals or exceeds the devastating 1997-98 and 2015-16 episodes â€” at 63 per cent.
+On June 11, 2026, NOAA's Climate Prediction Center declared that El NiÃ±o conditions had developed across the tropical Pacific. By June 17, the weekly NiÃ±o-3.4 index — the key intensity metric — had reached +0.7Â°C, with the centred anomaly at +1.7Â°C. Ocean heat content in the equatorial Pacific is now nearly double the levels recorded in 2023. The probability that the index exceeds +2.0Â°C — the Super El NiÃ±o threshold — stands at 63 per cent. The 1997-98 Super El NiÃ±o inflicted $5.7 trillion in global economic losses over five years, according to a 2023 *Science* study. This event is forecast to rival or exceed that episode.
 
 ## What's Happening
 
-El NiÃ±o, the warm phase of the El NiÃ±o-Southern Oscillation (ENSO), is defined by persistently above-average sea-surface temperatures in the central and eastern tropical Pacific. After months of below-average sea-surface temperatures across most of the equatorial Pacific from August 2025 through February 2026, the pattern shifted abruptly. By early February 2026, above-average temperatures emerged in the far eastern equatorial Pacific. Those warm anomalies expanded rapidly through the central and eastern Pacific by mid-April, setting the stage for the June declaration.
-
-By 17 June, the weekly NiÃ±o-3.4 index â€” the key metric for tracking El NiÃ±o strength â€” had reached **+0.7Â°C**, while the centred anomaly hit **+1.7Â°C**. Even more concerning, ocean heat content in the equatorial Pacific is now nearly double the levels recorded in 2023, providing a vast reservoir of thermal energy to sustain and intensify the event through the coming months.
+El NiÃ±o is defined by persistently above-average sea-surface temperatures in the central and eastern tropical Pacific. From August 2025 through February 2026, the equatorial Pacific experienced below-average temperatures. The pattern shifted abruptly in early February 2026, when above-average anomalies emerged in the far eastern Pacific and expanded rapidly through the central and eastern basin by mid-April. The June 11 advisory formalised what satellite data had been signalling for weeks. The NiÃ±o-3.4 index tracking now shows a trajectory consistent with the strongest events in the observational record.
 
 ## The Forecast
 
-The International Research Institute for Climate and Society (IRI) at Columbia University, in its June 2026 ENSO forecast quick look, places the likelihood of El NiÃ±o persisting through the June-August window at 80 per cent, rising to 90 per cent through November. Critically, the probability that the NiÃ±o-3.4 index exceeds **+2.0Â°C** â€” the threshold for a "very strong" or "Super El NiÃ±o" â€” now stands at **63 per cent**.
-
-The World Meteorological Organisation has echoed these projections, warning that this event is expected to strengthen through the Northern Hemisphere autumn and winter, likely peaking between November 2026 and February 2027. El NiÃ±o conditions are expected to persist into early 2027 before gradually weakening, though lag effects on global weather patterns and agriculture will continue well beyond.
+Columbia University's International Research Institute places the likelihood of El NiÃ±o persisting through June-August at 80 per cent, rising to 90 per cent through November. The probability that the NiÃ±o-3.4 index exceeds +2.0Â°C — the Super El NiÃ±o threshold — is 63 per cent. The World Meteorological Organisation expects the event to strengthen through the Northern Hemisphere autumn and winter, peaking between November 2026 and February 2027. El NiÃ±o conditions are projected to persist into early 2027, with lag effects on global weather and agriculture extending well beyond.
 
 ## The Economic Toll
 
-The financial stakes are staggering. Risilience, in a June 2026 analysis titled *Pricing the Storm: The $342 Billion Agribusiness Risk of Super El NiÃ±o*, projects that agricultural losses from this event could reach **$342 billion** â€” a figure that would make it one of the costliest climate-related disruptions to global food systems in modern history.
-
-To put that in perspective, research published in *Science* in 2023 estimated that the 1997-98 El NiÃ±o inflicted **$5.7 trillion** in global economic losses over the five years following the event, far exceeding earlier estimates. Those losses were driven not just by immediate infrastructure damage from floods and droughts, but by persistent reductions in economic output, agricultural productivity, and human capital. The European Commission's Joint Research Centre has described the incoming event as "potentially historic".
+Risilience's June 2026 analysis, *Pricing the Storm: The $342 Billion Agribusiness Risk of Super El NiÃ±o*, projects agricultural losses of $342 billion — potentially one of the costliest climate-related disruptions to global food systems in modern history. The European Commission's Joint Research Centre has described the incoming event as "potentially historic". Research published in *Science* in 2023 found that the 1997-98 El NiÃ±o cost $5.7 trillion over five years, driven not by immediate infrastructure damage alone but by persistent reductions in economic output, agricultural productivity, and human capital.
 
 ## Who's at Risk
 
-The human toll is concentrated among the world's most vulnerable food producers. Reporting by *The Independent* has highlighted that **500 million smallholder farmers** â€” the backbone of food production across the developing world â€” face a critical threat from the cascading impacts of extreme weather, crop failure, and economic disruption.
-
-Drought conditions are expected to emerge across **Australia, Southeast Asia, India, and southern Africa** during the July-September period, precisely when northern hemisphere harvests reach their peak agricultural impact window. Flooding risks will shift to the **southern United States, East Africa, and Peru** during the November-to-February peak. In Peru, the anchovy fishery â€” a cornerstone of the global fishmeal industry â€” has already been suspended.
+An estimated 500 million smallholder farmers across the developing world face the greatest threat, according to reporting by *The Independent*. Drought conditions are expected across Australia, Southeast Asia, India, and southern Africa during July-September, coinciding with the peak agricultural impact window for northern hemisphere harvests. Flooding risks shift to the southern United States, East Africa, and Peru during the November-to-February peak. In Peru, the anchovy fishery — the foundation of the global fishmeal industry — has already been suspended.
 
 ## Timeline of Impacts
 
-The timeline of this event follows a well-established pattern, now accelerating into its most dangerous phase:
-
 | Date | Event |
 |------|-------|
-| **Jul-Sep 2026** | El NiÃ±o strengthens. Extreme heat builds across tropics and subtropics. Droughts emerge in Australia, SE Asia, India, southern Africa. |
+| **Jul-Sep 2026** | El NiÃ±o strengthens. Extreme heat across tropics and subtropics. Droughts in Australia, SE Asia, India, southern Africa. |
 | **Sep-Oct 2026** | Peak agricultural impact window for northern hemisphere harvests. |
-| **Nov 2026 - Feb 2027** | El NiÃ±o likely peaks. 63% probability of exceeding +2.0Â°C. Flooding risk peaks in southern US, East Africa, Peru. |
+| **Nov 2026 - Feb 2027** | El NiÃ±o likely peaks. 63% probability of exceeding +2.0Â°C. Flooding peaks in southern US, East Africa, Peru. |
 | **Spring 2027** | El NiÃ±o weakens. Lag effects persist. |
 | **2027-2028** | Secondary effects from crop losses, fertiliser shortages, farmer debt cycles. |
 
 ## Global Response
 
-The international community is mobilising. The WMO issued a formal call to prepare on 1 June 2026, urging governments to activate contingency plans for extreme weather, food insecurity, and public health emergencies. The United Nations has launched a **$202 million anticipatory action appeal** for El NiÃ±o, aiming to deploy resources before the worst impacts materialise â€” a shift from the traditional reactive humanitarian model to proactive, pre-emptive support.
-
-The World Resources Institute, in its analysis of Super El NiÃ±o impacts, has emphasised that the window for effective intervention is narrowing. Without rapid scaling of anticipatory action, the combination of drought-stricken harvests, disrupted supply chains, and the indebtedness cycle among smallholder farmers could reverberate through global food systems well into 2028.
+The WMO issued a formal call to prepare on June 1, 2026, urging governments to activate contingency plans for extreme weather, food insecurity, and public health emergencies. The United Nations launched a $202 million anticipatory action appeal, aiming to deploy resources before the worst impacts materialise — a shift from reactive humanitarianism to proactive support. The World Resources Institute warns that the window for effective intervention is narrowing. Without rapid scaling, the combination of drought-stricken harvests, disrupted supply chains, and smallholder debt cycles could reverberate through global food systems well into 2028.

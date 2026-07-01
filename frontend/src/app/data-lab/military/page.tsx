@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { militaryChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'Defence Budget', value: '₹6.2L Cr', change: '+4.8%', trend: 'up' as const },
-  { label: 'Active Personnel', value: '14.6L', change: '+0.5%', trend: 'up' as const },
-  { label: 'Defence % of GDP', value: '2.1%', change: '-0.1pp', trend: 'down' as const },
-  { label: 'Global Military Rank', value: '4th', change: '—', trend: 'neutral' as const },
-  { label: 'Defence Exports', value: '₹21,000 Cr', change: '+32%', trend: 'up' as const },
-  { label: 'Modernisation Share', value: '28%', change: '+3pp', trend: 'up' as const },
+  { label: 'Defence Budget (BE 2024-25)', value: '₹6.2L Cr', change: '+4.8%', trend: 'up' as const },
+  { label: 'Active Armed Forces', value: '14.6L', change: '+0.5%', trend: 'up' as const },
+  { label: 'Defence Spending % of GDP', value: '2.1%', change: '-0.1pp', trend: 'down' as const },
+  { label: 'Global Military Strength Rank', value: '4th', change: '—', trend: 'neutral' as const },
+  { label: 'Defence Exports (FY24)', value: '₹21,000 Cr', change: '+32%', trend: 'up' as const },
+  { label: 'Capital Modernisation Share', value: '28%', change: '+3pp', trend: 'up' as const },
 ]
 
 export default function MilitaryLabPage() {
   return (
-    <LabLayout title="Military" description="Defence spending, force strength, equipment, global comparison." metrics={metrics}>
+    <LabLayout title="Military" description="Defence expenditure trends, personnel strength by service, equipment inventories, modernisation priorities, and India's position in the global strategic balance." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="Force Strength by Branch" option={militaryChart} height={380} />
-        <LabChart title="Defence Budget Trend" option={{
+        <LabChart title="Active Personnel by Service Arm" option={militaryChart} height={380} />
+        <LabChart title="Defence Budget: Revenue vs Capital Split" option={{
           color: ['#FF9933', '#138808', '#2563eb'],
           tooltip: { trigger: 'axis' },
           legend: { data: ['Revenue', 'Capital', 'Total'], bottom: 0 },
@@ -34,7 +34,7 @@ export default function MilitaryLabPage() {
           ],
         }} height={380} />
       </div>
-      <LabChart title="Major Equipment Inventory" option={{
+      <LabChart title="Major Conventional Weapons Inventory — Peer Comparison" option={{
         color: ['#FF9933', '#138808', '#2563eb', '#dc2626'],
         tooltip: { trigger: 'axis' },
         legend: { data: ['Tanks', 'Aircraft', 'Naval Vessels', 'Missile Systems'], bottom: 0 },
@@ -49,25 +49,20 @@ export default function MilitaryLabPage() {
         ],
       }} height={320} />
 
-      <LabContext title="Defence Spending as % of GDP Is Declining" variant="warning">
-        Despite a nominal increase, defence spending as a share of GDP has fallen from 2.4% in 2012 to 2.1%
-        in 2024-25. This is below the 3% target recommended by successive Parliamentary committees. Meanwhile,
-        China's defence spending (~1.7% of GDP on official figures) is ~4x India's in absolute terms. The gap
-        in capital modernisation — especially in naval and air force platforms — remains a strategic concern.
+      <LabContext title="Defence-to-GDP Ratio at a Two-Decade Low" variant="warning">
+        Defence spending as a share of GDP has declined from 2.4% (2012) to 2.1% (2024-25) — the lowest in 20 years and well below the 3% recommended by successive Parliamentary Standing Committees. In absolute terms, China's defence budget is approximately 4x India's, even at Beijing's official (likely understated) 1.7% of GDP. The capital-to-revenue ratio within India's defence budget has improved (28% capital, up from 22% in 2019) but the overall resource envelope is shrinking relative to the economy. The most acute gaps are in naval surface combatants, submarine fleet age, and air force squadron strength — currently at 31 squadrons against a sanctioned requirement of 42.
       </LabContext>
 
-      <LabContext title="Exports Surge Reflects Self-Reliance Push" variant="insight">
-        Defence exports grew 32% year-on-year to ₹21,000 crore, driven by platforms like the BrahMos missile
-        system, Akash air defence, radars, and light combat aircraft. India now exports to over 85 countries.
-        The government's target of ₹35,000 crore in defence exports by 2028-29 will require sustained
-        private-sector participation and faster clearance of export orders.
+      <LabContext title="Defence Exports — From Buyer to Builder" variant="insight">
+        Defence exports surged 32% year-on-year to ₹21,000 crore (~$2.5B), driven by BrahMos missiles, Akash air-defence systems, radars, and light combat aircraft. India now ships to over 85 countries, up from ~30 a decade ago. The government's export target of ₹35,000 crore by 2028–29 will require scaling private-sector participation — currently, private firms account for ~40% of defence production. The biggest headwind is the length of the export clearance process: average approval times of 6–9 months compare poorly with global benchmarks, discouraging international OEMs from using India as a defence manufacturing hub.
       </LabContext>
 
       <LabSources sources={[
         'Ministry of Defence — Annual Report 2023–24',
         'SIPRI — Military Expenditure Database, 2024',
-        'Department of Defence Production — Export Data, 2024',
+        'Department of Defence Production — Defence Exports Data, FY 2023–24',
         'International Institute for Strategic Studies — The Military Balance, 2024',
+        'Parliamentary Standing Committee on Defence — Demands for Grants 2024–25',
       ]} />
     </LabLayout>
   )

@@ -5,18 +5,18 @@ export interface NavItem {
 }
 
 export const MAIN_NAV: NavItem[] = [
-  { label: 'Intelligence', href: '/intelligence' },
-  { label: 'Explained', href: '/explained' },
-  { label: 'The Fix', href: '/the-fix' },
+  { label: 'Intelligence Reports', href: '/intelligence' },
+  { label: 'Explainers', href: '/explained' },
+  { label: 'Solutions Lab', href: '/the-fix' },
   { label: 'Data Lab', href: '/data-lab' },
   { label: 'Accountability', href: '/accountability' },
   { label: 'India', href: '/india' },
-  { label: 'World', href: '/world' },
+  { label: 'Geopolitics', href: '/world' },
   { label: 'AI & Technology', href: '/ai-technology' },
   { label: 'Policy Lab', href: '/policy-lab' },
   { label: 'Timelines', href: '/timelines' },
   { label: 'Country Profiles', href: '/country-profiles' },
-  { label: 'Search', href: '/search' },
+  { label: 'Search Index', href: '/search' },
 ]
 
 export const DATA_LAB_SECTIONS = [

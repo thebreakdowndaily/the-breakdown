@@ -27,11 +27,11 @@ export default function IntelligencePage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">Intelligence</h1>
-        <p className="text-muted-foreground mt-2">Geopolitical analysis, diplomatic tracking, and global situational awareness — drawn from our latest reports.</p>
+        <p className="text-muted-foreground mt-2">Geopolitical analysis, diplomatic tracking, and global situational awareness — structured as intelligence briefs drawn from verified sources, not speculation.</p>
       </div>
       {stories.length === 0 ? (
         <div className="rounded-xl border bg-muted/30 h-[300px] flex items-center justify-center">
-          <p className="text-muted-foreground">No intelligence reports yet. New analysis coming soon.</p>
+          <p className="text-muted-foreground">No intelligence reports yet. Fresh analysis is being prepared.</p>
         </div>
       ) : (
         <div className="space-y-6">

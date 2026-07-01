@@ -7,20 +7,20 @@ import { LabSources } from '@/components/data-lab/lab-sources'
 import { budgetChart } from '@/components/data-lab/chart-options'
 
 const metrics = [
-  { label: 'Total Expenditure', value: '₹48.2L Cr', change: '+7.3%', trend: 'up' as const },
-  { label: 'Revenue', value: '₹35.0L Cr', change: '+12.9%', trend: 'up' as const },
-  { label: 'Fiscal Deficit', value: '4.9%', change: '-0.6pp', trend: 'down' as const },
+  { label: 'Total Expenditure (BE)', value: '₹48.2L Cr', change: '+7.3%', trend: 'up' as const },
+  { label: 'Revenue Receipts', value: '₹35.0L Cr', change: '+12.9%', trend: 'up' as const },
+  { label: 'Fiscal Deficit (% of GDP)', value: '4.9%', change: '-0.6pp', trend: 'down' as const },
   { label: 'Capital Expenditure', value: '₹11.1L Cr', change: '+16.9%', trend: 'up' as const },
-  { label: 'Tax Revenue', value: '₹25.8L Cr', change: '+11.5%', trend: 'up' as const },
-  { label: 'Debt-to-GDP', value: '57.2%', change: '-0.8pp', trend: 'down' as const },
+  { label: 'Gross Tax Revenue', value: '₹25.8L Cr', change: '+11.5%', trend: 'up' as const },
+  { label: 'Central Debt-to-GDP', value: '57.2%', change: '-0.8pp', trend: 'down' as const },
 ]
 
 export default function BudgetLabPage() {
   return (
-    <LabLayout title="Budget" description="Union Budget, allocations, deficits, revenue, expenditure trends." metrics={metrics}>
+    <LabLayout title="Budget" description="Union Budget 2024–25 — revenue mobilisation, expenditure quality, fiscal consolidation trajectory, and the shifting composition of public spending." metrics={metrics}>
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        <LabChart title="Revenue, Expenditure & Deficit" option={budgetChart} height={380} />
-        <LabChart title="Budget Allocation by Ministry (2024-25)" option={{
+        <LabChart title="Revenue, Expenditure & Fiscal Deficit Trajectory" option={budgetChart} height={380} />
+        <LabChart title="Share of Central Expenditure by Ministry (2024-25 BE)" option={{
           color: ['#FF9933', '#138808', '#2563eb', '#dc2626', '#7c3aed', '#ea580c', '#0d9488', '#ca8a04'],
           tooltip: { trigger: 'item' },
           series: [{
@@ -28,7 +28,7 @@ export default function BudgetLabPage() {
             radius: ['30%', '60%'],
             center: ['50%', '55%'],
             itemStyle: { borderRadius: 4 },
-            label: { formatter: '{b}\n₹{c}L Cr' },
+            label: { formatter: '{b}\n₹{c}L Cr', fontSize: 11 },
             data: [
               { value: 6.2, name: 'Defence' },
               { value: 4.5, name: 'Health' },
@@ -42,7 +42,7 @@ export default function BudgetLabPage() {
           }],
         }} height={380} />
       </div>
-      <LabChart title="Revenue Sources (2024-25)" option={{
+      <LabChart title="Composition of Tax & Non-Tax Revenue (2024-25 BE)" option={{
         color: ['#138808', '#2563eb', '#FF9933', '#7c3aed', '#dc2626'],
         tooltip: { trigger: 'item' },
         series: [{
@@ -61,25 +61,20 @@ export default function BudgetLabPage() {
         }],
       }} height={320} />
 
-      <LabContext title="Fiscal Consolidation Is on Track" variant="info">
-        The fiscal deficit has narrowed from 9.2% of GDP in 2020-21 to a budgeted 4.9% in 2024-25. The government
-        aims to reach 4.5% by 2025-26. This glide path has been supported by robust tax collections (especially
-        GST and income tax) and rationalised expenditure. However, the debt-to-GDP ratio at 57.2% remains above
-        the FRBM target of 40%, leaving limited room for counter-cyclical spending in a downturn.
+      <LabContext title="Fiscal Glide Path — On Track but Debt Overhang Persists" variant="info">
+        The fiscal deficit has narrowed from a pandemic peak of 9.2% of GDP (2020-21) to a budgeted 4.9% in 2024-25, en route to the 4.5% target for 2025-26. Revenue buoyancy — GST collections averaging ₹1.7L Cr/month and direct tax growth of 11.5% — has been the primary driver. However, the central government's debt-to-GDP ratio of 57.2% remains well above the FRBM anchor of 40%, constraining counter-cyclical capacity. Interest payments alone consume ~24% of revenue receipts, leaving less fiscal space for productive spending than the headline deficit numbers suggest.
       </LabContext>
 
-      <LabContext title="Capex Push — Quality of Spending Is Improving" variant="insight">
-        Capital expenditure has grown at 16.9% — nearly 2.5x the growth in revenue expenditure. A higher capex
-        share improves the quality of public spending by building roads, railways, defence infrastructure, and
-        digital assets. Every rupee of capex is estimated to have a multiplier of 2.5–3.5x on GDP, compared to
-        ~0.9x for revenue spending.
+      <LabContext title="Capex Multiplier Effect — Why Spending Composition Matters" variant="insight">
+        Capital expenditure has grown at 16.9% year-on-year — roughly 2.5x the pace of revenue expenditure (6.7%). This tilt matters because the fiscal multiplier of capex (2.5–3.5x GDP) far exceeds that of revenue spending (~0.9x). Roads, railways, defence infrastructure, and digital public infrastructure now absorb a rising share of the budget. However, actual capex execution has historically undershot budget estimates by 10–15% — the quality of the fiscal expansion depends not just on allocation but on implementation velocity at the state and PSU level.
       </LabContext>
 
       <LabSources sources={[
         'Ministry of Finance — Union Budget 2024–25, Budget at a Glance',
-        'Controller General of Accounts — Monthly Accounts Reports, 2024',
+        'Controller General of Accounts — Monthly Accounts Reports, FY 2024–25',
         'Reserve Bank of India — State Finances: A Study of Budgets, 2024',
-        'International Monetary Fund — India Article IV Consultation, 2024',
+        'International Monetary Fund — India Article IV Consultation Staff Report, 2024',
+        'Comptroller and Auditor General — Compliance Audit of Union Government Accounts, 2023–24',
       ]} />
     </LabLayout>
   )

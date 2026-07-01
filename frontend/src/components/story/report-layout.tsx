@@ -30,20 +30,20 @@ import { Badge } from '@/components/ui/badge'
 
 const SECTION_LABELS: Record<string, string> = {
   'executive-summary': 'Executive Summary',
-  'quick-facts': 'Quick Facts',
-  'key-numbers': 'Key Numbers',
-  'timeline': 'Timeline',
-  'evidence': 'Evidence',
-  'root-cause': 'Root Cause',
-  'system-map': 'System Map',
-  'debate': 'The Debate',
-  'the-fix': 'The Fix',
-  'global-comparison': 'Global Comparison',
-  'whats-next': "What's Next",
-  'sources': 'Primary Sources',
-  'knowledge': 'Related Knowledge',
-  'body': 'In Depth',
-  'explained': 'Explained',
+  'quick-facts': 'Fact Base',
+  'key-numbers': 'Key Data Points',
+  'timeline': 'Event Chronology',
+  'evidence': 'Evidence Chain',
+  'root-cause': 'Root-Cause Analysis',
+  'system-map': 'Systemic Map',
+  'debate': 'Policy Debate',
+  'the-fix': 'Proposed Solutions',
+  'global-comparison': 'Global Benchmark',
+  'whats-next': 'Forward Outlook',
+  'sources': 'Primary Sources & Attribution',
+  'knowledge': 'Related Entity Intelligence',
+  'body': 'Full Analysis',
+  'explained': 'Explainer',
 }
 
 const VISIBLE_SECTION_TYPES = new Set(Object.keys(SECTION_LABELS))
@@ -216,7 +216,7 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
           month: 'long',
           day: 'numeric',
         }) : ''}
-        author={report.author || 'The Breakdown Desk'}
+        author={report.author || 'Editorial Intelligence Unit'}
         summary={report.summary}
         imageUrl={report.hero}
         caption={report.caption}
@@ -316,7 +316,7 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
             dangerouslySetInnerHTML={{ __html: report.body }}
           />
         ) : (
-          <p className="text-muted-foreground text-center py-12">Content coming soon.</p>
+          <p className="text-muted-foreground text-center py-12">This intelligence report is being compiled. Sources verified, analysis pending.</p>
         )}
       </div>
 
@@ -330,7 +330,7 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
                   href={`/story/${prevStory.slug}`}
                   className="group flex flex-col gap-1 rounded-lg border p-4 hover:bg-muted/50 transition-colors relative"
                 >
-                  <span className="text-xs text-muted-foreground">&larr; Previous Story</span>
+                  <span className="text-xs text-muted-foreground">&larr; Previous Report</span>
                   <span className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors">
                     {prevStory.title}
                   </span>
@@ -344,7 +344,7 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
                   href={`/story/${nextStory.slug}`}
                   className="group flex flex-col gap-1 rounded-lg border p-4 hover:bg-muted/50 transition-colors relative"
                 >
-                  <span className="text-xs text-muted-foreground">Next Story &rarr;</span>
+                  <span className="text-xs text-muted-foreground">Next Report &rarr;</span>
                   <span className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors">
                     {nextStory.title}
                   </span>
@@ -359,7 +359,7 @@ export function ReportLayout({ report, relatedStories, prevStory, nextStory }: R
       {/* Related Stories */}
       {relatedStories && relatedStories.length > 0 && (
         <section className="max-w-4xl mx-auto mt-16 pt-8 border-t print:hidden">
-          <h2 className="text-xl font-bold font-heading mb-6">Related Stories</h2>
+          <h2 className="text-xl font-bold font-heading mb-6">Related Intelligence Reports</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {relatedStories.map(s => (
               <Link key={s.slug} href={`/story/${s.slug}`}>

@@ -18,24 +18,24 @@ const TOP_NAV = MAIN_NAV.slice(0, 5)
 const MORE_NAV = MAIN_NAV.slice(5)
 
 const NAV_ICONS: Record<string, typeof Search> = {
-  'Intelligence': Sparkles,
-  'Explained': BookOpen,
-  'The Fix': UserCheck,
+  'Intelligence Reports': Sparkles,
+  'Explainers': BookOpen,
+  'Solutions Lab': UserCheck,
   'Data Lab': BarChart3,
   'Accountability': UserCheck,
   'India': Globe,
-  'World': Map,
+  'Geopolitics': Map,
   'AI & Technology': BrainCircuit,
   'Policy Lab': BookOpen,
   'Timelines': Timer,
   'Country Profiles': Globe,
-  'Search': Search,
+  'Search Index': Search,
 }
 
 const CATEGORIES: { title: string; items: typeof MAIN_NAV }[] = [
-  { title: 'Core', items: MAIN_NAV.slice(0, 5) },
-  { title: 'Topics', items: MAIN_NAV.slice(5, 9) },
-  { title: 'Tools', items: MAIN_NAV.slice(9) },
+  { title: 'Formats', items: MAIN_NAV.slice(0, 5) },
+  { title: 'Coverage', items: MAIN_NAV.slice(5, 9) },
+  { title: 'Resources', items: MAIN_NAV.slice(9) },
 ]
 
 export function TopBar() {
@@ -69,13 +69,13 @@ export function TopBar() {
       <div className="flex items-center justify-between px-4 h-9 text-xs text-muted-foreground border-b">
         <div className="flex items-center gap-4">
           <span className="tabular-nums font-mono">{time} IST</span>
-          <span className="hidden sm:inline">Markets ▼</span>
-          <span className="hidden md:inline">AI Watch</span>
-          <span className="hidden md:inline">Conflict Tracker</span>
+          <span className="hidden sm:inline">Market Data ▼</span>
+          <span className="hidden md:inline">AI Monitor</span>
+          <span className="hidden md:inline">Conflict Radar</span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="hidden sm:inline">Weather</span>
-          <span className="font-medium text-foreground/80">Breaking</span>
+          <span className="hidden sm:inline">Climate Watch</span>
+          <span className="font-medium text-foreground/80">Live Feed</span>
         </div>
       </div>
       <div className="flex items-center justify-between px-4 h-12">
@@ -91,7 +91,7 @@ export function TopBar() {
           ))}
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 hover:text-foreground/80 transition-colors cursor-default text-sm font-medium">
-              More <ChevronDown className="size-3" />
+              More Formats <ChevronDown className="size-3" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
               {MORE_NAV.map(item => (
@@ -109,7 +109,7 @@ export function TopBar() {
             <ThemeToggle />
           </div>
           <Link href="/search" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline">
-            Search
+            Search Reports
           </Link>
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger
@@ -132,7 +132,7 @@ export function TopBar() {
                   <Input
                     value={mobileSearch}
                     onChange={(e) => setMobileSearch(e.target.value)}
-                    placeholder="Search..."
+                    placeholder="Search reports, topics, entities..."
                     className="pl-8 h-9 text-sm"
                   />
                 </form>

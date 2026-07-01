@@ -69,7 +69,7 @@ export function PagefindSearch() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground py-8 justify-center">
         <Loader2 className="size-4 animate-spin" />
-        Loading search...
+        Initialising search index...
       </div>
     );
   }
@@ -82,7 +82,7 @@ export function PagefindSearch() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search reports, data, analysis..."
+          placeholder="Search intelligence reports, data, entities..."
           className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
           autoFocus
         />
@@ -91,7 +91,7 @@ export function PagefindSearch() {
       {loading && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground py-4 justify-center">
           <Loader2 className="size-4 animate-spin" />
-          Searching...
+          Querying index...
         </div>
       )}
 
@@ -120,7 +120,7 @@ export function PagefindSearch() {
 
       {query && !loading && results.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-8">
-          No results found for &ldquo;{query}&rdquo;
+          No intelligence reports match &ldquo;{query}&rdquo;
         </p>
       )}
     </div>

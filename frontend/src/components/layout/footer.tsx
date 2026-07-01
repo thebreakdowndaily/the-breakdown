@@ -3,24 +3,24 @@ import { SITE_CONFIG } from '@/lib/content/generated/site-config'
 import { PushSubscribeButton } from '@/components/pwa/push-subscribe'
 
 const sections = [
-  { title: 'Products', links: [
-    { label: 'Intelligence', href: '/intelligence' },
-    { label: 'Explained', href: '/explained' },
-    { label: 'The Fix', href: '/the-fix' },
+  { title: 'Formats', links: [
+    { label: 'Intelligence Reports', href: '/intelligence' },
+    { label: 'Explainers', href: '/explained' },
+    { label: 'Solutions Lab', href: '/the-fix' },
     { label: 'Data Lab', href: '/data-lab' },
-    { label: 'Accountability', href: '/accountability' },
+    { label: 'Accountability Tracker', href: '/accountability' },
   ]},
-  { title: 'Topics', links: [
+  { title: 'Coverage', links: [
     { label: 'India', href: '/india' },
-    { label: 'World', href: '/world' },
+    { label: 'Geopolitics', href: '/world' },
     { label: 'AI & Technology', href: '/ai-technology' },
     { label: 'Policy Lab', href: '/policy-lab' },
   ]},
   { title: 'Tools', links: [
     { label: 'Timelines', href: '/timelines' },
     { label: 'Country Profiles', href: '/country-profiles' },
-    { label: 'Search', href: '/search' },
-    { label: 'Ask AI', href: '/search' },
+    { label: 'Search Index', href: '/search' },
+    { label: 'AI Query', href: '/search' },
     { label: 'Reading List', href: '/reading-list' },
     { label: 'RSS Feed', href: '/feed.xml' },
   ]},
@@ -48,9 +48,9 @@ export function Footer() {
         {/* Tagline from pipeline */}
         <div className="mb-12 pb-12 border-b">
           <div className="max-w-xl mx-auto text-center">
-            <h3 className="text-lg font-bold font-heading mb-2">THE BREAKDOWN</h3>
+            <h3 className="text-lg font-bold font-heading mb-2">THE BREAKDOWN — Editorial Intelligence</h3>
             <p className="text-sm text-muted-foreground">
-              {SITE_CONFIG.footer?.['footer-tagline'] || 'Complex stories. Clear analysis. A news analysis platform built for people who want to understand the world, not just watch it.'}
+              {SITE_CONFIG.footer?.['footer-tagline'] || 'Evidence-driven intelligence. Clear analysis. Built for decision-makers who need to understand the forces shaping India and the world.'}
             </p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-xs text-muted-foreground">
-            {SITE_CONFIG.footer?.['footer-copyright'] || `© ${year} The Breakdown. All rights reserved.`}
+            {SITE_CONFIG.footer?.['footer-copyright'] || `© ${year} The Breakdown. Intelligence analysis platform. All rights reserved.`}
           </div>
           <PushSubscribeButton />
           <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export function Footer() {
             ))}
           </div>
           <div className="text-xs text-muted-foreground">
-            Understand the world, not just the news.
+            Intelligence over information. Analysis over noise.
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ export default function ReadingListPage() {
         ]} />
 
         <h1 className="text-3xl md:text-4xl font-bold font-heading mb-2">Reading List</h1>
-        <p className="text-muted-foreground mb-8">Stories you have saved to read later.</p>
+        <p className="text-muted-foreground mb-8">Stories you have bookmarked for later reading — your personal research queue.</p>
 
         <ReadingListClient />
       </div>

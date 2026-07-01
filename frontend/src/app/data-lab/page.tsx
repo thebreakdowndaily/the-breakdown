@@ -20,16 +20,16 @@ interface Section {
 }
 
 const sections: Section[] = [
-  { label: 'GDP', href: '/data-lab/gdp', description: 'Gross Domestic Product', detail: 'Quarterly growth, sectoral breakdown, global rank, per capita trends.', icon: <BarChart3 className="size-5" /> },
-  { label: 'Inflation', href: '/data-lab/inflation', description: 'CPI, WPI & Core Inflation', detail: 'Category-wise breakdown, food vs fuel, global comparison, RBI repo rate context.', icon: <TrendingUp className="size-5" /> },
-  { label: 'Budget', href: '/data-lab/budget', description: 'Union Budget', detail: 'Revenue & expenditure trends, fiscal deficit, ministry allocations, tax composition.', icon: <Banknote className="size-5" /> },
-  { label: 'Military', href: '/data-lab/military', description: 'Defence & Force Strength', detail: 'Spending trends, personnel, equipment inventory, global firepower rank.', icon: <Swords className="size-5" /> },
-  { label: 'Education', href: '/data-lab/education', description: 'Literacy & Enrollment', detail: 'State-wise literacy, GER trends, NEP 2020 progress, budget allocation.', icon: <GraduationCap className="size-5" /> },
-  { label: 'Health', href: '/data-lab/health', description: 'Healthcare Outcomes', detail: 'Life expectancy, mortality, disease burden, state-wise spending, infrastructure.', icon: <Heart className="size-5" /> },
-  { label: 'Population', href: '/data-lab/population', description: 'Demographics', detail: 'Age pyramid, urbanization shift, state-wise distribution, median age trends.', icon: <Users className="size-5" /> },
-  { label: 'AI', href: '/data-lab/ai', description: 'Artificial Intelligence', detail: 'Investment, patents, adoption by sector, talent pool, global readiness index.', icon: <BrainCircuit className="size-5" /> },
-  { label: 'Energy', href: '/data-lab/energy', description: 'Energy Mix & Renewables', detail: 'Consumption by source, solar & wind growth, per capita use, energy intensity.', icon: <Zap className="size-5" /> },
-  { label: 'Trade', href: '/data-lab/trade', description: 'Exports, Imports & FDI', detail: 'Trade balance, top partners, services exports, FDI inflows, global share.', icon: <Globe className="size-5" /> },
+  { label: 'GDP', href: '/data-lab/gdp', description: 'Gross Domestic Product', detail: 'Quarterly growth, sectoral contribution, global rank trajectory, per capita convergence, and composition over time.', icon: <BarChart3 className="size-5" /> },
+  { label: 'Inflation', href: '/data-lab/inflation', description: 'CPI, WPI & Core Inflation', detail: 'Category-wise breakdown, food vs fuel divergence, global comparison, RBI repo rate correlation, and real wage impact.', icon: <TrendingUp className="size-5" /> },
+  { label: 'Budget', href: '/data-lab/budget', description: 'Union Budget', detail: 'Revenue and expenditure trends, fiscal deficit trajectory, ministry-wise allocation shifts, and tax composition evolution.', icon: <Banknote className="size-5" /> },
+  { label: 'Military', href: '/data-lab/military', description: 'Defence & Force Strength', detail: 'Spending trends as share of GDP, personnel strength by service, equipment inventory, and global firepower rank.', icon: <Swords className="size-5" /> },
+  { label: 'Education', href: '/data-lab/education', description: 'Literacy & Enrollment', detail: 'State-wise literacy rates, gross enrollment ratio trends, NEP 2020 implementation, and budget allocation efficiency.', icon: <GraduationCap className="size-5" /> },
+  { label: 'Health', href: '/data-lab/health', description: 'Healthcare Outcomes', detail: 'Life expectancy gains, mortality trends, disease burden shift, state-level spending variance, and infrastructure density.', icon: <Heart className="size-5" /> },
+  { label: 'Population', href: '/data-lab/population', description: 'Demographics', detail: 'Age structure shift, urbanisation pace, state-wise distribution changes, dependency ratio, and median age trajectory.', icon: <Users className="size-5" /> },
+  { label: 'AI', href: '/data-lab/ai', description: 'Artificial Intelligence', detail: 'Investment flows, patent filing trends, sectoral adoption rates, talent pool depth, and global readiness index standing.', icon: <BrainCircuit className="size-5" /> },
+  { label: 'Energy', href: '/data-lab/energy', description: 'Energy Mix & Renewables', detail: 'Consumption by source, solar and wind capacity growth, per capita use vs peers, and energy intensity trajectory.', icon: <Zap className="size-5" /> },
+  { label: 'Trade', href: '/data-lab/trade', description: 'Exports, Imports & FDI', detail: 'Trade balance evolution, top partner shifts, services export growth, FDI sectoral flows, and global share trends.', icon: <Globe className="size-5" /> },
 ]
 
 export default function DataLabPage() {
@@ -38,7 +38,7 @@ export default function DataLabPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">Data Lab</h1>
-        <p className="text-muted-foreground mt-2">Interactive visualizations — every chart is explorable, filterable, and comparable. Select a topic below.</p>
+        <p className="text-muted-foreground mt-2">Open datasets transformed into interactive visualisations. Every chart is explorable, filterable, and comparable across time and geographies. Select a topic below.</p>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sections.map(s => (

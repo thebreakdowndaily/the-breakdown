@@ -44,7 +44,7 @@ export function ReadingListClient() {
           </svg>
           <h2 className="text-lg font-bold font-heading mb-2">Your reading list is empty</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            Bookmark stories to save them for later reading.
+            Bookmark reports and intelligence briefs to build a personal research library for later reference.
           </p>
           <Link href="/story">
             <Button variant="default">Browse Stories</Button>

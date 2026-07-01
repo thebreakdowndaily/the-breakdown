@@ -22,11 +22,11 @@ export default function ExplainedPage() {
       <Breadcrumbs />
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading">Explained</h1>
-        <p className="text-muted-foreground mt-2">Complex topics, clearly broken down. Systems, policies, and science — no jargon.</p>
+        <p className="text-muted-foreground mt-2">Systems, policies, science, and geopolitics — stripped of jargon and anchored in evidence. Every explainer answers not just what happened, but how it works and why it matters.</p>
       </div>
       {stories.length === 0 ? (
         <div className="rounded-xl border bg-muted/30 h-[300px] flex items-center justify-center">
-          <p className="text-muted-foreground">No explainers yet. Coming soon.</p>
+          <p className="text-muted-foreground">No explainers yet. New analyses are in production.</p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

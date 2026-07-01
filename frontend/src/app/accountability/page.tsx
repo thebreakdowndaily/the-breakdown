@@ -54,15 +54,13 @@ const TRACKERS = [
 export default function AccountabilityPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Hero */}
       <section className="mb-12">
         <div className="relative rounded-xl border bg-card overflow-hidden">
           <div className="p-8 md:p-12 max-w-3xl">
             <Badge className="mb-4">Government Tracking</Badge>
             <h1 className="text-3xl md:text-5xl font-bold font-heading mb-4">Accountability</h1>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              Democracy demands accountability. We track government spending, infrastructure projects, election promises,
-              and provide resources for citizen-led transparency. Every number is sourced from official data — verified, analyzed, and presented without bias.
+              Democracy demands more than elections. It requires continuous, verifiable accountability. We track government spending against budget estimates, monitor infrastructure projects through their lifecycle, measure election promises against delivery, and equip citizens with RTI tools to demand transparency. Every data point is sourced from official records — verified, analysed, and presented without editorial spin.
             </p>
             <div className="flex flex-wrap gap-3">
               <span className="text-xs bg-muted/50 px-3 py-1.5 rounded-full font-medium">Ministry Budgets</span>
@@ -74,7 +72,6 @@ export default function AccountabilityPage() {
         </div>
       </section>
 
-      {/* Tracker Cards */}
       <div className="grid md:grid-cols-2 gap-6 mb-12">
         {TRACKERS.map((tracker) => {
           const Icon = tracker.icon
@@ -105,7 +102,6 @@ export default function AccountabilityPage() {
         })}
       </div>
 
-      {/* Spending Preview */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold font-heading">Recent Spending Data</h2>
@@ -145,7 +141,6 @@ export default function AccountabilityPage() {
         </Card>
       </section>
 
-      {/* Project Status Preview */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold font-heading">Project Status Overview</h2>
@@ -181,7 +176,6 @@ export default function AccountabilityPage() {
         </div>
       </section>
 
-      {/* Promises Quick View */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold font-heading">Promises vs Delivery</h2>
@@ -217,7 +211,6 @@ export default function AccountabilityPage() {
         </Card>
       </section>
 
-      {/* RTI Resources Preview */}
       <section className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold font-heading">Popular RTI Resources</h2>

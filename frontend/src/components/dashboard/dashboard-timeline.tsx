@@ -57,19 +57,19 @@ const FALLBACK_EVENTS: TimelineEvent[] = [
   {
     time: '09:30 AM',
     title: 'RBI MPC Minutes Released',
-    description: 'Minutes of June 3-5 MPC meeting show 5-1 vote to hold repo rate at 6.00%. Governor Das highlights inflation risks from food prices.',
+    description: 'Minutes of June 3-5 MPC meeting reveal 5-1 vote to hold repo rate at 6.00%. Governor flags persistent food-price inflation as key risk to disinflation trajectory.',
     category: 'Economy',
   },
   {
     time: '12:15 PM',
     title: 'PM Modi Reviews Hydrogen Mission Progress',
-    description: 'Prime Minister chairs high-level review of National Green Hydrogen Mission. DAE presents world-first nuclear hydrogen plant at Kalpakkam.',
+    description: 'High-level review of National Green Hydrogen Mission; DAE briefs on world-first nuclear-integrated hydrogen plant at Kalpakkam. Target: 5 MMT annual green hydrogen by 2030.',
     category: 'Policy',
   },
   {
     time: '03:45 PM',
     title: 'Markets Close at Record Highs',
-    description: 'Sensex closes at 81,456 (+0.5%), Nifty at 24,812 (+0.6%). Realty and IT stocks lead gains on strong FII inflows.',
+    description: 'Sensex settles at 81,456 (+0.5%), Nifty at 24,812 (+0.6%). Realty and IT lead; FII inflows surge on stable rate outlook and robust Q4 earnings season.',
     category: 'Markets',
   },
 ]
@@ -110,7 +110,7 @@ export function DashboardTimeline() {
     <section>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold font-heading">Timeline of the Day</h2>
+          <h2 className="text-xl font-bold font-heading">Today's Intelligence Timeline</h2>
           <Badge variant="outline" className="text-[10px]">
             {new Date().toLocaleDateString('en-IN', {
               day: 'numeric',
@@ -119,7 +119,7 @@ export function DashboardTimeline() {
             })}
           </Badge>
         </div>
-        <Link href="/timelines" className="text-sm text-muted-foreground hover:text-foreground">All Timelines →</Link>
+        <Link href="/timelines" className="text-sm text-muted-foreground hover:text-foreground">Full Event Timeline →</Link>
       </div>
       <Card>
         <CardContent className="p-6">
@@ -152,7 +152,7 @@ export function DashboardTimeline() {
                         href={`/story/${e.slug}`}
                         className="shrink-0 text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 mt-1"
                       >
-                        Read →
+                        Read Analysis →
                       </Link>
                     )}
                   </div>
@@ -164,13 +164,13 @@ export function DashboardTimeline() {
           {/* Quick stats */}
           <div className="mt-6 pt-4 border-t flex flex-wrap gap-4 text-xs text-muted-foreground">
             <span>
-              <strong className="text-foreground">{todayEvents.length}</strong> events today
+              <strong className="text-foreground">{todayEvents.length}</strong> key events today
             </span>
             <span>
-              <strong className="text-foreground">{ALL_STORIES.length}</strong> stories in pipeline
+              <strong className="text-foreground">{ALL_STORIES.length}</strong> stories in editorial pipeline
             </span>
             <Link href="/timelines" className="underline underline-offset-2 hover:text-foreground">
-              View full timelines →
+              Browse historical timeline →
             </Link>
           </div>
         </CardContent>
