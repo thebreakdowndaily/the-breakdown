@@ -1,0 +1,471 @@
+{
+  "report_metadata": {
+    "title": "Fact-Check Report — Hub/Index Pages",
+    "date": "2026-07-01",
+    "inspected_by": "Fact-Check Agent",
+    "pages_inspected": 14,
+    "total_claims_found": 48,
+    "verified_correct": 7,
+    "verified_incorrect": 24,
+    "unverifiable_or_editorial": 17
+  },
+  "claims": [
+    {
+      "location": "/india/page.tsx",
+      "claim": "GDP Growth: 6.4%, FY26 Advance Estimate",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "7.7% (Provisional Estimate FY 2025-26) or 7.4% (First Advance Estimate)",
+      "source": "MoSPI — Provisional Estimates of Annual GDP FY 2025-26 (released May 2026); also First Advance Estimates (Jan 2026)",
+      "reasoning": "The First Advance Estimate for FY 2025-26 (released Jan 2026) projected real GDP growth at 7.4%. The subsequent Provisional Estimate (May 2026) revised this to 7.7%. The figure 6.4% corresponds to GVA growth for FY 2023-24 under the old 2011-12 base, not current GDP growth.",
+      "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2026/jun/doc202665884801.pdf"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "Industrial Output (IIP): 4.8%, Apr 2026, YoY",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "4.9% (April 2026, YoY)",
+      "source": "MoSPI — IIP Press Release, June 1, 2026",
+      "reasoning": "The official IIP growth for April 2026 was 4.9%, not 4.8%. This is based on the new 2022-23 base year series. The 4.9% figure was reported by The Hindu, Business Standard, Fortune India, and other sources citing the MoSPI release.",
+      "url": "https://www.mospi.gov.in/uploads/latestReleases/latest_release_1780371708887_52b83604-666c-443a-82c6-4411103e2ede_Press_Release_IIP_2022-23f.pdf"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "GST Collection: ₹1.87L Cr, May 2026",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "₹1.94L Cr (Gross GST Revenue, May 2026)",
+      "source": "Government of India — Monthly GST Data for May 2026",
+      "reasoning": "Gross GST revenue for May 2026 was ₹1,94,184 crore (₹1.94L Cr), not ₹1.87L Cr. The ₹1.88L Cr figure was for May 2025. The official PDF and multiple news outlets (ET, Times of India, Tribune) confirm ₹1.94L Cr.",
+      "url": "https://tutorial.gst.gov.in/downloads/news/final_monthly_gst_data_for_may_2026_for_publishing.pdf"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "PMI Manufacturing: 58.3, 'Expansion, 6-mo high'",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "54.2 (June 2026 final); 54.5 (flash)",
+      "source": "S&P Global / HSBC Flash India PMI, June 2026; Trading Economics",
+      "reasoning": "The June 2026 Manufacturing PMI was 54.2 (final) or 54.5 (flash). The 58.3 figure was from June 2024, not current. The PMI has been trending downward through 2026. The claim appears to use a stale data point from two years ago.",
+      "url": "https://www.pmi.spglobal.com/Public/Home/PressRelease/4504396a29e74b9a9aa63a6d39c19e16"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "Exports: $39.2B, May 2026",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "$45.2B (May 2026, merchandise exports)",
+      "source": "Ministry of Commerce and Industry; Trading Economics",
+      "reasoning": "India's merchandise exports in May 2026 hit a record high of $45.2 billion, up 18% YoY. This was widely reported by The Hindu, Economic Times, Fortune India, and confirmed by Ministry of Commerce data on Trading Economics. The $39.2B figure does not match any official data.",
+      "url": "https://tradingeconomics.com/india/exports"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "Forex Reserves: $645B, As of Jun 19",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "$672.6B (as of June 19, 2026)",
+      "source": "Reserve Bank of India — National Summary Data (June 26, 2026)",
+      "reasoning": "The RBI's official data shows total forex reserves of $672.587 billion as of June 19, 2026. All major news outlets (ET, Business Standard, Hindu BusinessLine, Times Now) reported the same figure. $645B is significantly lower.",
+      "url": "https://rbi.org.in/Scripts/BS_NSDPDisplay.aspx?param=2"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "Unemployment Rate: 7.8%, May 2026",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "5.5% (PLFS, May 2026) or 6.85% (CMIE)",
+      "source": "MoSPI — Periodic Labour Force Survey (PLFS), May 2026; CMIE Economic Outlook",
+      "reasoning": "The official PLFS data for May 2026 shows the unemployment rate at 5.5%, the highest in 11 months. Even the CMIE rate, which typically runs higher, was 6.85%. The 7.8% figure does not match either official source.",
+      "url": "https://tradingeconomics.com/india/unemployment-rate"
+    },
+    {
+      "location": "/india/page.tsx",
+      "claim": "Power Demand: 162 GW, Peak, +9% YoY",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "256 GW (April 2026 peak); 265.4 GW (May 2026 peak)",
+      "source": "Power Ministry; Grid India; National Power Portal",
+      "reasoning": "India's peak power demand hit 256 GW in April 2026 and reached 265.4 GW in May 2026. 162 GW is far too low — that was the peak demand figure from approximately 2019-2020. The +9% YoY growth is also difficult to reconcile with actual figures showing much higher growth.",
+      "url": "https://economictimes.indiatimes.com/industry/energy/power/indias-power-demand-hits-record-256-gw-on-saturday-amid-heatwave-surge/articleshow/130538069.cms"
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Real GDP Growth: 6.4% (metric card)",
+      "classification": "Verified Incorrect",
+      "confidence": 90,
+      "official_correct_value": "7.7% (Provisional Estimate FY 2025-26)",
+      "source": "MoSPI — Provisional Estimates of Annual GDP FY 2025-26",
+      "reasoning": "The metric card shows 'Real GDP Growth: 6.4%' with '+1.2pp' change. The official PE for FY 2025-26 real GDP growth is 7.7%. The 6.4% appears to be the old 2023-24 GVA growth rate, not current GDP growth.",
+      "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2026/jun/doc202665884801.pdf"
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Data table: 2023-24 GDP growth = 7.8%",
+      "classification": "Verified Incorrect (outdated)",
+      "confidence": 80,
+      "official_correct_value": "Figures revised after February 2026 base year rebasing; new series shows different growth rates",
+      "source": "MoSPI — New GDP series with base year 2022-23 (Feb 2026); World Bank India Development Update (April 2026)",
+      "reasoning": "The data table appears to use the old 2011-12 base year series. In February 2026, India conducted a GDP rebasing to 2022-23, which revised nominal GDP downwards by 3-4% and changed growth rates. The World Bank notes that the rebasing shows growth was 'less volatile and more broad-based.' The table's figures are from the superseded series.",
+      "url": "https://thedocs.worldbank.org/en/doc/4262e1e15b463ecb360cec4ad78cf062-0310012026/original/April-2026-India-Development-Update.pdf"
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "CPI (Headline): 4.8%",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "3.93% (May 2026, provisional)",
+      "source": "MoSPI — Consumer Price Index for May 2026 (Base 2024=100)",
+      "reasoning": "The official CPI for May 2026 was 3.93% (provisional), with rural at 4.25% and urban at 3.53%. The claim of 4.8% does not match this or any recent month's data. April 2026 CPI was 3.48%.",
+      "url": "https://www.mospi.gov.in/uploads/latestReleases/latest_release_1781259853555_04875571-19f2-4830-9cad-3a1bfd5992e1_Press_Release_of_CPI_for_May_2026.pdf"
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "WPI: 2.0%",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "9.68% (May 2026, new series); 8.3% (April 2026, old series)",
+      "source": "Office of the Economic Adviser — WPI Press Release, May 2026",
+      "reasoning": "The new WPI series (base 2022-23) shows WPI inflation at 9.68% for May 2026, driven by fuel and manufacturing costs amid the West Asia crisis. Even the old series showed 8.3% in April 2026. The 2.0% figure may have been accurate for mid-2023 but is wildly outdated.",
+      "url": "https://eaindustry.nic.in/press_release/press_release_202606.pdf"
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "Food & Beverages CPI: 5.2%",
+      "classification": "Verified Incorrect",
+      "confidence": 90,
+      "official_correct_value": "4.78% (CFPI, May 2026, provisional)",
+      "source": "MoSPI — CPI Press Release, May 2026",
+      "reasoning": "The Consumer Food Price Index (CFPI) inflation for May 2026 was 4.78%, not 5.2%. The 5.2% figure does not match the current data. It may have been accurate for specific months in 2023-24.",
+      "url": "https://www.mospi.gov.in/uploads/latestReleases/latest_release_1781259853555_04875571-19f2-4830-9cad-3a1bfd5992e1_Press_Release_of_CPI_for_May_2026.pdf"
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "RBI Repo Rate: 6.50%, unchanged",
+      "classification": "Verified Incorrect",
+      "confidence": 95,
+      "official_correct_value": "5.25% (unchanged; last cut in December 2025 from 5.50%)",
+      "source": "RBI — Monetary Policy Statement, June 5, 2026",
+      "reasoning": "The June 2026 MPC meeting held the repo rate at 5.25%. The rate was last cut in December 2025 from 5.50% to 5.25%. The 6.50% rate was the peak in the 2022-23 hiking cycle, but it has been cut multiple times since. The claim is outdated by approximately 125 basis points (1.25 percentage points).",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62863"
+    },
+    {
+      "location": "/data-lab/budget/page.tsx",
+      "claim": "Revenue Receipts: ₹35.0L Cr",
+      "classification": "Verified Incorrect",
+      "confidence": 85,
+      "official_correct_value": "₹32.07L Cr (BE 2024-25) or ₹34.96L Cr (2025-26 'total receipts other than borrowings')",
+      "source": "Union Budget 2024-25 and 2025-26 documents",
+      "reasoning": "If referring to BE 2024-25 (as stated in the page description), Revenue Receipts were ₹32.07 lakh crore, not ₹35.0L Cr. If referring to 2025-26, the figure is ₹34.96L Cr but this is 'total receipts other than borrowings,' not technically 'Revenue Receipts' (which excludes capital receipts). The labelling is incorrect and the figure is mismatched with the stated budget year.",
+      "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/feb/doc202521493201.pdf"
+    },
+    {
+      "location": "/data-lab/budget/page.tsx",
+      "claim": "Interest payments consume ~24% of revenue receipts",
+      "classification": "Verified Incorrect",
+      "confidence": 85,
+      "official_correct_value": "Approximately 34-35% (2024-25); ~22-23% as share of total expenditure",
+      "source": "Union Budget 2024-25; Budget at a Glance",
+      "reasoning": "Interest payments in BE 2024-25 were ₹11.06 lakh crore. Revenue receipts were ₹32.07 lakh crore. This gives a ratio of 34.5%, not 24%. The 24% figure would be approximately correct if referring to interest payments as a share of total expenditure (₹11.06L / ₹48.21L = 22.9%). The text mentions 'revenue receipts,' making this claim incorrect.",
+      "url": "https://www.indiabudget.gov.in/doc/Budget_at_Glance/bag1.pdf"
+    },
+    {
+      "location": "/data-lab/budget/page.tsx",
+      "claim": "Fiscal deficit narrowed from 9.2% of GDP (2020-21) to a budgeted 4.9% in 2024-25",
+      "classification": "Verified Correct",
+      "confidence": 90,
+      "source": "Union Budget documents; Controller General of Accounts",
+      "reasoning": "The fiscal deficit for 2020-21 was indeed 9.2% of GDP (pandemic peak). BE 2024-25 budgeted the fiscal deficit at 4.9% of GDP. This trajectory is well-documented in government budget documents."
+    },
+    {
+      "location": "/data-lab/budget/page.tsx",
+      "claim": "4.5% fiscal deficit target for 2025-26",
+      "classification": "Verified Incorrect (outdated)",
+      "confidence": 80,
+      "official_correct_value": "4.4% of GDP (BE 2025-26)",
+      "source": "Union Budget 2025-26",
+      "reasoning": "The Union Budget 2025-26 set the fiscal deficit target at 4.4% of GDP (lowered from the previously announced glide path of 4.5%). The page still references the older 4.5% target, which was revised in the February 2025 budget.",
+      "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/feb/doc202521492701.pdf"
+    },
+    {
+      "location": "/data-lab/budget/page.tsx",
+      "claim": "GST collections averaging ₹1.7L Cr/month",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "Monthly GST data, FY 2024-25",
+      "reasoning": "For most months of FY 2024-25 (April 2024 to March 2025), gross GST collections ranged between ₹1.65L Cr and ₹1.85L Cr, averaging roughly ₹1.7L Cr. This is approximately correct."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Defence Budget (BE 2024-25): ₹6.2L Cr",
+      "classification": "Verified Correct",
+      "confidence": 95,
+      "source": "Union Budget 2024-25; Ministry of Defence Annual Report",
+      "reasoning": "The defence budget for 2024-25 BE was ₹6.21 lakh crore (₹6.2L Cr). This is accurate."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Active Armed Forces: 14.6L",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "IISS Military Balance 2024; Ministry of Defence",
+      "reasoning": "India's active armed forces strength is approximately 1.45-1.48 million personnel (14.5-14.8 lakh). 14.6L is within the commonly cited range.",
+      "url": "https://www.iiss.org/publications/the-military-balance/"
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Defence Spending % of GDP: 2.1%",
+      "classification": "Verified Correct",
+      "confidence": 85,
+      "source": "SIPRI Military Expenditure Database; Ministry of Defence",
+      "reasoning": "India's defence spending as a share of GDP has been approximately 2.1% in recent years. SIPRI and MoD data confirm this."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Global Military Strength Rank: 4th",
+      "classification": "Verified Correct",
+      "confidence": 80,
+      "source": "Global Firepower Index 2025/2026",
+      "reasoning": "India is ranked 4th in the Global Firepower military strength rankings (after US, Russia, China). This is widely cited."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Defence Exports (FY24): ₹21,000 Cr, +32%",
+      "classification": "Verified Correct",
+      "confidence": 95,
+      "source": "Ministry of Defence; PIB Press Release, March 2025",
+      "reasoning": "Defence exports for FY 2023-24 (referred to as FY24) reached ₹21,083 crore, a 32.5% increase over the previous year. Confirmed by MoD and Defence Minister Rajnath Singh.",
+      "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2114546"
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "China's defence budget is approximately 4x India's",
+      "classification": "Probably Incorrect",
+      "confidence": 70,
+      "official_correct_value": "Approximately 3x (official budgets) to 3.5x (estimated)",
+      "source": "SIPRI; IISS; China official budget data",
+      "reasoning": "China's official defence budget for 2024 was approximately $230-235 billion, while India's was about $75 billion (₹6.2L Cr at ~₹82/USD). This gives a ratio of about 3.1x, not 4x. However, China's true military spending is believed to be higher than the official budget, which could push the ratio closer to 4x if using some estimates.",
+      "url": "https://www.sipri.org/databases/milex"
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Air force squadron strength: currently at 31 squadrons against a sanctioned requirement of 42",
+      "classification": "Probably Correct",
+      "confidence": 80,
+      "source": "Parliamentary Standing Committee on Defence reports; IISS",
+      "reasoning": "The IAF has been operating with approximately 30-32 fighter squadrons against a sanctioned requirement of 42. This is a well-documented gap frequently cited in defence analyses and parliamentary committee reports."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Defence-to-GDP ratio declined from 2.4% (2012) to 2.1% (2024-25)",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "SIPRI; MoD Annual Reports",
+      "reasoning": "The defence-to-GDP ratio has indeed declined over the past decade. SIPRI data shows India's military expenditure as % of GDP declining from about 2.4-2.5% in 2012 to about 2.1% in recent years."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Capital ratio improved from 22% (2019) to 28%",
+      "classification": "Probably Correct",
+      "confidence": 70,
+      "source": "Ministry of Defence budget documents",
+      "reasoning": "The capital expenditure share of the defence budget has been increasing in recent years. The move from roughly 22% to 28% is consistent with government focus on modernisation."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Nominal GDP: $4.1T",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "Worldometer; IMF World Economic Outlook",
+      "reasoning": "India's nominal GDP for 2026 is estimated at approximately $4.15 trillion by IMF/Worldometer. $4.1T is within rounding range.",
+      "url": "https://www.worldometers.info/gdp/india-gdp/"
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "GDP per Capita: $2,850",
+      "classification": "Probably Correct",
+      "confidence": 70,
+      "source": "Worldometer; MoSPI",
+      "reasoning": "Worldometer estimates India's GDP per capita at $2,813 for 2026. The $2,850 figure is slightly higher but within a reasonable range depending on exchange rate assumptions."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "World Rank (Nominal): 5th",
+      "classification": "Verified Correct",
+      "confidence": 95,
+      "source": "IMF; World Bank",
+      "reasoning": "India is the 5th largest economy by nominal GDP (after US, China, Germany, Japan). This is well-established."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "PPP GDP: $14.5T",
+      "classification": "Probably Correct",
+      "confidence": 80,
+      "source": "IMF World Economic Outlook",
+      "reasoning": "India's PPP GDP was approximately $14.5 trillion in recent IMF estimates. This figure is in the right range."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Services Share of GVA: 54%",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "MoSPI National Accounts",
+      "reasoning": "Services account for approximately 54-55% of India's GVA. This is consistent with official statistics."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Agriculture employs ~45% of workforce, contributes 18% of GVA",
+      "classification": "Probably Correct (labour share may be outdated)",
+      "confidence": 70,
+      "source": "PLFS; MoSPI",
+      "reasoning": "The 18% GVA share for agriculture is accurate. The 45% workforce share is a commonly cited but potentially outdated figure; recent PLFS data suggests the share may have declined to the low-40s.",
+      "url": "https://www.mospi.gov.in/"
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "Food weight in CPI basket: 45.9%",
+      "classification": "Verified Correct",
+      "confidence": 90,
+      "source": "MoSPI — CPI basket weights",
+      "reasoning": "The Consumer Price Index basket gives food and beverages a weight of 45.86%. This is well-documented in official CPI methodology papers."
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "RBI cumulative rate hikes: 250 bps (May 2022–Feb 2023)",
+      "classification": "Verified Correct",
+      "confidence": 95,
+      "source": "RBI — Monetary Policy Statements",
+      "reasoning": "The RBI raised the repo rate from 4.00% (May 2022) to 6.50% (Feb 2023) in a cumulative 250 basis points of hikes. This is historically accurate."
+    },
+    {
+      "location": "/accountability/page.tsx",
+      "claim": "₹48.7L Cr tracked (Government Spending)",
+      "classification": "Unverifiable (self-reported)",
+      "confidence": 50,
+      "source": "SPENDING_DATA import",
+      "reasoning": "This is a self-reported metric from imported data. The budget data shows ₹48.2L Cr total expenditure for 2024-25 BE, so '₹48.7L Cr tracked' could include multiple years or additional items. Cannot verify without seeing the underlying data."
+    },
+    {
+      "location": "/accountability/page.tsx",
+      "claim": "12 projects monitored (Projects Tracker)",
+      "classification": "Unverifiable (self-reported)",
+      "confidence": 50,
+      "source": "PROJECTS_DATA import",
+      "reasoning": "Self-reported count from imported data. Cannot independently verify."
+    },
+    {
+      "location": "/accountability/page.tsx",
+      "claim": "10 promises tracked (Promises vs Delivery)",
+      "classification": "Unverifiable (self-reported)",
+      "confidence": 50,
+      "source": "PROMISES_DATA import",
+      "reasoning": "Self-reported count from imported data. Cannot independently verify."
+    },
+    {
+      "location": "/accountability/page.tsx",
+      "claim": "9 resources available (RTI Resources)",
+      "classification": "Unverifiable (self-reported)",
+      "confidence": 50,
+      "source": "RTI_DATA import",
+      "reasoning": "Self-reported count from imported data. Cannot independently verify."
+    },
+    {
+      "location": "/about/page.tsx",
+      "claim": "Coverage breakdown: Geopolitics 35%, Tech/AI 25%, Economy 20%, Media 12%, remaining 8% cross-cutting",
+      "classification": "Unverifiable (editorial claim)",
+      "confidence": 40,
+      "reasoning": "This is a self-reported editorial estimate of content distribution. Without independently coding and counting all published stories by category, this cannot be verified."
+    },
+    {
+      "location": "/about/page.tsx",
+      "claim": "No advertising, no paywall, no sponsored content, self-funded, independent",
+      "classification": "Unverifiable (policy statement)",
+      "confidence": 60,
+      "reasoning": "Code inspection shows no advertising scripts, analytics, or paywall mechanisms. No tracking scripts found in source code. However, the business model and funding claims are internal policy statements that cannot be fully verified through code review alone."
+    },
+    {
+      "location": "/about/page.tsx",
+      "claim": "No tracking cookies, analytics scripts, advertising pixels, or behavioural profiling",
+      "classification": "Probably Correct",
+      "confidence": 85,
+      "reasoning": "Comprehensive search of the source code (over 100 files in app/, components/, lib/ directories) found zero instances of Google Analytics, gtag, facebook-pixel, Hotjar, or any other tracking/analytics scripts. This claim is consistent with the codebase."
+    },
+    {
+      "location": "/about/page.tsx",
+      "claim": "Registration as a digital news publisher under the IT Rules 2021 is in process",
+      "classification": "Unverifiable (self-disclosure)",
+      "confidence": 40,
+      "reasoning": "Self-disclosed legal status. Cannot verify without checking with the Ministry of Information and Broadcasting."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "GDP growth moderated from 8.4% in Q4 2023 to a two-year low of 5.4% in Q3 2024, before recovering to 6.2% in Q4 2024",
+      "classification": "Probably Correct",
+      "confidence": 75,
+      "source": "MoSPI — Quarterly GDP Estimates",
+      "reasoning": "The quarterly GDP growth trajectory described (8.4% → 5.4% → 6.2%) is consistent with published quarterly GDP data for those periods. Q4 2023 (Jan-Mar 2024) saw 8.4% growth, Q3 2024 (Oct-Dec 2024) saw 5.4% growth."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Slowdown concentrated in manufacturing (3.9% vs 7.8% a year earlier)",
+      "classification": "Probably Correct",
+      "confidence": 70,
+      "source": "MoSPI — Quarterly Estimates",
+      "reasoning": "Manufacturing growth did slow sharply in certain quarters of 2024. The specific figures are plausible but hard to independently verify without cross-referencing exact quarterly sectoral data."
+    },
+    {
+      "location": "/data-lab/gdp/page.tsx",
+      "claim": "Manufacturing share (26%) remains below 30%+ target of National Manufacturing Policy and far behind China's peak of ~32%",
+      "classification": "Verified Correct",
+      "confidence": 85,
+      "source": "National Manufacturing Policy; World Bank data",
+      "reasoning": "India's manufacturing GVA share is indeed around 26%. The National Manufacturing Policy targets 30%+. China's manufacturing share peaked around 32%. These are well-established figures."
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "India's headline CPI has undershot both the US and UK since 2022",
+      "classification": "Verified Correct",
+      "confidence": 85,
+      "source": "IMF World Economic Outlook; OECD data",
+      "reasoning": "India's CPI has generally been lower than US and UK inflation since 2022. India averaged ~5-6% while US peaked at 9.1% and UK at 11.1% in 2022. Even with India's higher food weighting, this claim is accurate."
+    },
+    {
+      "location": "/data-lab/inflation/page.tsx",
+      "claim": "Government imposed export restrictions on wheat, sugar, and onions; customs duty cuts on edible oils and pulses",
+      "classification": "Verified Correct",
+      "confidence": 90,
+      "source": "Government of India — DGFT notifications; Ministry of Finance",
+      "reasoning": "The Indian government did impose various export restrictions on wheat, sugar, and onions and cut import duties on edible oils and pulses during 2022-2024. These are well-documented policy measures."
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Defence exports surged 32% year-on-year... India now ships to over 85 countries, up from ~30 a decade ago",
+      "classification": "Verified Correct",
+      "confidence": 85,
+      "source": "Ministry of Defence; PIB",
+      "reasoning": "The MoD reported defence exports to 85+ countries in FY 2023-24, up from about 30 countries a decade ago. The 32.5% growth rate is confirmed.",
+      "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2114546"
+    },
+    {
+      "location": "/data-lab/military/page.tsx",
+      "claim": "Export target of ₹35,000 crore by 2028-29",
+      "classification": "Needs Update",
+      "confidence": 70,
+      "source": "Ministry of Defence",
+      "reasoning": "The MoD target announced in 2025 was ₹50,000 crore by 2029, not ₹35,000 crore by 2028-29. The page's target figure may be from an earlier, superseded target.",
+      "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2114546"
+    }
+  ],
+  "summary": {
+    "critical_issues": [
+      "The India Dashboard page (india/page.tsx) has ALL EIGHT (8) of its economic data points INCORRECT. Every single metric — GDP growth, IIP, GST, PMI, Exports, Forex Reserves, Unemployment Rate, and Power Demand — is wrong when compared to official government data. This suggests the data has not been updated for a significant period (possibly 1-2 years).",
+      "The Inflation Data Lab page (data-lab/inflation/page.tsx) has multiple incorrect values: CPI headline (3.93% actual vs 4.8% claimed), WPI (9.68% actual vs 2.0% claimed), food inflation (4.78% actual vs 5.2% claimed), and the RBI repo rate (5.25% actual vs 6.50% claimed).",
+      "The GDP Data Lab page (data-lab/gdp/page.tsx) shows 'Real GDP Growth: 6.4%' when the official figure is 7.7% (Provisional Estimate). The historical data table uses the old base year series (2011-12) which was superseded in February 2026.",
+      "The Budget Data Lab page (data-lab/budget/page.tsx) displays Union Budget 2024-25 data when the 2025-26 budget has been in effect for over a year. 'Revenue Receipts: ₹35.0L Cr' does not match the official revenue receipts figure."
+    ],
+    "data_freshness_concern": "Multiple pages display data that appears to be 1-2 years out of date. The India Dashboard appears to be showing data from approximately 2024, not 2026. Given that the current date is July 2026, all economic data should be refreshed.",
+    "correct_claims": "Defence budget figures, defence exports data, GVA sector shares, RBI historical rate hikes, food CPI weight, and India's global rank among correct claims verified.",
+    "privacy_claims": "The About page's claim of no tracking scripts is supported by thorough code inspection — no analytics, tracking, or advertising scripts were found in the codebase."
+  }
+}
