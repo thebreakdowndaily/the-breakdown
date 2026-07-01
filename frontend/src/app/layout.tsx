@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Bebas_Neue, Source_Sans_3, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { TopBar } from '@/components/layout/top-bar'
@@ -8,9 +8,16 @@ import { SWRegister } from '@/components/pwa/sw-register'
 import { ErrorBoundary } from '@/components/layout/error-boundary'
 import { FadeIn } from '@/components/ui/fade-in'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const sourceSans = Source_Sans_3({
+  variable: '--font-sans',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+})
+
+const bebasNeue = Bebas_Neue({
+  variable: '--font-heading',
+  subsets: ['latin'],
+  weight: '400',
 })
 
 const geistMono = Geist_Mono({
@@ -41,8 +48,8 @@ export const metadata: Metadata = {
     title: 'The Breakdown OS — Understand the world, not just the news',
     description: DEFAULT_DESC,
     images: [DEFAULT_IMAGE],
-    site: '@thebreakdowndaily',
-    creator: '@thebreakdowndaily',
+    site: '@thebreakdownin',
+    creator: '@thebreakdownin',
   },
   other: {},
 }
@@ -53,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${sourceSans.variable} ${bebasNeue.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
         {process.env.GOOGLE_SITE_VERIFICATION ? (
           <meta name="google-site-verification" content={process.env.GOOGLE_SITE_VERIFICATION} />
@@ -112,6 +119,19 @@ export default function RootLayout({
           </main>
           <Footer />
         </TooltipProvider>
+        {/* Brand watermark — bottom-right B mark */}
+        <div
+          aria-hidden="true"
+          className="fixed bottom-6 right-6 pointer-events-none select-none z-0"
+          style={{ opacity: 0.07 }}
+        >
+          <span
+            className="font-heading leading-none text-primary"
+            style={{ fontSize: 'clamp(4rem, 10vw, 8rem)' }}
+          >
+            B
+          </span>
+        </div>
       </body>
     </html>
   )
