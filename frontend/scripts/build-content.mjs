@@ -744,12 +744,102 @@ for (const dir of storyDirs) {
   if (story) stories.push(story)
 }
 
+// ============================================================
+// Supabase CMS story fetch
+// If SUPABASE_URL and SUPABASE_SERVICE_KEY are available at build
+// time (set as Cloudflare Pages secrets), merge published CMS
+// stories into the static build output.
+// ============================================================
+const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY
+
+if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+  try {
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/stories?status=eq.published&select=*&order=published_at.desc`,
+      {
+        headers: {
+          apikey: SUPABASE_SERVICE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    if (resp.ok) {
+      const rows = await resp.json()
+      if (Array.isArray(rows) && rows.length > 0) {
+        const existingSlugs = new Set(stories.map(s => s.slug))
+        let cmsCount = 0
+        let mergedCount = 0
+
+        for (const row of rows) {
+          // Skip rows that duplicate a static story slug
+          if (existingSlugs.has(row.slug)) {
+            mergedCount++
+            continue
+          }
+
+          const tags = typeof row.tags === 'string'
+            ? (() => { try { return JSON.parse(row.tags) } catch { return [] } })()
+            : (Array.isArray(row.tags) ? row.tags : [])
+
+          const category = row.category || 'Uncategorised'
+
+          // Generate a synthetic body so the story renders even without
+          // a local markdown file
+          const body = row.content || row.body || ''
+          const htmlBody = body
+            ? marked.parse(body)
+            : '<p>This story was published via the CMS. <a href="/admin">Log in to the admin panel</a> to view the full content.</p>'
+
+          // Parse sections from the CMS body
+          const sections = markdownToSections(body || '')
+
+          // Extract sources from CMS body
+          const sources = parseSources(body || '')
+
+          const cmsStory = {
+            slug: row.slug,
+            title: row.title || row.slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+            summary: row.summary || '',
+            category,
+            tags,
+            publishedAt: row.published_at || null,
+            readTime: row.read_time || Math.max(1, Math.ceil((body || '').split(/\s+/).length / 200)),
+            hero: row.hero || row.fact_check_image || '',
+            caption: row.caption || row.fact_check_image_caption || '',
+            author: row.author || 'The Breakdown Desk',
+            content: sections,
+            metadata: {
+              keyNumbers: [],
+              timeline: [],
+              sources,
+            },
+            body: htmlBody,
+          }
+
+          stories.push(cmsStory)
+          cmsCount++
+        }
+
+        console.log(`✓ Supabase: ${rows.length} published stories found, ${cmsCount} new, ${mergedCount} merged with static`)
+      }
+    } else {
+      console.warn(`⚠ Supabase: HTTP ${resp.status} — CMS stories not merged`)
+    }
+  } catch (err) {
+    console.warn(`⚠ Supabase fetch failed: ${err.message || err} — CMS stories not merged`)
+  }
+} else {
+  console.log(`ℹ Supabase: env vars not available — skipping CMS story fetch`)
+}
+
 stories.sort((a, b) => {
   const da = a.publishedAt ? new Date(a.publishedAt).getTime() : 0
   const db = b.publishedAt ? new Date(b.publishedAt).getTime() : 0
   return db - da
 })
 
-console.log(`✓ Parsed ${stories.length} stories`)
+console.log(`✓ Parsed ${stories.length} stories total`)
 
 generateOutput(siteConfig, stories)

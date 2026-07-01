@@ -163,6 +163,10 @@ export const SITE_CONFIG = {
   "ticker": {
     "headlines": [
       {
+        "title": "India's Monsoon Crisis: 3rd Driest June in 126 Years, 42% Deficit, Kharif Sowing Collapses 23%",
+        "link": "/story/india-monsoon-crisis-2026"
+      },
+      {
         "title": "E20 and the Supreme Court: One Distillery's Dispute Exposed a National Policy in Transition",
         "link": "/story/e20-sc-ethanol-status-quo-2026"
       },
@@ -200,7 +204,7 @@ export const FEATURED = {
   title: "Stories We Are Breaking Down",
 }
 
-export const TICKER_HEADLINES = [{"title":"E20 and the Supreme Court: One Distillery's Dispute Exposed a National Policy in Transition","link":"/story/e20-sc-ethanol-status-quo-2026"},{"title":"Europe's Hottest June: 1,300 Dead, 7 All-Time Records, Continent Unprepared for Heat","link":"/story/europe-heatwave-2026"},{"title":"World's First Nuclear-Powered Hydrogen Plant Is in India — Here's Why That Matters","link":"/story/nuclear-hydrogen-kalpakkam-world-first"},{"title":"NEET 2026: The Exam That Broke India — Scam, Scandal, System Failure","link":"/story/neet-2026-the-exam-that-broke-india"},{"title":"Bangladesh-China: Tarique Rahman's Beijing Visit Reshapes South Asia","link":"/story/bangladesh-china-tarique-rahman-beijing-2026"},{"title":"India's Digital Regulation Offensive 2026: DPDP, IT Rules, Crypto Bill","link":"/story/india-digital-regulation-offensive-2026-dpdp-it-rules-crypto"}]
+export const TICKER_HEADLINES = [{"title":"India's Monsoon Crisis: 3rd Driest June in 126 Years, 42% Deficit, Kharif Sowing Collapses 23%","link":"/story/india-monsoon-crisis-2026"},{"title":"E20 and the Supreme Court: One Distillery's Dispute Exposed a National Policy in Transition","link":"/story/e20-sc-ethanol-status-quo-2026"},{"title":"Europe's Hottest June: 1,300 Dead, 7 All-Time Records, Continent Unprepared for Heat","link":"/story/europe-heatwave-2026"},{"title":"World's First Nuclear-Powered Hydrogen Plant Is in India — Here's Why That Matters","link":"/story/nuclear-hydrogen-kalpakkam-world-first"},{"title":"NEET 2026: The Exam That Broke India — Scam, Scandal, System Failure","link":"/story/neet-2026-the-exam-that-broke-india"},{"title":"Bangladesh-China: Tarique Rahman's Beijing Visit Reshapes South Asia","link":"/story/bangladesh-china-tarique-rahman-beijing-2026"},{"title":"India's Digital Regulation Offensive 2026: DPDP, IT Rules, Crypto Bill","link":"/story/india-digital-regulation-offensive-2026-dpdp-it-rules-crypto"}]
 
 export const STATS = [{"icon":"📝","number":"100+","label":"Stories Published"},{"icon":"🌍","number":"50+","label":"Countries Covered"},{"icon":"👥","number":"1M+","label":"Readers"},{"icon":"🤖","number":"24/7","label":"AI Research"}]
 
