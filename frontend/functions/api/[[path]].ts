@@ -214,7 +214,20 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       return error(`Cannot transition from '${story.status}' to '${toStatus}'`)
     }
 
-    await db.updateStory(slug, { status: toStatus, publishedAt: toStatus === 'published' ? new Date().toISOString() : story.publishedAt })
+    const updateData: Record<string, any> = { status: toStatus }
+    if (toStatus === 'published') {
+      updateData.publishedAt = new Date().toISOString()
+    }
+    await db.updateStory(slug, updateData)
+
+    // When publishing, trigger the Cloudflare Pages deploy hook
+    if (toStatus === 'published' && env.DEPLOY_HOOK_URL) {
+      // Fire-and-forget — don't block response on deploy trigger
+      fetch(env.DEPLOY_HOOK_URL, { method: 'POST' }).catch(err => {
+        console.error('[deploy-hook] Failed to trigger rebuild:', err)
+      })
+    }
+
     return json({ message: `Story moved from '${story.status}' to '${toStatus}'`, story: { slug, title: story.title, status: toStatus } })
   }
 
