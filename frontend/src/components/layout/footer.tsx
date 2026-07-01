@@ -27,6 +27,7 @@ const sections = [
   { title: 'About', links: [
     { label: 'Mission', href: '/about' },
     { label: 'Methodology', href: '/about' },
+    { label: 'Transparency', href: '/transparency' },
     { label: 'Contact', href: '/about' },
   ]},
 ]

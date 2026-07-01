@@ -41,6 +41,7 @@ const staticRoutes: { path: string; priority: number; changeFreq: 'daily' | 'wee
   { path: '/knowledge', priority: 0.6, changeFreq: 'weekly' },
   { path: '/reading-list', priority: 0.4, changeFreq: 'monthly' },
   { path: '/about', priority: 0.4, changeFreq: 'monthly' },
+  { path: '/transparency', priority: 0.5, changeFreq: 'monthly' },
   { path: '/story', priority: 0.8, changeFreq: 'daily' },
 ]
 

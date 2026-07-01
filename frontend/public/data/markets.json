@@ -17,8 +17,8 @@
     {
       "symbol": "FTSE",
       "name": "FTSE 100",
-      "price": 10498,
-      "change": 1.19,
+      "price": 10500,
+      "change": 2.81,
       "changePercent": 0
     },
     {
@@ -31,17 +31,17 @@
     {
       "symbol": "SENSEX",
       "name": "SENSEX",
-      "price": 77029,
-      "change": 549.98,
+      "price": 77033,
+      "change": 554.07,
       "changePercent": 0.7
     },
     {
       "symbol": "NIFTY",
       "name": "NIFTY 50",
-      "price": 24016,
-      "change": 150.1,
-      "changePercent": 0.6
+      "price": 24028,
+      "change": 162.25,
+      "changePercent": 0.7
     }
   ],
-  "updatedAt": 1782892754954
+  "updatedAt": 1782893205523
 }

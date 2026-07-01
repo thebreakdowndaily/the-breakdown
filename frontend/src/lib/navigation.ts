@@ -17,6 +17,7 @@ export const MAIN_NAV: NavItem[] = [
   { label: 'Timelines', href: '/timelines' },
   { label: 'Country Profiles', href: '/country-profiles' },
   { label: 'Search Index', href: '/search' },
+  { label: 'Transparency', href: '/transparency' },
 ]
 
 export const DATA_LAB_SECTIONS = [
