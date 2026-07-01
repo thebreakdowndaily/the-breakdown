@@ -1,0 +1,398 @@
+{
+  "meta": {
+    "story": "India's Monsoon Crisis 2026 — Historic June Drought",
+    "slug": "india-monsoon-crisis-2026",
+    "generated": "2026-07-01T06:00:00+05:30",
+    "version": "1.0"
+  },
+  "entities": {
+    "events": [
+      {
+        "id": "event-june-2026-drought",
+        "type": "Natural Disaster",
+        "name": "June 2026 India Drought",
+        "description": "Third-driest June in 126 years with 42% rainfall deficit. Caused by El Niño and stalled monsoon.",
+        "startDate": "2026-06-01",
+        "endDate": "2026-06-30",
+        "confidence": 98,
+        "sources": ["reuters-jun30", "imd-official", "india-today-jun24"],
+        "relatedEntities": [
+          "event-el-nino-2026", "organization-imd", "country-india",
+          "event-kharif-sowing-decline", "event-reservoir-depletion"
+        ]
+      },
+      {
+        "id": "event-el-nino-2026",
+        "type": "Climate Phenomenon",
+        "name": "2026 El Niño Event",
+        "description": "Nino 3.4 index at +1.7°C, strengthening through monsoon season.",
+        "startDate": "2026-05-01",
+        "endDate": "null",
+        "confidence": 95,
+        "sources": ["noaa", "imd-official", "india-today-jun24"],
+        "relatedEntities": ["country-india", "event-june-2026-drought"]
+      },
+      {
+        "id": "event-kharif-sowing-decline",
+        "type": "Economic Event",
+        "name": "Kharif Sowing Decline 2026",
+        "description": "Kharif sowing down 22.7% YoY (182.72 vs 236.46 lakh ha). Oilseeds worst hit at -53%.",
+        "startDate": "2026-06-01",
+        "endDate": "2026-06-25",
+        "confidence": 97,
+        "sources": ["moneycontrol-jun30", "ministry-agriculture"],
+        "relatedEntities": ["country-india", "event-june-2026-drought"]
+      },
+      {
+        "id": "event-reservoir-depletion",
+        "type": "Resource Crisis",
+        "name": "India Reservoir Depletion 2026",
+        "description": "Major reservoirs at 26.4% capacity vs 36% last year. Karnataka at 14.7% vs 48.6%.",
+        "startDate": "2026-06-01",
+        "endDate": "2026-06-30",
+        "confidence": 95,
+        "sources": ["moneycontrol-jun30", "central-water-commission"],
+        "relatedEntities": ["country-india", "event-june-2026-drought"]
+      },
+      {
+        "id": "event-food-price-surge",
+        "type": "Economic Event",
+        "name": "India Food Price Surge 2026",
+        "description": "Tomato prices up 24% YoY. Tomato inflation at 48.43% in May. Food inflation at 4.78%.",
+        "startDate": "2026-05-01",
+        "endDate": "ongoing",
+        "confidence": 95,
+        "sources": ["et-agriculture-jun25", "dca-official"],
+        "relatedEntities": ["country-india", "event-june-2026-drought"]
+      },
+      {
+        "id": "event-imd-july-forecast",
+        "type": "Forecast",
+        "name": "IMD July 2026 Monsoon Forecast",
+        "description": "July rainfall forecast at below 94% of LPA. Below-average monsoon expected.",
+        "startDate": "2026-06-30",
+        "endDate": "2026-07-01",
+        "confidence": 90,
+        "sources": ["reuters-jun30"],
+        "relatedEntities": ["organization-imd", "country-india", "event-june-2026-drought"]
+      }
+    ],
+    "organizations": [
+      {
+        "id": "organization-imd",
+        "type": "Government Agency",
+        "name": "India Meteorological Department",
+        "description": "India's national weather service. Director-General: Mrutyunjay Mohapatra.",
+        "confidence": 100,
+        "sources": ["pib-may29", "imd-official"],
+        "relatedEntities": ["country-india", "event-june-2026-drought", "event-el-nino-2026"]
+      },
+      {
+        "id": "organization-rbi",
+        "type": "Central Bank",
+        "name": "Reserve Bank of India",
+        "description": "India's central bank. Governor: Sanjay Malhotra. Repo rate at 5.25%.",
+        "confidence": 100,
+        "sources": ["et-jun5", "rbi-official"],
+        "relatedEntities": ["country-india", "person-sanjay-malhotra", "event-food-price-surge"]
+      },
+      {
+        "id": "organization-ministry-agriculture",
+        "type": "Government Agency",
+        "name": "Ministry of Agriculture and Farmers' Welfare",
+        "description": "Government ministry overseeing agricultural policy and data collection.",
+        "confidence": 100,
+        "sources": ["moneycontrol-jun30"],
+        "relatedEntities": ["country-india"]
+      },
+      {
+        "id": "organization-central-water-commission",
+        "type": "Government Agency",
+        "name": "Central Water Commission",
+        "description": "Government agency monitoring reservoir levels across India.",
+        "confidence": 100,
+        "sources": ["moneycontrol-jun30"],
+        "relatedEntities": ["country-india", "event-reservoir-depletion"]
+      },
+      {
+        "id": "organization-noaa",
+        "type": "Government Agency",
+        "name": "National Oceanic and Atmospheric Administration (USA)",
+        "description": "US agency tracking El Niño conditions. Confirmed >80% probability.",
+        "confidence": 100,
+        "sources": ["noaa-official", "india-today-jun24"],
+        "relatedEntities": ["event-el-nino-2026"]
+      }
+    ],
+    "people": [
+      {
+        "id": "person-mrutyunjay-mohapatra",
+        "type": "Government Official",
+        "name": "Mrutyunjay Mohapatra",
+        "description": "Director-General of the India Meteorological Department. Announced July below-average forecast.",
+        "confidence": 100,
+        "sources": ["reuters-jun30"],
+        "relatedEntities": ["organization-imd"]
+      },
+      {
+        "id": "person-sanjay-malhotra",
+        "type": "Government Official",
+        "name": "Sanjay Malhotra",
+        "description": "Governor of the Reserve Bank of India. Warned of food inflation risks from weak monsoon.",
+        "confidence": 100,
+        "sources": ["et-jun5"],
+        "relatedEntities": ["organization-rbi", "event-food-price-surge"]
+      },
+      {
+        "id": "person-kj-ramesh",
+        "type": "Expert",
+        "name": "KJ Ramesh",
+        "description": "Former Director-General of IMD. Advised against panic, citing groundwater buffer.",
+        "confidence": 90,
+        "sources": ["oneindia-jun30"],
+        "relatedEntities": ["organization-imd", "event-june-2026-drought"]
+      }
+    ],
+    "countries": [
+      {
+        "id": "country-india",
+        "type": "Country",
+        "name": "India",
+        "description": "Nearly $4 trillion economy. 42% of workforce in agriculture. 70% of annual rainfall from monsoon.",
+        "confidence": 100,
+        "sources": ["reuters-jun30"],
+        "relatedEntities": [],
+        "stats": {
+          "gdp": "~$4 trillion",
+          "agricultureWorkforce": "42%",
+          "rainfedFarmland": "~50%",
+          "populationDependentOnFarming": "~50%"
+        }
+      }
+    ],
+    "policies": [
+      {
+        "id": "policy-rbi-repo-rate",
+        "type": "Monetary Policy",
+        "name": "RBI Repo Rate (5.25%)",
+        "description": "Repo rate held at 5.25% in June 2026 MPC meeting. Neutral stance. FY27 inflation projection: 5.1%.",
+        "confidence": 100,
+        "sources": ["et-jun5"],
+        "relatedEntities": ["organization-rbi", "person-sanjay-malhotra", "event-food-price-surge"]
+      },
+      {
+        "id": "policy-fuel-restrictions",
+        "type": "Government Policy",
+        "name": "Fuel Sale Restrictions (June 12, 2026)",
+        "description": "Govt imposed fuel sale restrictions due to West Asia supply disruptions. Lifted July 1.",
+        "confidence": 100,
+        "sources": ["moneycontrol-jul1", "reuters"],
+        "relatedEntities": ["country-india"]
+      },
+      {
+        "id": "policy-lpg-price-cut",
+        "type": "Government Policy",
+        "name": "LPG Cylinder Price Cut (July 1, 2026)",
+        "description": "19 kg commercial LPG cylinder price reduced by ₹183.50.",
+        "confidence": 100,
+        "sources": ["moneycontrol-jul1"],
+        "relatedEntities": ["country-india"]
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "source": "event-el-nino-2026",
+      "target": "event-june-2026-drought",
+      "type": "caused",
+      "confidence": 85,
+      "description": "El Niño conditions suppressed monsoon rainfall in June 2026"
+    },
+    {
+      "source": "event-june-2026-drought",
+      "target": "event-kharif-sowing-decline",
+      "type": "caused",
+      "confidence": 95,
+      "description": "Rainfall deficit led to 22.7% reduction in kharif sowing"
+    },
+    {
+      "source": "event-june-2026-drought",
+      "target": "event-reservoir-depletion",
+      "type": "caused",
+      "confidence": 90,
+      "description": "Lack of rainfall reduced reservoir storage levels"
+    },
+    {
+      "source": "event-june-2026-drought",
+      "target": "event-food-price-surge",
+      "type": "contributed_to",
+      "confidence": 80,
+      "description": "Monsoon deficit + heatwave disrupted food supply chains"
+    },
+    {
+      "source": "organization-imd",
+      "target": "event-imd-july-forecast",
+      "type": "issued",
+      "confidence": 100,
+      "description": "IMD issued below-average July monsoon forecast"
+    },
+    {
+      "source": "organization-rbi",
+      "target": "policy-rbi-repo-rate",
+      "type": "set",
+      "confidence": 100,
+      "description": "RBI set repo rate at 5.25% with neutral stance"
+    },
+    {
+      "source": "person-mrutyunjay-mohapatra",
+      "target": "organization-imd",
+      "type": "leads",
+      "confidence": 100,
+      "description": "Mrutyunjay Mohapatra is Director-General of IMD"
+    },
+    {
+      "source": "person-sanjay-malhotra",
+      "target": "organization-rbi",
+      "type": "leads",
+      "confidence": 100,
+      "description": "Sanjay Malhotra is Governor of RBI"
+    },
+    {
+      "source": "country-india",
+      "target": "event-june-2026-drought",
+      "type": "affected_by",
+      "confidence": 100,
+      "description": "India experienced the drought event"
+    },
+    {
+      "source": "event-food-price-surge",
+      "target": "policy-rbi-repo-rate",
+      "type": "influences",
+      "confidence": 75,
+      "description": "Food inflation may delay RBI rate cuts"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-04-15",
+      "title": "IMD First-Stage Forecast",
+      "description": "IMD forecasts 92% of LPA — below normal monsoon",
+      "type": "forecast",
+      "entities": ["organization-imd"]
+    },
+    {
+      "date": "2026-05-29",
+      "title": "IMD Downgrades to 90% of LPA",
+      "description": "Second-stage forecast: 90% of LPA, 60% probability of deficient rainfall. El Niño confirmed.",
+      "type": "forecast",
+      "entities": ["organization-imd", "event-el-nino-2026"]
+    },
+    {
+      "date": "2026-06-01",
+      "title": "Monsoon Onset Delayed",
+      "description": "Monsoon reaches Kerala 3 days behind normal June 1 schedule.",
+      "type": "milestone",
+      "entities": ["organization-imd"]
+    },
+    {
+      "date": "2026-06-05",
+      "title": "RBI MPC Meeting",
+      "description": "RBI holds repo rate at 5.25%. Governor flags monsoon risk to inflation. GDP forecast cut to 6.6%.",
+      "type": "economic",
+      "entities": ["organization-rbi", "person-sanjay-malhotra"]
+    },
+    {
+      "date": "2026-06-12",
+      "title": "Fuel Sale Restrictions Imposed",
+      "description": "Govt imposes fuel sale restrictions due to West Asia supply disruptions.",
+      "type": "policy",
+      "entities": ["country-india", "policy-fuel-restrictions"]
+    },
+    {
+      "date": "2026-06-18",
+      "title": "Monsoon Stalls",
+      "description": "Monsoon stalls over southern Maharashtra for ~11 days. Deficit balloons to 46%.",
+      "type": "milestone",
+      "entities": ["organization-imd", "event-june-2026-drought"]
+    },
+    {
+      "date": "2026-06-22",
+      "title": "Driest June of 21st Century Declared",
+      "description": "India Today reports driest June of 21st century. El Niño at +1.7°C.",
+      "type": "media",
+      "entities": ["event-june-2026-drought", "event-el-nino-2026"]
+    },
+    {
+      "date": "2026-06-25",
+      "title": "Kharif Sowing Data Released",
+      "description": "Kharif sowing at 182.72 lakh ha — 22.7% decline YoY. Oilseeds down 53%.",
+      "type": "economic",
+      "entities": ["event-kharif-sowing-decline", "ministry-agriculture"]
+    },
+    {
+      "date": "2026-06-30",
+      "title": "June Confirmed 3rd Driest; July Below-Average Forecast",
+      "description": "IMD confirms June 2026 as 3rd driest on record. July forecast: below 94% of LPA.",
+      "type": "milestone",
+      "entities": ["organization-imd", "event-june-2026-drought", "event-imd-july-forecast"]
+    },
+    {
+      "date": "2026-07-01",
+      "title": "LPG Price Cut; Fuel Restrictions Lifted",
+      "description": "Govt cuts LPG cylinder price by ₹183.50. Lifts fuel sale restrictions.",
+      "type": "policy",
+      "entities": ["country-india", "policy-lpg-price-cut", "policy-fuel-restrictions"]
+    },
+    {
+      "date": "2026-07-15",
+      "title": "Mid-July Monsoon Assessment (Upcoming)",
+      "description": "Critical checkpoint — if rainfall does not revive, drought declaration likely.",
+      "type": "forecast",
+      "entities": ["organization-imd", "event-june-2026-drought"]
+    }
+  ],
+  "relatedStories": [
+    {
+      "slug": "rbi-monsoon-warning-growth-inflation-outlook-june-2026",
+      "title": "RBI's Monsoon Warning: Growth vs Inflation Outlook (June 2026)",
+      "relationship": "companion"
+    },
+    {
+      "slug": "el-nino-2026",
+      "title": "El Niño 2026: Global Climate Disruption",
+      "relationship": "cause"
+    },
+    {
+      "slug": "europe-heatwave-2026",
+      "title": "Europe Heatwave 2026",
+      "relationship": "related_climate"
+    }
+  ],
+  "searchIndex": {
+    "primaryKeywords": [
+      "India monsoon 2026",
+      "June rainfall deficit 2026",
+      "driest June India",
+      "El Niño India 2026",
+      "kharif sowing 2026"
+    ],
+    "secondaryKeywords": [
+      "food inflation India 2026",
+      "India drought 2026",
+      "IMD July forecast 2026",
+      "tomato prices India",
+      "India reservoir levels 2026",
+      "RBI monsoon warning"
+    ],
+    "entities": [
+      "India",
+      "IMD",
+      "RBI",
+      "El Niño",
+      "monsoon",
+      "kharif",
+      "drought",
+      "food inflation"
+    ]
+  }
+}
