@@ -185,7 +185,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     if (!data.slug) return error('Slug is required')
     const existing = await db.getStory(data.slug)
     if (existing) return error('Story with this slug already exists', 409)
-    const story = await db.createStory(data)
+    const story = await db.createStory({ ...data, status: 'draft', publishedAt: null })
     return json({ story }, 201)
   }
 
