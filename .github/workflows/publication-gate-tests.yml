@@ -67,6 +67,8 @@ jobs:
           node --check ../scripts/pipeline.mjs
           node --check ../deploy/netlify/functions/api.js
           node --check ../deploy/server.js
+          node --check ../deploy/lib/cms-schema-contract.cjs
+          node --check ../deploy/lib/publication-deploy-hook.cjs
           node --check ../scripts/ai/publish.mjs
       - name: Build and validate the static story corpus
         run: node scripts/build-content.mjs
