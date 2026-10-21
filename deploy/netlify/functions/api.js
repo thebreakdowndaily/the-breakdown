@@ -1,11 +1,139 @@
 const { supabase } = require('./lib/supabase');
+const { assertLegacyCmsSchema } = require('../../lib/cms-schema-contract.cjs');
+const { validateDeploymentHookUrl, triggerDeploymentHook } = require('../../lib/publication-deploy-hook.cjs');
 const crypto = require('crypto');
 
-const COOKIE_SECRET = process.env.SESSION_SECRET || 'the-breakdown-fact-check-cms-secret-key-change-me';
+const COOKIE_SECRET = process.env.SESSION_SECRET || '';
 const COOKIE_MAX_AGE = 24 * 60 * 60; // 24 hours
 
 // ==================== COOKIE AUTH HELPERS ====================
+function sessionSecretIsConfigured() {
+  return typeof COOKIE_SECRET === 'string' && COOKIE_SECRET.length >= 32;
+}
+
+function isEditorInChief(user) {
+  const allowed = String(process.env.EDITOR_IN_CHIEF_EMAILS || '')
+    .split(',').map(value => value.trim().toLowerCase()).filter(Boolean);
+  return Boolean(user && user.email && allowed.includes(String(user.email).toLowerCase()));
+}
+
+function publicationDestination() {
+  const raw = process.env.PUBLICATION_DESTINATION || '';
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') return null;
+    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return null;
+    return parsed.origin;
+  } catch { return null; }
+}
+
+const APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:';
+const APPROVAL_TTL_MS = 60 * 60 * 1000;
+
+function normaliseList(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch {}
+  }
+  return [];
+}
+
+function storyVersionPayload(story) {
+  return {
+    slug: String(story.slug || ''),
+    title: String(story.title || ''),
+    summary: String(story.summary || ''),
+    body: String(story.body ?? story.content ?? ''),
+    category: String(story.category || 'Uncategorised'),
+    tags: normaliseList(story.tags),
+    hero: String(story.hero ?? story.fact_check_image ?? ''),
+    caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
+    author: String(story.author || 'The Breakdown Desk'),
+    readTime: Number(story.readTime ?? story.read_time ?? 5),
+    sourceUrl: String(story.fact_check_url ?? story.source_url ?? ''),
+    video: String(story.fact_check_video ?? story.video ?? ''),
+    sourceVerification: String(story.source_verification ?? ''),
+    metaTitle: String(story.meta_title ?? story.metaTitle ?? ''),
+    metaDescription: String(story.meta_description ?? story.metaDescription ?? ''),
+    ogImage: String(story.og_image ?? story.ogImage ?? ''),
+    publishAt: String(story.publish_at ?? story.publishAt ?? ''),
+    relatedStoryIds: normaliseList(story.related_story_ids ?? story.relatedStoryIds),
+    storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
+  };
+}
+
+function storyVersionHash(story) {
+  return crypto.createHash('sha256').update(JSON.stringify(storyVersionPayload(story))).digest('hex');
+}
+
+function parseApproval(note) {
+  if (typeof note !== 'string' || !note.startsWith(APPROVAL_PREFIX)) return null;
+  try {
+    const value = JSON.parse(note.slice(APPROVAL_PREFIX.length));
+    if (value?.schema !== 1 || typeof value.contentHash !== 'string' ||
+        typeof value.destination !== 'string' || typeof value.approvedBy !== 'string' ||
+        typeof value.approvedAt !== 'string') return null;
+    return value;
+  } catch { return null; }
+}
+
+async function reopenStoryForSourceMutation(storyId, user, description) {
+  const { data: story, error } = await supabase.from('stories')
+    .select('id, status, published_at').eq('id', storyId).single();
+  if (error || !story) return { ok: false, status: 404, error: 'Story for source mutation was not found' };
+  const status = String(story.status || 'draft');
+  if (['draft', 'archived', 'trash'].includes(status)) return { ok: true };
+
+  const actor = String(user?.email || user?.name || user?.id || 'cms-user').trim().toLowerCase();
+  let deploymentHookUrl = null;
+  if (status === 'published') {
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return { ok: false, status: 503, error: 'DEPLOY_HOOK_URL must be configured before editing sources on a published story; story state remains unchanged.' }; }
+  }
+
+  const { error: attemptError } = await supabase.from('pipeline_log').insert({
+    story_id: story.id,
+    from_status: status,
+    to_status: 'source-change-attempted',
+    changed_by: actor,
+    note: `Source evidence change requested (${description}); prior editorial approval invalidated`,
+  });
+  if (attemptError) return { ok: false, status: 503, error: 'Could not persist source-change audit; source change is blocked' };
+
+  const { data: updated, error: updateError } = await supabase.from('stories')
+    .update({ status: 'draft', published_at: null })
+    .eq('id', storyId).eq('status', status).select('id').maybeSingle();
+  if (updateError || !updated) {
+    return { ok: false, status: 409, error: 'Story state changed during source editing; reload and retry after review' };
+  }
+
+  let auditFailure = false;
+  const { error: finalAuditError } = await supabase.from('pipeline_log').insert({
+    story_id: story.id,
+    from_status: status,
+    to_status: 'draft',
+    changed_by: actor,
+    note: `Source evidence changed (${description}); prior editorial approval invalidated`,
+  });
+  if (finalAuditError) auditFailure = true;
+
+  if (status === 'published') {
+    try {
+      await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Source change reopened a published story but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return { ok: false, status: 502, error: 'Story was moved to draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before editing sources.' };
+    }
+  }
+  if (auditFailure) return { ok: false, status: 503, error: 'Story was moved to draft, but final audit logging failed; investigate before editing sources' };
+  return { ok: true };
+}
+
 function signToken(payload) {
+  if (!sessionSecretIsConfigured()) throw new Error('SESSION_SECRET must be configured with at least 32 characters');
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const sig = crypto.createHmac('sha256', COOKIE_SECRET).update(data).digest('base64url');
   return data + '.' + sig;
@@ -13,6 +141,7 @@ function signToken(payload) {
 
 function verifyToken(token) {
   try {
+    if (!sessionSecretIsConfigured()) return null;
     const parts = token.split('.');
     if (parts.length !== 2) return null;
     const [data, sig] = parts;
@@ -62,7 +191,24 @@ function hashPassword(password) {
 }
 
 // ==================== ROUTER ====================
+let schemaPreflightPromise;
+async function ensureSchemaPreflight() {
+  if (!schemaPreflightPromise) {
+    schemaPreflightPromise = assertLegacyCmsSchema({
+      baseUrl: process.env.SUPABASE_URL || '',
+      serviceKey: process.env.SUPABASE_SERVICE_KEY || '',
+    });
+  }
+  return schemaPreflightPromise;
+}
+
 exports.handler = async (event) => {
+  try {
+    await ensureSchemaPreflight();
+  } catch (schemaError) {
+    console.error('[cms-schema] API blocked because the configured database does not match the legacy CMS contract');
+    return json(503, { error: 'CMS database schema is incompatible; service unavailable. No content writes were attempted.' });
+  }
   const path = event.path.replace('/.netlify/functions/api', '') || '/';
   const method = event.httpMethod;
   const body = event.body ? JSON.parse(event.body) : {};
@@ -80,6 +226,7 @@ exports.handler = async (event) => {
     if (route === '/auth/login' && method === 'POST') {
       const { email, password } = body;
       if (!email || !password) return json(400, { error: 'Email and password required' });
+      if (!sessionSecretIsConfigured()) return json(503, { error: 'SESSION_SECRET must be configured with at least 32 characters' });
 
       const { data: users, error } = await supabase
         .from('admin_users')
@@ -93,7 +240,7 @@ exports.handler = async (event) => {
       const user = users[0];
       if (hashPassword(password) !== user.password_hash) return json(401, { error: 'Invalid credentials' });
 
-      const token = signToken({ id: user.id, email: user.email, name: user.name, exp: Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE });
+      const token = signToken({ id: user.id, email: user.email, name: user.name, role: 'cms-admin', iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE });
       return json(200, { success: true, user: { id: user.id, name: user.name, email: user.email } }, { 'Set-Cookie': setCookie(token) });
     }
 
@@ -160,7 +307,7 @@ exports.handler = async (event) => {
 
       const { data, error } = await supabase
         .from('stories')
-        .insert({ title, slug, category: category || 'Uncategorized', summary: summary || '', content: content || '', author: user.name || 'The Breakdown' })
+        .insert({ title, slug, category: category || 'Uncategorized', summary: summary || '', content: content || '', author: user.name || 'The Breakdown', status: 'draft', published_at: null })
         .select().single();
 
       if (error) return json(500, { error: 'Failed to create story' });
@@ -181,21 +328,96 @@ exports.handler = async (event) => {
         return json(200, { story: data[0] });
       }
 
-      // PUT /api/stories/:id
+      // PUT /api/stories/:id — generic edits cannot set workflow status.
       if (segments.length === 2 && method === 'PUT') {
+        const { data: existing, error: fetchError } = await supabase.from('stories').select('*').eq('id', storyId).single();
+        if (fetchError || !existing) return json(404, { error: 'Story not found' });
+
         const updates = { ...body };
-        delete updates.id; delete updates.created_at; delete updates.updated_at; delete updates.story_sources;
-        const { data, error } = await supabase.from('stories').update(updates).eq('id', storyId).select().single();
+        delete updates.id; delete updates.created_at; delete updates.updated_at;
+        delete updates.story_sources; delete updates.status; delete updates.published_at;
+
+        const beforeHash = storyVersionHash(existing);
+        const afterHash = storyVersionHash({ ...existing, ...updates });
+        const materialChanged = beforeHash !== afterHash;
+        const invalidatedApproval = materialChanged && existing.status !== 'draft';
+        let deploymentHookUrl = null;
+        if (invalidatedApproval && existing.status === 'published') {
+          try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+          catch { return json(503, { error: 'DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.' }); }
+        }
+
+        const actor = String(user.email || user.id || 'cms-user');
+        if (invalidatedApproval) {
+          const { error: attemptError } = await supabase.from('pipeline_log').insert({
+            story_id: storyId, from_status: existing.status, to_status: 'content-edit-attempted',
+            changed_by: actor, note: 'Material edit requested; prior editorial approval invalidated',
+          });
+          if (attemptError) return json(503, { error: 'Could not persist edit invalidation audit; story was not changed' });
+          updates.status = 'draft';
+          updates.published_at = null;
+        }
+
+        const { data, error } = await supabase.from('stories')
+          .update(updates).eq('id', storyId).eq('status', existing.status).select().maybeSingle();
         if (error) return json(500, { error: 'Failed to update story' });
-        if (!data) return json(404, { error: 'Story not found' });
-        return json(200, { story: data });
+        if (!data) return json(409, { error: 'Story state changed during edit; reload and retry against the latest version' });
+
+        let auditFailure = false;
+        if (invalidatedApproval) {
+          const { error: logError } = await supabase.from('pipeline_log').insert({
+            story_id: storyId, from_status: existing.status, to_status: 'draft',
+            changed_by: actor, note: 'Material story edit invalidated prior review/publication approval',
+          });
+          if (logError) auditFailure = true;
+        }
+
+        if (invalidatedApproval && existing.status === 'published') {
+          try {
+            const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+            data.deployment = { status: 'triggered', httpStatus: acknowledgement.status };
+          } catch (deployError) {
+            console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+            return json(502, {
+              error: 'Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.',
+              approvalInvalidated: true,
+              deploymentStatus: 'not-acknowledged',
+            });
+          }
+        }
+        if (auditFailure) return json(503, { error: 'Story was moved to draft but audit logging failed; inspect story and audit records before release' });
+        return json(200, { story: data, approvalInvalidated: invalidatedApproval });
       }
 
-      // DELETE /api/stories/:id
+      // DELETE /api/stories/:id — only drafts may be trashed directly.
+      // Live stories must go through an audited takedown and acknowledged rebuild.
       if (segments.length === 2 && method === 'DELETE') {
-        const { error } = await supabase.from('stories').delete().eq('id', storyId);
-        if (error) return json(500, { error: 'Failed to delete story' });
-        return json(200, { success: true });
+        const { data: existing, error: fetchError } = await supabase.from('stories')
+          .select('id, status').eq('id', storyId).single();
+        if (fetchError || !existing) return json(404, { error: 'Story not found' });
+        if (existing.status !== 'draft') {
+          return json(409, { error: 'Direct trash is available only for drafts. Move workflow items to draft and use the audited takedown path for live stories.' });
+        }
+
+        const actor = String(user.email || user.id || 'cms-user');
+        const { error: attemptError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'draft', to_status: 'trash-attempted',
+          changed_by: actor, note: 'Human requested trash of draft story',
+        });
+        if (attemptError) return json(503, { error: 'Trash audit could not be persisted; story was not changed' });
+
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'trash', deleted_at: new Date().toISOString(), published_at: null })
+          .eq('id', storyId).eq('status', 'draft').select().maybeSingle();
+        if (updateError) return json(500, { error: 'Failed to trash story' });
+        if (!updated) return json(409, { error: 'Story state changed during trash; reload and retry' });
+
+        const { error: finalAuditError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'draft', to_status: 'trash',
+          changed_by: actor, note: 'Draft moved to trash after conditional state transition',
+        });
+        if (finalAuditError) return json(503, { error: 'Story was moved to trash but the final audit event failed; inspect before retrying' });
+        return json(200, { success: true, story: updated });
       }
 
       // ===== SOURCES (nested under stories) =====
@@ -212,6 +434,9 @@ exports.handler = async (event) => {
         const { label, url, source_type, verified } = body;
         if (!label || !url) return json(400, { error: 'Label and URL required' });
 
+        const reopened = await reopenStoryForSourceMutation(storyId, user, 'source added');
+        if (!reopened.ok) return json(503, { error: reopened.error });
+
         const { count } = await supabase
           .from('story_sources').select('id', { count: 'exact', head: true }).eq('story_id', storyId);
 
@@ -223,26 +448,156 @@ exports.handler = async (event) => {
         return json(201, { source: data });
       }
 
-      // ===== PUBLISH =====
-      // POST /api/stories/:id/publish
-      if (segments.length === 3 && segments[2] === 'publish' && method === 'POST') {
-        const { data: story, error } = await supabase
-          .from('stories').select('*').eq('id', storyId).single();
+      // POST /api/stories/:id/return-to-draft
+      if (segments.length === 3 && segments[2] === 'return-to-draft' && method === 'POST') {
+        const { data: story, error } = await supabase.from('stories').select('id, status').eq('id', storyId).single();
         if (error || !story) return json(404, { error: 'Story not found' });
-
-        const { data: updated, error: updateError } = await supabase
-          .from('stories').update({ status: 'published', published_at: new Date().toISOString() }).eq('id', storyId).select().single();
-        if (updateError) return json(500, { error: 'Failed to publish story' });
-
-        await supabase.from('publish_log').insert({ story_id: storyId, published_by: user.id, deploy_status: 'success' });
-
+        if (!['approved-for-release', 'ready', 'in-review', 'fact-checking', 'scheduled'].includes(String(story.status))) {
+          return json(409, { error: 'Only a pending-release or in-review story can be returned to draft; use Unpublish for live stories.' });
+        }
+        const actor = String(user.email || user.name || user.id || 'cms-user');
+        const { error: logError } = await supabase.from('pipeline_log').insert({
+          story_id: story.id, from_status: story.status, to_status: 'draft',
+          changed_by: actor, note: 'Human returned story to draft; previous release approval revoked',
+        });
+        if (logError) return json(503, { error: 'Could not persist approval-revocation audit; operation is blocked' });
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'draft', published_at: null }).eq('id', storyId).eq('status', story.status).select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story changed concurrently; reload and retry' });
         return json(200, { success: true, story: updated });
+      }
+
+      // ===== VERSION-BOUND EDITORIAL APPROVAL =====
+      // POST /api/stories/:id/approve-release
+      if (segments.length === 3 && segments[2] === 'approve-release' && method === 'POST') {
+        if (!isEditorInChief(user)) {
+          return json(403, { error: 'Only an email listed in EDITOR_IN_CHIEF_EMAILS can approve public release' });
+        }
+        const destination = publicationDestination();
+        if (!destination) return json(503, { error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+
+        const { data: story, error } = await supabase.from('stories').select('*').eq('id', storyId).single();
+        if (error || !story) return json(404, { error: 'Story not found' });
+        // This CMS has its own draft-based lifecycle. The explicit, allowlisted
+        // Editor-in-Chief action is the final human release approval for the saved
+        // draft; the UI must not publish as part of this action.
+        if (!['draft', 'ready', 'scheduled'].includes(String(story.status))) {
+          return json(409, { error: 'Only a draft, ready, or due scheduled story can be approved for public release' });
+        }
+        const scheduledAt = story.publish_at ? Date.parse(story.publish_at) : NaN;
+        if (story.status === 'scheduled' && !Number.isFinite(scheduledAt)) {
+          return json(409, { error: 'Scheduled story has no valid publish_at time' });
+        }
+        if (Number.isFinite(scheduledAt) && scheduledAt > Date.now()) {
+          return json(409, { error: 'Scheduled time has not arrived; approval is not yet available' });
+        }
+
+        const approvalFromStatus = story.status;
+        const approvedAt = new Date().toISOString();
+        const approvedBy = String(user.email).toLowerCase();
+        const approval = {
+          schema: 1, contentHash: storyVersionHash(story), destination, approvedBy, approvedAt,
+        };
+        const { error: logError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: story.status, to_status: 'approved-for-release',
+          changed_by: approvedBy, note: APPROVAL_PREFIX + JSON.stringify(approval),
+        });
+        if (logError) return json(503, { error: 'Could not persist approval record; release is blocked' });
+
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'approved-for-release' }).eq('id', storyId).eq('status', approvalFromStatus).select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story changed during approval; reload and review again' });
+        return json(200, { success: true, story: updated, approval: { approvedBy, approvedAt, destination, contentHash: approval.contentHash } });
+      }
+
+      // POST /api/stories/:id/publish — approval is necessary but not sufficient.
+      if (segments.length === 3 && segments[2] === 'publish' && method === 'POST') {
+        let deploymentHookUrl;
+        try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+        catch { return json(503, { error: 'DEPLOY_HOOK_URL must be configured before publication; story status remains unchanged.' }); }
+        const destination = publicationDestination();
+        if (!destination) return json(503, { error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+
+        const { data: story, error } = await supabase.from('stories').select('*').eq('id', storyId).single();
+        if (error || !story) return json(404, { error: 'Story not found' });
+        if (story.status !== 'approved-for-release') return json(409, { error: 'Story has no current release approval' });
+
+        const { data: logs, error: logsError } = await supabase.from('pipeline_log')
+          .select('*').eq('story_id', storyId)
+          .order('created_at', { ascending: false }).order('id', { ascending: false }).limit(1);
+        if (logsError) return json(503, { error: 'Approval history unavailable; release is blocked' });
+        const latest = Array.isArray(logs) ? logs[0] : null;
+        if (!latest || latest.to_status !== 'approved-for-release') return json(409, { error: 'Latest story event is not a release approval' });
+
+        const approval = parseApproval(latest.note);
+        if (!approval) return json(409, { error: 'Release approval record is malformed or missing' });
+        if (String(latest.changed_by).toLowerCase() !== approval.approvedBy) return json(409, { error: 'Approval identity does not match its audit event' });
+        if (approval.destination !== destination) return json(409, { error: 'Approval was recorded for a different destination' });
+        const approvedAt = Date.parse(approval.approvedAt);
+        const now = Date.now();
+        if (!Number.isFinite(approvedAt) || approvedAt > now + 60000 || now - approvedAt > APPROVAL_TTL_MS) {
+          return json(409, { error: 'Release approval expired or has an invalid timestamp' });
+        }
+        if (approval.contentHash !== storyVersionHash(story)) return json(409, { error: 'Story changed after approval; release is blocked' });
+
+        // Persist a terminal release event first. If the story mutation then
+        // fails, the approval cannot be replayed; the story remains non-public.
+        const { error: eventError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'release-attempted',
+          changed_by: user.email || String(user.id), note: 'Approval consumed after version-bound validation; conditional publication transition follows',
+        });
+        if (eventError) return json(503, { error: 'Release audit could not be persisted; publication is blocked' });
+
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'published', published_at: new Date().toISOString() })
+          .eq('id', storyId).eq('status', 'approved-for-release').select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story status changed during publication; release is blocked and requires fresh review' });
+
+        const { error: publishedEventError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
+          changed_by: user.email || String(user.id), note: 'Published after version-bound human approval and successful conditional status transition',
+        });
+        if (publishedEventError) return json(500, { error: 'Story is published but final release audit logging failed; investigate before retrying' });
+
+        const { error: publishLogError } = await supabase.from('publish_log').insert({
+          story_id: storyId, published_by: user.id, deploy_status: 'success',
+        });
+        if (publishLogError) {
+          // The version-bound pipeline log is the primary audit record. Telemetry
+          // failure must not silently suppress the public rebuild after publication.
+          console.error('[publication-gate] publish_log telemetry failed after primary audit succeeded');
+        }
+
+        let deploymentAcknowledgement;
+        try {
+          deploymentAcknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+        } catch (deployError) {
+          console.error('[deploy-hook] Story is published and audited, but rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+          return json(502, {
+            error: 'Story is published and audited in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.',
+            releaseStatus: 'published',
+            deploymentStatus: 'not-acknowledged',
+          });
+        }
+
+        return json(200, {
+          success: true,
+          story: updated,
+          deployment: { status: 'triggered', httpStatus: deploymentAcknowledgement.status },
+          telemetryStatus: publishLogError ? 'degraded' : 'recorded',
+        });
       }
     }
 
     // ===== SOURCES (standalone) =====
     // PUT /api/sources/:id
     if (segments.length === 2 && segments[0] === 'sources' && method === 'PUT') {
+      const { data: source, error: sourceError } = await supabase
+        .from('story_sources').select('id, story_id').eq('id', segments[1]).single();
+      if (sourceError || !source) return json(404, { error: 'Source not found' });
+      const reopened = await reopenStoryForSourceMutation(source.story_id, user, 'source updated');
+      if (!reopened.ok) return json(503, { error: reopened.error });
+
       const updates = { ...body }; delete updates.id; delete updates.story_id; delete updates.created_at;
       const { data, error } = await supabase.from('story_sources').update(updates).eq('id', segments[1]).select().single();
       if (error) return json(500, { error: 'Failed to update source' });
@@ -251,6 +606,12 @@ exports.handler = async (event) => {
 
     // DELETE /api/sources/:id
     if (segments.length === 2 && segments[0] === 'sources' && method === 'DELETE') {
+      const { data: source, error: sourceError } = await supabase
+        .from('story_sources').select('id, story_id').eq('id', segments[1]).single();
+      if (sourceError || !source) return json(404, { error: 'Source not found' });
+      const reopened = await reopenStoryForSourceMutation(source.story_id, user, 'source deleted');
+      if (!reopened.ok) return json(503, { error: reopened.error });
+
       const { error } = await supabase.from('story_sources').delete().eq('id', segments[1]);
       if (error) return json(500, { error: 'Failed to delete source' });
       return json(200, { success: true });

@@ -8,7 +8,8 @@
     "build": "next build",
     "postbuild": "node scripts/postbuild.mjs",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:publication-gate": "node --test scripts/test-*.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

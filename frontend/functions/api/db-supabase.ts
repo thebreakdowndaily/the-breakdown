@@ -11,7 +11,7 @@
  */
 
 import { type Story, type User, type PipelineLog, type DbBackend } from './types'
-import { SEED_STORIES } from './seed-data'
+import { assertSupabaseCmsSchema } from './supabase-schema-contract.mjs'
 
 interface SupabaseConfig {
   url: string
@@ -79,54 +79,13 @@ export class SupabaseBackend implements DbBackend {
   }
 
   async ensureSchema(): Promise<void> {
-    // The Supabase project already has:
-    //   - admin_users table (CMS users)
-    //   - stories table (CMS content, 48 existing stories)
-    //
-    // A pipeline_log table needs to be created via Supabase SQL editor:
-    //   CREATE TABLE IF NOT EXISTS pipeline_log (
-    //     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    //     story_id UUID NOT NULL,
-    //     from_status TEXT,
-    //     to_status TEXT NOT NULL,
-    //     changed_by TEXT NOT NULL DEFAULT 'system',
-    //     note TEXT NOT NULL DEFAULT '',
-    //     created_at TIMESTAMPTZ DEFAULT NOW()
-    //   );
-    //
-    // We gracefully handle its absence — pipeline features will
-    // return empty logs until the table is created.
-
-    // Seed our 30 stories into the stories table if they don't exist by slug
-    for (const s of SEED_STORIES) {
-      const resp = await fetch(
-        `${this.cfg.url}/rest/v1/stories?slug=eq.${encodeURIComponent(s.slug)}&select=id`,
-        { headers: headers(this.cfg, true) }
-      )
-      const existing = await resp.json()
-      if (!Array.isArray(existing) || existing.length === 0) {
-        await fetch(`${this.cfg.url}/rest/v1/stories`, {
-          method: 'POST',
-          headers: headers(this.cfg, true),
-          body: JSON.stringify({
-            slug: s.slug,
-            title: s.title,
-            summary: s.summary,
-            content: s.body,
-            category: s.category,
-            tags: JSON.stringify(s.tags),
-            fact_check_image: s.hero,
-            fact_check_image_caption: s.caption,
-            author: s.author,
-            read_time: s.readTime,
-            published_at: s.publishedAt || null,
-            status: s.status || 'published',
-            created_at: s.createdAt,
-            updated_at: s.updatedAt,
-          }),
-        })
-      }
-    }
+    // Fail before any writes if Pages points at the canonical site database or an
+    // incomplete CMS schema. This is a read-only schema contract check; it never
+    // creates tables or seeds content.
+    await assertSupabaseCmsSchema({
+      baseUrl: this.cfg.url,
+      serviceKey: this.cfg.serviceKey,
+    })
   }
 
   /** Helper to safely query a table that may not exist */
@@ -218,7 +177,6 @@ export class SupabaseBackend implements DbBackend {
 
     const row = storyToRow(data)
     row.updated_at = new Date().toISOString()
-    // Don't overwrite slug
     delete row.slug
 
     const resp = await fetch(
@@ -231,6 +189,25 @@ export class SupabaseBackend implements DbBackend {
     )
     if (!resp.ok) return null
     return this.getStory(slug)
+  }
+
+  async updateStoryIfStatus(slug: string, expectedStatus: string, data: Partial<Story>): Promise<Story | null> {
+    const row = storyToRow(data)
+    row.updated_at = new Date().toISOString()
+    delete row.slug
+
+    const resp = await fetch(
+      `${this.cfg.url}/rest/v1/stories?slug=eq.${encodeURIComponent(slug)}&status=eq.${encodeURIComponent(expectedStatus)}&select=*`,
+      {
+        method: 'PATCH',
+        headers: headers(this.cfg, true),
+        body: JSON.stringify(row),
+      }
+    )
+    if (!resp.ok) return null
+    const rows = await resp.json().catch(() => null)
+    if (!Array.isArray(rows) || rows.length !== 1) return null
+    return rowToStory(rows[0])
   }
 
   async deleteStory(slug: string): Promise<boolean> {
@@ -310,20 +287,6 @@ export class SupabaseBackend implements DbBackend {
     by: string,
     note: string,
   ): Promise<PipelineLog> {
-    const rows = await this.safeQuery('pipeline_log', 'select=id&limit=1')
-    if (rows.length === 0) {
-      // pipeline_log table doesn't exist yet — return a fake log
-      return {
-        id: 0,
-        story_id: storyId,
-        from_status: from,
-        to_status: to,
-        changed_by: by,
-        note: note + ' (table not created)',
-        created_at: new Date().toISOString(),
-      }
-    }
-
     const resp = await fetch(`${this.cfg.url}/rest/v1/pipeline_log`, {
       method: 'POST',
       headers: headers(this.cfg, true),
@@ -335,8 +298,13 @@ export class SupabaseBackend implements DbBackend {
         note,
       }),
     })
+    if (!resp.ok) {
+      const detail = await resp.text().catch(() => '')
+      throw new Error(`Could not persist pipeline audit event (${resp.status}): ${detail.slice(0, 300)}`)
+    }
     const result = await resp.json()
     const row = Array.isArray(result) ? result[0] : result
+    if (!row || row.id == null) throw new Error('Pipeline audit event was not returned by storage')
     return {
       id: row.id,
       story_id: row.story_id,
@@ -348,11 +316,14 @@ export class SupabaseBackend implements DbBackend {
     }
   }
 
-  async getPipelineLogs(_storySlug?: string): Promise<PipelineLog[]> {
-    const rows = await this.safeQuery(
-      'pipeline_log',
-      'select=*&order=created_at.desc&limit=100'
-    )
+  async getPipelineLogs(storySlug?: string): Promise<PipelineLog[]> {
+    let query = 'select=*&order=created_at.desc&limit=100'
+    if (storySlug) {
+      const story = await this.getStory(storySlug)
+      if (!story) return []
+      query = `story_id=eq.${encodeURIComponent(String(story.id))}&select=*&order=created_at.desc&limit=100`
+    }
+    const rows = await this.safeQuery('pipeline_log', query)
     return rows.map((r: any) => ({
       id: r.id,
       story_id: r.story_id,

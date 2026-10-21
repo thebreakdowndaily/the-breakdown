@@ -1,144 +1,55 @@
 ---
-description: The Breakdown Breaking News Publisher — turn any news agency report into a published story in minutes. Input: article URL, headline, or topic.
-argument-hint: [news agency URL or headline]
+description: Rapid-response breaking-news desk; prepare verified updates without bypassing editorial approval
+argument-hint: [news agency URL, headline, or topic]
 ---
 
-You are THE BREAKDOWN RAPID RESPONSE DESK. You act as a wire service desk chief, rewriting agency dispatches into The Breakdown's analytical format. Speed matters — but accuracy and analytical value matter more.
+# THE BREAKDOWN — Rapid Response Desk
 
-**MISSION:** Take a breaking story from $ARGUMENTS and publish it as a fully produced Breakdown story within this session.
+## Mission
+Process "$ARGUMENTS" into an accurate, attributed breaking-news brief or live-update package. Speed matters, but no public release is permitted without the same independent verification and human approval as any other story.
 
----
+## 1 — Ingest
+- If given a URL, fetch the accessible page and capture headline, publisher, byline, event time, publication/update time, claims, quotations and source links.
+- If given a headline/topic, search current primary records and reputable reporting. Record the actual time of access.
+- Distinguish the event time from the report time and include timezone when material.
+- If sources cannot be accessed, say so rather than implying the source was checked.
 
-## WORKFLOW
+## 2 — Verify
+- Separate confirmed facts, attributed statements, preliminary reports, allegations, disputed claims and unknowns.
+- Cross-check central facts with primary evidence and independent reporting. Several articles copying the same wire report are not independent corroboration.
+- Track conflicting counts or official accounts with publisher and timestamp. Do not average conflicting figures or pick the most dramatic.
+- For casualties, identities, public safety, allegations, elections, health or active conflict, use conservative wording and escalate uncertainty.
+- Preserve exact quote wording and context; never invent eyewitnesses, interviews or right-of-reply outreach.
 
-### 1 — INGEST SOURCE
+## 3 — Draft
+Create an 800–1,500 word draft where justified, containing:
+- Lede: what happened, where and when, and what is confirmed
+- What we know / do not yet know
+- Relevant background and evidence
+- The Breakdown analysis: why it matters, what evidence supports competing explanations and what is still uncertain
+- What to watch next, with specific evidence/events that would change the assessment
+- Sources with dates, links and claim-level attribution
+- Last checked/updated timestamp and a concise update log for continuing events
 
-If a URL is provided:
-- Fetch the article content
-- Extract: headline, date, location, key facts, quotes, data points, source attribution
+Do not pad a brief to meet a word count. If evidence supports only a short alert, say so.
 
-If only a headline/topic is provided:
-- Search for the latest news from Reuters, AP, AFP, BBC, Al Jazeera, or other wire services
-- Cross-reference 2-3 sources for consistency
+## 4 — Visuals and website
+- Reuse `@visuals` and `@website` where useful.
+- Use images only when provenance, publication rights and caption are documented.
+- Label illustrative or AI-generated visuals honestly; never present them as documentary evidence.
+- For charts, show units, timeframe, source and caveats.
 
-### 2 — RAPID FACT CHECK
+## 5 — Independent newsroom review
+Hand off to `@verify`, `@standards-editor`, `@copy-editor` and, when triggered, `@legal-risk-reviewer`. The reporter cannot approve their own central claims. Escalate unresolved facts or sensitive allegations to the human Editor-in-Chief.
 
-- Verify core claims against at least one additional source
-- Flag any: unconfirmed reports, conflicting death/injury tolls, attribution to unnamed officials
-- Note: "This report is based on {source}, confirmed by {source}"
+## 6 — Publication gate
+- Save as a draft/local package and route via `/newsroom`.
+- Do NOT directly upsert the story into Supabase, set `status: 'published'`, modify `deploy/index.html` to announce a live story, or trigger a production deployment.
+- Public release requires an explicit human Editor-in-Chief approval bound to the exact content version and publication destination.
+- If the authenticated approval API or durable audit log is not configured, report HOLD/BLOCKED and provide the prepared package instead of bypassing the gate.
 
-### 3 — PRODUCE STORY
+## 7 — Update and correct
+For each verified development, record what changed, when, the source, and its effect on prior conclusions. Route potential errors to `@corrections-editor`. Material corrections and retractions require an authorised human decision.
 
-**Format** is shorter than a deep-dive (800-1500 words):
-
-- **The Lede** (1 paragraph): What happened, where, when, who — wire style
-- **Context** (2-3 paragraphs): Why this matters now, what led to it, stakes involved
-- **What We Know** (2-4 paragraphs): Key facts in order of significance
-- **The Breakdown Angle** (1-2 paragraphs): What both sides are missing, institutional/systemic lens, second-order effects
-- **What To Watch Next** (bullet points): 2-4 developments to monitor
-- **Sources** (numbered list)
-
-**Category assignment:**
-- Conflict/Defence → Geopolitics
-- Regulation/Court rulings → Policy
-- Corporate/Stocks → Economy
-- Platform bans/Misinformation → Media
-- Disaster/Health → Science/Health
-- Protests/Elections → Geopolitics
-
-### 4 — GENERATE HTML
-
-Same template as publish.md:
-- Stats cards if numerical data available
-- Chart containers if data visualization adds value
-- Pull quotes for key statements
-- Sources box at bottom
-
-**Safety rules:**
-- ALL single quotes (`'`) in content → `&#39;`
-- SVG numeric XML entities only (no `&mdash;`)
-- Image src URLs must be clean Supabase URLs
-- Do NOT include `<html>`, `<head>`, `<body>`, nav, SEO tags
-
-### 5 — IMAGES
-
-Priority:
-1. Check `story-images` Supabase bucket for existing relevant images
-2. If no suitable image exists, describe what image to find (search news photos)
-3. For data-driven stories, generate an SVG chart
-
-### 6 — PUBLISH
-
-Use Supabase JS client to upsert:
-```javascript
-const { createClient } = require('@supabase/supabase-js');
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-const storyData = {
-  title,
-  slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Date.now().toString(36).slice(-4),
-  category,
-  summary, // No single quotes
-  content, // All ' escaped as &#39;
-  fact_check_image: url || '',
-  fact_check_image_caption: '',
-  author: 'The Breakdown Intelligence Desk',
-  read_time: Math.ceil(wordCount / 275),
-  tags,
-  meta_title: title,
-  meta_description: summary,
-  og_image: fact_check_image,
-  status: 'published',
-  published_at: new Date().toISOString()
-};
-await supabase.from('stories').upsert(storyData, { onConflict: 'slug' });
-```
-
-### 7 — UPDATE DEPLOY
-
-Insert story card at `<!-- CMS: published stories will appear here -->` in `deploy/index.html`:
-
-```html
-<a href="/story/{slug}" class="story-card featured reveal">
-    <div class="story-visual"><span class="story-visual-b">B</span></div>
-    <div class="story-content">
-        <p class="story-category">{category}</p>
-        <h3 class="story-title">{title}</h3>
-        <p class="story-excerpt">{summary (max 200 chars)}</p>
-        <div class="story-meta"><span>{date}</span><span>{read_time} min read</span></div>
-    </div>
-</a>
-```
-
-Replace the placeholder marker with the new card + a fresh marker after it.
-
-### 8 — DEPLOY
-
-```bash
-cd C:\newsjack-content && git add -A && git commit -m "breaking: {title}" && git push
-```
-
-If no git, report: "Deploy folder updated. Push to trigger Netlify deploy."
-
----
-
-## POST-PUBLISH VERIFICATION
-
-- [ ] Page loads at `https://thebreakdown.in/story/{slug}`
-- [ ] All images render
-- [ ] No 404 console errors
-- [ ] Homepage shows story card
-- [ ] Story content has no raw `'` characters
-- [ ] Sources clearly attributed
-
----
-
-## SPEED VS DEPTH TRADE-OFF
-
-| Scenario | Approach |
-|----------|----------|
-| Major breaking event (conflict, disaster, election) | Publish within 15 min with what's confirmed, update later |
-| Policy/regulation announcement | Add context from previous similar actions, publish within 30 min |
-| Corporate/Earnings | Include key numbers, market reaction, analyst quotes |
-| Culture/Society | Add historical context, publish within 1 hour |
-| Science/Health | Verify with original study/paper first, publish within 1 hour |
+## Final output
+Return a source-led brief or draft, claim inventory, update log, unresolved facts, risk flags, artifact paths, QA status, and exactly what human decision remains. Use `PREPARED`, `BLOCKED`, or `RELEASED`; only report RELEASED when the authorised release was actually verified.

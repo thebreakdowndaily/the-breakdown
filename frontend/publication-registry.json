@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "purpose": "Pinned baseline for legacy static stories that were already present in the checked-in generated public corpus before the newsroom publication gate. New stories must reach static output through the approved CMS publish path.",
+  "hash": "Git blob object IDs for the selected story source and relevant metadata files. Any changed/missing/added relevant source must be reviewed through the CMS approval process rather than being silently published by static rebuild.",
+  "legacyStaticStories": {
+    "e20-sc-ethanol-status-quo-2026": {
+      "files": {
+        "e20-sc-ethanol-status-quo-2026.md": "a36070d832e922d6addf4e8540bbdd2968de2f24"
+      }
+    },
+    "europe-heatwave-2026": {
+      "files": {
+        "europe-heatwave-2026.md": "73f6f0fb2592aa80ba5f54ab2d28c87cf1c82372",
+        "references.md": "0af9092a4cd3842cfa0ba60cc706af64c9516861"
+      }
+    },
+    "india-transparency-paradox-2026": {
+      "files": {
+        "india-transparency-paradox-2026.md": "8cffaeda0c1400f58b6deeec5d80bf0901b87bc2"
+      }
+    },
+    "vb-g-ram-g-rural-employment-act-2026": {
+      "files": {
+        "vb-g-ram-g-rural-employment-act-2026.md": "6417595ca71a0051c64f7ca8d9fc3de8c25369cb"
+      }
+    },
+    "pothole-crisis-india-root-causes-solutions": {
+      "files": {
+        "meta.json": "f6287e22d1e6473a6aa10ef9247fa8d5a2a8432b",
+        "pothole-crisis-india-root-causes-solutions.md": "25aa039fc8298d118f4212d65e1f6d0e2595ca08",
+        "references.md": "7f39b8fd9272ea04a5dd5bec437f61a301c66ed3"
+      }
+    },
+    "nuclear-hydrogen-kalpakkam-world-first": {
+      "files": {
+        "nuclear-hydrogen-kalpakkam-world-first.md": "338ae8199b8ce7c868d657aabd22a092e4e750f3",
+        "references.md": "24d2397b02a5ad6859442832b4e312ce7d90c847"
+      }
+    },
+    "cbi-operation-chakra-vi-digital-arrest": {
+      "files": {
+        "cbi-operation-chakra-vi-digital-arrest.md": "0e1f201f9489cc78ad4dd1f3783046d55a6941b4",
+        "references.md": "8f44c65540e846ce18cb6bb89d95263b9e71b080"
+      }
+    },
+    "neet-2026-the-exam-that-broke-india": {
+      "files": {
+        "neet-2026.md": "b1628864e20a6fc3620931f698798c7a6c182ea7",
+        "references.md": "ac0ecbf70edd40c61529d017c6ec3f645125f0ff"
+      }
+    },
+    "bangladesh-china-tarique-rahman-beijing-2026": {
+      "files": {
+        "bangladesh-china-tarique-rahman-beijing-2026.md": "d51a6a9cc67b3424a5d3275e144e33eba9dc9021",
+        "references.md": "7be9214cdca1cd80fe83c6b6aa313917b7839779"
+      }
+    },
+    "tmc-implosion-2026": {
+      "files": {
+        "references.md": "da7a912c6b6e9c73301568c236017878c74f27c7",
+        "tmc-implosion-2026.md": "59679f2619e67aabcae3a860ee6cf6275c271696"
+      }
+    },
+    "modi-cabinet-reshuffle-2026": {
+      "files": {
+        "modi-cabinet-reshuffle-2026.md": "222527108ae6be9d8b4ca61c77507b41fdf1c94f",
+        "references.md": "860dfc83cd528dfc3cf1d3fb446125ff4aa02048"
+      }
+    },
+    "india-us-trade-deal-2026": {
+      "files": {
+        "india-us-trade-deal-2026.md": "101f54244e734cd778854cc81b66ff151a36c6e8",
+        "references.md": "eac01b5009fb0b28c47650312104b61bd1f1d835"
+      }
+    },
+    "anthropic-mythos-ai-2026": {
+      "files": {
+        "anthropic-mythos-ai-2026.md": "f006e3e51e8748a39e12c3660028b59f78c72bcb",
+        "references.md": "05f2d9e1d833a43fff00d73a623b7fea71aeded1"
+      }
+    },
+    "china-lineshine-supercomputer-top500-2026": {
+      "files": {
+        "china-lineshine-supercomputer-top500-2026.md": "d7bce76b7d50f13c19f363309a6cbc7b6519fc54",
+        "references.md": "50f6950b42912f0c699c7e9f436faafae57f10ac"
+      }
+    },
+    "el-nino-2026": {
+      "files": {
+        "el-nino-2026.md": "fc63492442bd4d8e33ad7af2c9b853e37b7f9f2a",
+        "references.md": "83d4234c19f1e939ebb61bb83deeafc057fca67b"
+      }
+    },
+    "us-iran-peace-deal-2026": {
+      "files": {
+        "references.md": "72033d19f3623360088e9a28d8a8fcb7aad5cb80",
+        "us-iran-peace-deal-2026.md": "1feaad29cf807e9f1a0ac189d2d908c5667ce8fa"
+      }
+    },
+    "venezuela-earthquakes-2026": {
+      "files": {
+        "references.md": "7a1bf0be807e7e1fc3c7ef598dcdd39877792fb3",
+        "venezuela-earthquakes-2026.md": "56de018dba4bce68ea022876c913c332b4491a97"
+      }
+    },
+    "kunal-shah-meta-story-2026": {
+      "files": {
+        "kunal-shah-meta-story-2026.md": "3d26ef7e37b095228b6933c6b66acb4e48cc20f8",
+        "references.md": "f23081cb84ebee1f4096f08c2a6dca5632b7a5b0"
+      }
+    },
+    "mohan-yadav-ujjain-land": {
+      "files": {
+        "mohan-yadav-ujjain-land.md": "d40f3edd0c57ca59ba823727a482fc5043a78e19",
+        "references.md": "3cef377667ff043fdd033c7d723228dc5cbd141e"
+      }
+    },
+    "us-iran-80b-pentagon-war-cost": {
+      "files": {
+        "references.md": "66cd6cf30943bc009baf55cc61b86735060d3d57",
+        "us-iran-80b-pentagon-war-cost.md": "ae53ac6d977373679fbf473fbddd3d2e491e8da2"
+      }
+    },
+    "tata-electronics-ransomware": {
+      "files": {
+        "references.md": "430a9fac542645c46e3a86e1b85dc57dde42e4f2",
+        "tata-electronics-ransomware.md": "ab904eb7412f69ab6fcc7b47555f44224ba25536"
+      }
+    },
+    "lucknow-fire-tragedy": {
+      "files": {
+        "lucknow-fire-tragedy.md": "528cc4613bdf0a37c601d8b9717cccf0cdca737d",
+        "references.md": "dd1c3bb9a17a6138732289c578b3a784504f68b9"
+      }
+    },
+    "rbi-monsoon-warning-growth-inflation-outlook-june-2026": {
+      "files": {
+        "rbi-monsoon-warning-growth-inflation-outlook-june-2026.md": "7a0c93c93deafe40ae48d3e635932cc2a5c88669",
+        "references.md": "7aca065e6b8db0e46f68441857161ce56fbb74af"
+      }
+    },
+    "canada-social-media-ban-under-16": {
+      "files": {
+        "canada-social-media-ban.md": "c72b6a95bf5a8ea860b2f6374e3baf914ec338a7",
+        "references.md": "0328c520a5df4d1044ef3d1573a8d481f7ef4e2e"
+      }
+    },
+    "doval-wang-india-china-lac-normalisation-june-2026": {
+      "files": {
+        "doval-wang-india-china-lac-normalisation-june-2026.md": "bd6100645ad9cbdf48c5b1e613600d6d2551abbd",
+        "references.md": "6e19bfa08dbada593496af560796398d46a5235e"
+      }
+    },
+    "india-us-after-g7-what-changed": {
+      "files": {
+        "india-us-after-g7-what-changed.md": "04e1621d8ffba5611ffe2abc7ea3e1e26114bca1",
+        "references.md": "21cf366733da51f66fddad6bfd44eaab5ec6b0e2"
+      }
+    },
+    "meta-ai-mode-2-billion-no-opt-out": {
+      "files": {
+        "meta-ai-mode-2-billion-no-opt-out.md": "bbaf9b4220d0dc22528bf770c0663890f2d28449",
+        "references.md": "5545546ff4658b69ddad61398e9f0abdab7a8cb2"
+      }
+    },
+    "india-banned-telegram-48-hours": {
+      "files": {
+        "india-banned-telegram-48-hours.md": "c94cbd191d4bdbb0a69edc727e81e702f7c5b9ac",
+        "references.md": "e099d886291c30e99ac53e26340874d5da2cc021"
+      }
+    },
+    "reuters-digital-news-report-2026-india-trust-crisis": {
+      "files": {
+        "references.md": "bbffb939d4d39002e6fdcbcd37e3272589d13171",
+        "reuters-digital-news-report-2026-india-trust-crisis.md": "ac950881312abb71875446328240d5bc232e9a02"
+      }
+    },
+    "drone-threat-intelligence-reset-jk-northeast-2026": {
+      "files": {
+        "drone-threat-intelligence-reset-jk-northeast-2026.md": "884fa168cd4fb0e3cc9bf605a360263fb719a6b9",
+        "references.md": "979eb49861c5780c6b16c407030692ac9e71a25a"
+      }
+    },
+    "earth-prize-2026-plas-stick": {
+      "files": {
+        "earth-prize-2026-plas-stick.md": "248e3da5eb3bfd25e3f6b09e6db0fb8b262ed8f1",
+        "meta.json": "a4d5334b86460ea931a8dc432122029db1be5710",
+        "references.md": "2c1ac6c62845a5dc1416842d1381008e7efd47cc"
+      }
+    },
+    "india-digital-regulation-offensive-2026-dpdp-it-rules-crypto": {
+      "files": {
+        "india-digital-regulation-offensive-2026-dpdp-it-rules-crypto.md": "9ddb9d572f689af7d71f63b516edcb512b3ae433",
+        "references.md": "3c80ab160758cc73cd4b25e77f96518a7e6d5e37"
+      }
+    },
+    "india-ai-governance-guidelines-impact-summit-2026": {
+      "files": {
+        "india-ai-governance-guidelines-impact-summit-2026.md": "8ffeefbc9a495ba2df66d252152a4505c22fb83e",
+        "references.md": "264ac51d5b318786befcabc36bbab8ec8a602f3c"
+      }
+    },
+    "india-monsoon-crisis-2026": {
+      "files": {
+        "india-monsoon-crisis-2026.md": "e33e4961433bebe27ab73c9440dd68c1e648001d",
+        "references.md": "967d64c4840316fd3db06cb019f2c524272b1c8f"
+      }
+    },
+    "vb-g-ram-g-2026": {
+      "files": {
+        "vb-g-ram-g-2026.md": "077311a0078c111ba0d074bc051422b857f6681b"
+      }
+    }
+  }
+}

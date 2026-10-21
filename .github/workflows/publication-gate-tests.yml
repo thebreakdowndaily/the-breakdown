@@ -1,0 +1,80 @@
+name: Publication gate tests
+
+on:
+  push:
+    branches:
+      - feat/newsroom-agency-agents-2026-10-21
+  pull_request:
+    paths:
+      - 'frontend/functions/api/publication-gate.*'
+      - 'frontend/functions/api/**'
+      - 'frontend/functions/api/db-supabase.ts'
+      - 'frontend/scripts/test-*.mjs'
+      - 'frontend/scripts/content-publication-policy.mjs'
+      - 'frontend/scripts/build-content.mjs'
+      - 'frontend/publication-registry.json'
+      - 'frontend/package.json'
+      - 'frontend/package-lock.json'
+      - 'backend/src/routes/pipeline.ts'
+      - 'backend/src/routes/stories.ts'
+      - 'backend/src/auth.ts'
+      - 'backend/src/seed.ts'
+      - 'backend/package.json'
+      - 'backend/package-lock.json'
+      - '.env.example'
+      - 'deploy/netlify/functions/api.js'
+      - 'deploy/server.js'
+      - 'deploy/admin/index.html'
+      - 'cloudflare-deploy/admin/index.html'
+      - 'backend/admin/index.html'
+      - 'frontend/public/admin/index.html'
+      - 'scripts/ai/publish.mjs'
+      - 'scripts/pipeline.mjs'
+      - 'scripts/deploy.ps1'
+      - '.github/workflows/publication-gate-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publication-gate:
+    name: Version-bound approval validation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Run approval and content policy tests
+        run: npm run test:publication-gate
+      - name: Type-check Cloudflare Pages API
+        run: npx --yes --package typescript@5.9.3 tsc --noEmit --skipLibCheck --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM functions/api/types.ts functions/api/db.ts functions/api/db-supabase.ts 'functions/api/[[path]].ts'
+      - name: Check JavaScript syntax
+        run: |
+          node --check scripts/build-content.mjs
+          node --check scripts/content-publication-policy.mjs
+          node --check ../scripts/ai/generate-story.mjs
+          node --check ../scripts/pipeline.mjs
+          node --check ../deploy/netlify/functions/api.js
+          node --check ../deploy/server.js
+          node --check ../deploy/lib/cms-schema-contract.cjs
+          node --check ../deploy/lib/publication-deploy-hook.cjs
+          node --check ../scripts/ai/publish.mjs
+      - name: Build and validate the static story corpus
+        run: node scripts/build-content.mjs
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+      - name: Compile backend TypeScript
+        run: npm run build
+        working-directory: backend

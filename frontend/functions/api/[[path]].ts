@@ -3,43 +3,77 @@
 
 import { getDb } from './db'
 import { type Story, type DbBackend } from './types'
+import { createApprovalNote, hashStoryVersion, validatePublicationApproval } from './publication-gate.mjs'
+import { validateDeploymentHookUrl, triggerDeploymentHook } from './deployment-hook.mjs'
 
 // ---------------------------------------------------------------------------
-// Simple JWT (no native HMAC in Pages Functions — OK for demo; replace with
-// Web Crypto API for production with non-trivial secrets).
+// JWT HS256 — Web Crypto HMAC signature verification (fail closed).
+// Required env: PAGES_JWT_SECRET (32+ chars). Never issue or accept unsigned tokens.
 // ---------------------------------------------------------------------------
 
-function base64UrlEncode(str: string): string {
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+function encodeBytes(bytes: Uint8Array): string {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function base64UrlDecode(str: string): string {
-  str = str.replace(/-/g, '+').replace(/_/g, '/')
-  while (str.length % 4) str += '='
-  return atob(str)
+function base64UrlEncode(value: string): string {
+  return encodeBytes(new TextEncoder().encode(value));
 }
 
-function createToken(username: string, secret: string): string {
-  const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
-  const payload = base64UrlEncode(JSON.stringify({
-    sub: username,
-    username,
-    role: 'admin',
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 86400,
-  }))
-  return header + '.' + payload + '.' + base64UrlEncode(header + '.' + payload)
+function base64UrlDecode(value: string): string {
+  value = value.replace(/-/g, '+').replace(/_/g, '/');
+  while (value.length % 4) value += '=';
+  const binary = atob(value);
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
-function verifyToken(token: string, _secret: string): any {
+function secretIsConfigured(secret: string): boolean {
+  return typeof secret === 'string' && secret.length >= 32;
+}
+
+async function hmacKey(secret: string, usages: KeyUsage[]): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, usages
+  );
+}
+
+async function createToken(username: string, role: 'admin' | 'editor-in-chief', secret: string): Promise<string> {
+  if (!secretIsConfigured(secret)) throw new Error('PAGES_JWT_SECRET must be configured with at least 32 characters');
+  const now = Math.floor(Date.now() / 1000);
+  const head = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const body = base64UrlEncode(JSON.stringify({
+    iss: 'the-breakdown-pages-api', aud: 'the-breakdown-pages-admin',
+    sub: username, username, role, iat: now, exp: now + 3600,
+  }));
+  const signingInput = head + '.' + body;
+  const key = await hmacKey(secret, ['sign']);
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
+  return signingInput + '.' + encodeBytes(new Uint8Array(signature));
+}
+
+async function verifyToken(token: string, secret: string): Promise<any> {
   try {
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
-    const payload = JSON.parse(base64UrlDecode(parts[1]))
-    if (payload.exp < Math.floor(Date.now() / 1000)) return null
-    return payload
+    if (!secretIsConfigured(secret)) return null;
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const header = JSON.parse(base64UrlDecode(parts[0]));
+    if (header.alg !== 'HS256' || header.typ !== 'JWT') return null;
+    const key = await hmacKey(secret, ['verify']);
+    const signature = Uint8Array.from(atob(parts[2].replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - parts[2].length % 4) % 4)), c => c.charCodeAt(0));
+    const valid = await crypto.subtle.verify('HMAC', key, signature, new TextEncoder().encode(parts[0] + '.' + parts[1]));
+    if (!valid) return null;
+    const payload = JSON.parse(base64UrlDecode(parts[1]));
+    const now = Math.floor(Date.now() / 1000);
+    if (!Number.isInteger(payload.exp) || payload.exp <= now) return null;
+    if (!Number.isInteger(payload.iat) || payload.iat > now + 60) return null;
+    if (payload.iss !== 'the-breakdown-pages-api' || payload.aud !== 'the-breakdown-pages-admin') return null;
+    if (payload.sub !== payload.username || typeof payload.username !== 'string' || !['admin', 'editor-in-chief'].includes(payload.role)) return null;
+    return payload;
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -63,24 +97,63 @@ function error(message: string, status = 400): Response {
   return json({ error: message }, status)
 }
 
-function getAuthUser(request: Request, _secret: string): any {
+async function getAuthUser(request: Request, secret: string): Promise<any> {
   const header = request.headers.get('Authorization')
   if (!header || !header.startsWith('Bearer ')) return null
-  return verifyToken(header.slice(7), _secret)
+  return verifyToken(header.slice(7), secret)
 }
 
 // ---------------------------------------------------------------------------
 // Route handlers (all async to support Turso backend)
 // ---------------------------------------------------------------------------
 
+function constantTimeEqual(a: string, b: string): boolean {
+  const encoder = new TextEncoder()
+  const aa = encoder.encode(a)
+  const bb = encoder.encode(b)
+  let diff = aa.length ^ bb.length
+  const n = Math.max(aa.length, bb.length)
+  for (let i = 0; i < n; i++) diff |= (aa[i] || 0) ^ (bb[i] || 0)
+  return diff === 0
+}
+
 async function handleAuth(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
-  const adminPass = env.ADMIN_PASSWORD || 'breakdown2026'
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
+  const adminPass = env.PAGES_ADMIN_PASSWORD || ''
+  const eicUsername = String(env.PAGES_EDITOR_IN_CHIEF_USERNAME || '').trim()
+  const eicPassword = env.PAGES_EDITOR_IN_CHIEF_PASSWORD || ''
+  const eicAllowlist = new Set(
+    String(env.PAGES_EDITOR_IN_CHIEF_USERNAMES || '')
+      .split(',')
+      .map(value => value.trim().toLowerCase())
+      .filter(Boolean)
+  )
 
   if (path === '/api/auth/login' && request.method === 'POST') {
-    const { username, password } = await request.json()
-    if (username === 'admin' && password === adminPass) {
-      const token = createToken(username, jwtSecret)
+    if (jwtSecret.length < 32 || !adminPass) {
+      return error('Authentication is not configured. Set PAGES_JWT_SECRET (32+ characters) and PAGES_ADMIN_PASSWORD.', 503)
+    }
+    const { username: submittedUsername, password } = await request.json()
+    const username = String(submittedUsername || '').trim()
+    const normalisedUsername = username.toLowerCase()
+    const submittedPassword = String(password || '')
+
+    // The EIC is a distinct principal with independent credentials; being the
+    // ordinary shared admin does not grant authority to approve public release.
+    if (eicUsername && eicPassword && normalisedUsername === eicUsername.toLowerCase() &&
+        normalisedUsername !== 'admin' && constantTimeEqual(submittedPassword, eicPassword)) {
+      if (!eicAllowlist.has(normalisedUsername)) {
+        return error('Editor-in-Chief username is not present in PAGES_EDITOR_IN_CHIEF_USERNAMES.', 503)
+      }
+      const token = await createToken(eicUsername, 'editor-in-chief', jwtSecret)
+      return json({
+        token,
+        user: { id: 'editor-in-chief', username: eicUsername, displayName: 'Editor-in-Chief', role: 'editor-in-chief' },
+      })
+    }
+
+    if (normalisedUsername === 'admin' && constantTimeEqual(submittedPassword, adminPass)) {
+      const token = await createToken('admin', 'admin', jwtSecret)
       return json({
         token,
         user: { id: 1, username: 'admin', displayName: 'Admin', role: 'admin' },
@@ -90,7 +163,7 @@ async function handleAuth(request: Request, db: DbBackend, env: Record<string, s
   }
 
   if (path === '/api/auth/me' && request.method === 'GET') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     return json({ user })
   }
@@ -99,13 +172,17 @@ async function handleAuth(request: Request, db: DbBackend, env: Record<string, s
 }
 
 async function handleStories(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
 
   // GET /api/stories
   if (path === '/api/stories' && request.method === 'GET') {
     const url = new URL(request.url)
     const includeAll = url.searchParams.get('all') === 'true'
     const statusFilter = url.searchParams.get('status') || undefined
+    if (includeAll || (statusFilter && statusFilter !== 'published')) {
+      const user = await getAuthUser(request, jwtSecret)
+      if (!user) return error('Unauthorized', 401)
+    }
     const category = url.searchParams.get('category') || undefined
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100)
     const offset = parseInt(url.searchParams.get('offset') || '0')
@@ -121,7 +198,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
     if (story.status !== 'published') {
-      const user = getAuthUser(request, jwtSecret)
+      const user = await getAuthUser(request, jwtSecret)
       if (!user) return error('Story not found', 404)
     }
     return json({ story })
@@ -129,47 +206,127 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
 
   // POST /api/stories
   if (path === '/api/stories' && request.method === 'POST') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const data = await request.json()
     if (!data.slug) return error('Slug is required')
     const existing = await db.getStory(data.slug)
     if (existing) return error('Story with this slug already exists', 409)
-    const story = await db.createStory(data)
+    const story = await db.createStory({ ...data, status: 'draft', publishedAt: null })
     return json({ story }, 201)
   }
 
   // PUT /api/stories/:slug
   const putMatch = path.match(/^\/api\/stories\/([^/]+)$/)
   if (putMatch && request.method === 'PUT') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = putMatch[1]
-    const data = await request.json()
-    const story = await db.updateStory(slug, data)
-    if (!story) return error('Story not found', 404)
-    return json({ story })
+    const incoming = await request.json()
+    // Status is controlled only by the pipeline endpoint, never by a generic edit.
+    const data: Record<string, any> = { ...(incoming || {}) }
+    for (const systemField of ['status', 'publishedAt', 'published_at', 'createdAt', 'created_at', 'updatedAt', 'updated_at', 'id']) {
+      delete data[systemField]
+    }
+    const existing = await db.getStory(slug)
+    if (!existing) return error('Story not found', 404)
+
+    const previousHash = await hashStoryVersion(existing)
+    const nextHash = await hashStoryVersion({ ...existing, ...data, slug })
+    const updateData: Record<string, any> = { ...data }
+    const contentChanged = previousHash !== nextHash
+    const approvalInvalidated = contentChanged && existing.status !== 'draft'
+    let deploymentHookUrl: string | null = null
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        deploymentHookUrl = validateDeploymentHookUrl(env.DEPLOY_HOOK_URL || '')
+      } catch {
+        return error('DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.', 503)
+      }
+    }
+
+    if (approvalInvalidated) {
+      try {
+        await db.createPipelineLog(existing.id!, existing.status, 'content-edit-attempted', user.username || 'system',
+          'Material edit requested; prior editorial approval invalidated')
+      } catch (auditError) {
+        console.error('[publication-gate] Could not persist edit invalidation attempt:', auditError)
+        return error('Edit invalidation audit could not be persisted; story was not changed', 503)
+      }
+      // Reopen the editorial workflow whenever reviewed material changes.
+      updateData.status = 'draft'
+      updateData.publishedAt = null
+    }
+
+    const story = approvalInvalidated
+      ? await db.updateStoryIfStatus(slug, existing.status, updateData)
+      : await db.updateStory(slug, updateData)
+    if (!story) return error('Story state changed during edit; reload and retry against the latest version', 409)
+
+    let finalAuditFailed = false
+    if (approvalInvalidated) {
+      try {
+        await db.createPipelineLog(existing.id!, existing.status, 'draft', user.username || 'system',
+          'Story content changed; prior review/publication approval invalidated')
+      } catch (auditError) {
+        finalAuditFailed = true
+        console.error('[publication-gate] Story was moved to draft but final invalidation audit failed')
+      }
+    }
+
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        return json({ story, approvalInvalidated: true, deployment: { status: 'triggered', httpStatus: acknowledgement.status } })
+      } catch (deployError: any) {
+        console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError?.code || 'unknown failure')
+        return error('Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.', 502)
+      }
+    }
+    if (finalAuditFailed) {
+      return error('Story was moved to draft but final audit logging failed; inspect the story and audit records before release', 503)
+    }
+    return json({ story, approvalInvalidated })
   }
 
   // DELETE /api/stories/:slug
   if (singleMatch && request.method === 'DELETE') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = singleMatch[1]
-    await db.deleteStory(slug)
-    return json({ message: 'Story archived' })
+    const existing = await db.getStory(slug)
+    if (!existing) return error('Story not found', 404)
+    if (existing.status !== 'draft') {
+      return error('Direct delete is available only for drafts. Move workflow items to draft and use the audited pipeline for takedown.', 409)
+    }
+    try {
+      await db.createPipelineLog(existing.id!, 'draft', 'trash-attempted', user.username || 'system', 'Human requested trash of draft story')
+    } catch (auditError) {
+      console.error('[pipeline] Could not persist trash attempt:', auditError)
+      return error('Trash audit could not be persisted; story was not changed', 503)
+    }
+    const trashed = await db.updateStoryIfStatus(slug, 'draft', { status: 'archived', publishedAt: null })
+    if (!trashed) return error('Story state changed during trash; reload and retry', 409)
+    try {
+      await db.createPipelineLog(existing.id!, 'draft', 'archived', user.username || 'system', 'Draft archived after conditional state transition')
+    } catch (auditError) {
+      console.error('[pipeline] Story was archived but final trash audit failed:', auditError)
+      return error('Story was archived but final audit logging failed; inspect before retrying', 503)
+    }
+    return json({ message: 'Story archived', story: trashed })
   }
 
   return error('Not found', 404)
 }
 
 async function handlePipeline(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
 
   const ACTION_MAP: Record<string, string> = {
     submit: 'in-review',
     approve: 'fact-checking',
     verify: 'ready',
+    'approve-release': 'approved-for-release',
     publish: 'published',
     reject: 'draft',
     archive: 'archived',
@@ -180,24 +337,34 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     draft: ['in-review'],
     'in-review': ['fact-checking', 'draft'],
     'fact-checking': ['ready', 'draft'],
-    ready: ['published', 'draft'],
+    ready: ['approved-for-release', 'draft'],
+    'approved-for-release': ['published', 'draft'],
     published: ['archived'],
     archived: ['draft'],
   }
 
   // GET /api/pipeline/stats
   if (path === '/api/pipeline/stats' && request.method === 'GET') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const stats = await db.getPipelineStats()
     const total = stats.reduce((sum, s) => sum + s.count, 0)
     return json({ stats, total })
   }
 
+  // GET /api/pipeline/:slug/log — authenticated audit history.
+  const logMatch = path.match(/^\/api\/pipeline\/([^/]+)\/log$/)
+  if (logMatch && request.method === 'GET') {
+    const user = await getAuthUser(request, jwtSecret)
+    if (!user) return error('Unauthorized', 401)
+    const logs = await db.getPipelineLogs(logMatch[1])
+    return json({ logs })
+  }
+
   // POST /api/pipeline/:slug/:action
   const actionMatch = path.match(/^\/api\/pipeline\/([^/]+)\/([^/]+)$/)
   if (actionMatch && request.method === 'POST') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = actionMatch[1]
     const action = actionMatch[2]
@@ -209,33 +376,187 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
 
+    // A CMS status change alone does not update the public static site. Require
+    // a configured deployment hook before consuming approval or mutating status.
+    let deploymentHookUrl: string | null = null
+    const removesLiveStory = action === 'archive' && story.status === 'published'
+    if (action === 'publish' || removesLiveStory) {
+      try {
+        deploymentHookUrl = validateDeploymentHookUrl(env.DEPLOY_HOOK_URL || '')
+      } catch {
+        return error('DEPLOY_HOOK_URL must be configured before changing a live story; story status remains unchanged.', 503)
+      }
+    }
+
+    if (action === 'approve-release') {
+      const authorisedEic = new Set(
+        String(env.PAGES_EDITOR_IN_CHIEF_USERNAMES || '')
+          .split(',')
+          .map(value => value.trim().toLowerCase())
+          .filter(Boolean)
+      )
+      const username = String(user.username || '').trim().toLowerCase()
+      if (user.role !== 'editor-in-chief' || !username || !authorisedEic.has(username)) {
+        return error('Only a separately authenticated Editor-in-Chief with an allowlisted username may approve public release', 403)
+      }
+    }
+
     const allowed = VALID_TRANSITIONS[story.status] || []
     if (!allowed.includes(toStatus)) {
       return error(`Cannot transition from '${story.status}' to '${toStatus}'`)
     }
 
-    const updateData: Record<string, any> = { status: toStatus }
-    if (toStatus === 'published') {
-      updateData.publishedAt = new Date().toISOString()
+    let approvalLogRecorded = false
+    const destinationRaw = env.PUBLICATION_DESTINATION || ''
+    let destination = ''
+    try {
+      const parsed = new URL(destinationRaw)
+      if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') {
+        return error('PUBLICATION_DESTINATION must be an HTTPS origin', 503)
+      }
+      destination = parsed.origin
+    } catch {
+      if (action === 'approve-release' || action === 'publish') {
+        return error('PUBLICATION_DESTINATION is not configured as a valid URL origin', 503)
+      }
     }
-    await db.updateStory(slug, updateData)
 
-    // When publishing, trigger the Cloudflare Pages deploy hook
-    if (toStatus === 'published' && env.DEPLOY_HOOK_URL) {
-      // Fire-and-forget — don't block response on deploy trigger
-      fetch(env.DEPLOY_HOOK_URL, { method: 'POST' }).catch(err => {
-        console.error('[deploy-hook] Failed to trigger rebuild:', err)
+    if (action === 'approve-release') {
+      if (!destination) return error('PUBLICATION_DESTINATION is required for release approval', 503)
+      const approvedAt = new Date().toISOString()
+      const contentHash = await hashStoryVersion(story)
+      const approvalNote = createApprovalNote({
+        contentHash, destination, approvedBy: String(user.username), approvedAt,
       })
+      let savedApproval
+      try {
+        savedApproval = await db.createPipelineLog(
+          story.id!, story.status, 'approved-for-release', String(user.username), approvalNote,
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist approval:', err)
+        return error('Approval record could not be persisted; release is blocked', 503)
+      }
+      if (!savedApproval?.id || String(savedApproval.id) === '0' || savedApproval.note?.includes('table not created')) {
+        return error('Durable approval log is unavailable; release is blocked. Apply the pipeline_log migration.', 503)
+      }
+      approvalLogRecorded = true
+    }
+
+    let removalAuditWritten = false
+    if (removesLiveStory) {
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, 'archive-attempted', String(user.username || 'system'),
+          'Human requested archive of live content; static rebuild acknowledgement is required',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist archive attempt:', err)
+        return error('Archive audit could not be persisted; live story was not changed', 503)
+      }
+      removalAuditWritten = true
+    }
+
+    let publicationAuditWritten = false
+    if (action === 'publish') {
+      if (!destination) return error('PUBLICATION_DESTINATION is required for publication', 503)
+      let logs
+      try {
+        logs = await db.getPipelineLogs(slug)
+      } catch (err) {
+        console.error('[publication-gate] Could not read approval log:', err)
+        return error('Approval history is unavailable; release is blocked', 503)
+      }
+      const result = await validatePublicationApproval({ logs, story, destination, now: Date.now() })
+      if (result.ok === false) return error(`Publication blocked: ${result.reason}`, 409)
+
+      // Write the durable release event BEFORE changing public status. If the
+      // following update fails, this approval cannot be replayed accidentally.
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, 'release-attempted', String(user.username || 'system'),
+          'Approval consumed after validating the exact story version and destination; conditional publish transition follows',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist release event:', err)
+        return error('Release audit could not be persisted; publication is blocked', 503)
+      }
+      publicationAuditWritten = true
+    }
+
+    const updateData: Record<string, any> = { status: toStatus }
+    if (toStatus === 'published') updateData.publishedAt = new Date().toISOString()
+    if (toStatus === 'draft' || toStatus === 'archived') updateData.publishedAt = null
+
+    const updated = await db.updateStoryIfStatus(slug, story.status, updateData)
+    if (!updated) return error('Story update failed; no state transition recorded', 500)
+
+    if (publicationAuditWritten) {
+      try {
+        await db.createPipelineLog(
+          story.id!, 'approved-for-release', 'published', String(user.username || 'system'),
+          'Published after version-bound human approval and successful conditional status transition',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Story is published but the final release audit could not be recorded:', err)
+        return error('Story status changed to published but final audit logging failed; investigate before retrying', 500)
+      }
+    }
+
+    if (removalAuditWritten) {
+      let removalAuditFailed = false
+      try {
+        await db.createPipelineLog(
+          story.id!, 'published', 'archived', String(user.username || 'system'),
+          'Archived after conditional takedown state transition',
+        )
+      } catch (err) {
+        removalAuditFailed = true
+        console.error('[publication-gate] Live story was archived but final takedown audit could not be recorded')
+      }
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        if (removalAuditFailed) return error('Story was archived and rebuild acknowledged, but final takedown audit failed; inspect logs', 503)
+        return json({
+          message: `Story moved from '${story.status}' to 'archived'; public rebuild request acknowledged`,
+          story: { slug, title: story.title, status: toStatus },
+          deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+        })
+      } catch (deployError: any) {
+        console.error('[deploy-hook] Live story archived, but public rebuild was not acknowledged:', deployError?.code || 'unknown failure')
+        return error('Story is archived in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.', 502)
+      }
+    }
+
+    if (!approvalLogRecorded && !publicationAuditWritten) {
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, toStatus, String(user.username || 'system'),
+          (typeof note === 'string' && note) || `Pipeline action: ${action}`,
+        )
+      } catch (err) {
+        console.error('[pipeline] Failed to persist state transition log:', err)
+        if (toStatus === 'published') {
+          return error('Story status changed but publication audit log failed; check state and do not retry blindly', 500)
+        }
+      }
+    }
+
+    if (toStatus === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        return json({
+          message: `Story moved from '${story.status}' to 'published'; deployment hook acknowledged a rebuild request`,
+          story: { slug, title: story.title, status: toStatus },
+          deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+        })
+      } catch (err: any) {
+        console.error('[deploy-hook] Story is published and audit-logged, but the rebuild request was not acknowledged:', err?.code || 'unknown failure')
+        return error('Story is published and audit-logged in the CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.', 502)
+      }
     }
 
     return json({ message: `Story moved from '${story.status}' to '${toStatus}'`, story: { slug, title: story.title, status: toStatus } })
-  }
-
-  // GET /api/pipeline/:slug/log
-  const logMatch = path.match(/^\/api\/pipeline\/([^/]+)\/log$/)
-  if (logMatch && request.method === 'GET') {
-    const logs = await db.getPipelineLogs()
-    return json({ logs })
   }
 
   return error('Not found', 404)
@@ -282,6 +603,9 @@ export async function onRequest(context: { request: Request; env: Record<string,
     return error('Not found', 404)
   } catch (err: any) {
     console.error('[api] Error:', err)
+    if (err?.code === 'SUPABASE_CMS_SCHEMA_MISMATCH') {
+      return error('CMS database schema is incompatible. Service is unavailable; no content writes were attempted.', 503)
+    }
     return error(err.message || 'Internal error', 500)
   }
 }

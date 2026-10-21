@@ -25,8 +25,9 @@ interface StoryFrontmatter {
   hero?: string
   caption?: string
   author?: string
-  publishedAt?: string
   readTime?: number
+  status?: string
+  story?: { status?: string }
   [key: string]: unknown
 }
 
@@ -133,7 +134,6 @@ async function seed(): Promise<void> {
       let hero = ''
       let caption = ''
       let author = ''
-      let publishedAt: string | null = null
       let readTime = 5
 
       const dirName = path.basename(dir)
@@ -152,7 +152,6 @@ async function seed(): Promise<void> {
         hero = data.hero || ''
         caption = data.caption || ''
         author = data.author || ''
-        publishedAt = data.publishedAt || null
         readTime = data.readTime || 5
 
         // If no title in frontmatter, try HTML
@@ -171,12 +170,21 @@ async function seed(): Promise<void> {
       }
 
       // ---- INSERT INTO DATABASE ----
-      const now = publishedAt || new Date().toISOString()
+      // Seeding is never a publication path. Preserve every existing CMS row exactly
+      // as edited/reviewed, and insert filesystem imports as drafts regardless of
+      // any frontmatter status or date. Human approval must use the guarded pipeline.
+      const existing = queryOne(db, 'SELECT id FROM stories WHERE slug = ?', [slug])
+      if (existing) {
+        console.log(`  ↷ ${slug} — existing CMS record preserved (no overwrite)`)
+        skipped++
+        continue
+      }
 
+      const now = new Date().toISOString()
       execute(db, `
-        INSERT OR REPLACE INTO stories
+        INSERT OR IGNORE INTO stories
           (slug, title, summary, body, category, tags, hero, caption, author, read_time, published_at, status, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'published', ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 'draft', ?, ?)
       `, [
         slug,
         title || slugToTitle(slug),
@@ -188,12 +196,11 @@ async function seed(): Promise<void> {
         caption,
         author || 'The Breakdown Desk',
         readTime,
-        publishedAt || null,
         now,
         now,
       ])
 
-      console.log(`  ✓ ${slug} — "${(title || slugToTitle(slug)).substring(0, 70)}"`)
+      console.log(`  ✓ ${slug} — "${(title || slugToTitle(slug)).substring(0, 70)}" (draft; requires newsroom release gate)`)
       imported++
     } catch (err: any) {
       console.error(`  ✗ ${path.basename(dir)} — ${err.message}`)

@@ -8,10 +8,16 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const { assertLegacyCmsSchema } = require('./lib/cms-schema-contract.cjs');
+const { validateDeploymentHookUrl, triggerDeploymentHook } = require('./lib/publication-deploy-hook.cjs');
 
 const app = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
+const sessionSecret = process.env.SESSION_SECRET || '';
+if (sessionSecret.length < 32) {
+  throw new Error('SESSION_SECRET must be configured with at least 32 characters; refusing insecure startup.');
+}
 
 // Multer config: memory storage for direct upload to Supabase
 const upload = multer({
@@ -25,7 +31,10 @@ const upload = multer({
 
 // ==================== SUPABASE CLIENT ====================
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required for the newsroom CMS; refusing to use an anonymous fallback.');
+}
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: { persistSession: false },
   realtime: { transport: WebSocket }
@@ -45,12 +54,32 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret-change-me',
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   proxy: true,
   cookie: { secure: true, httpOnly: true, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }
 }));
+
+// Cache a read-only CMS schema preflight for API routes only. A mismatched CMS
+// database must block writes without taking the static public website offline.
+let cmsSchemaPreflightPromise;
+async function ensureCmsSchemaPreflight() {
+  if (!cmsSchemaPreflightPromise) {
+    cmsSchemaPreflightPromise = assertLegacyCmsSchema({ baseUrl: supabaseUrl, serviceKey: supabaseKey });
+  }
+  return cmsSchemaPreflightPromise;
+}
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureCmsSchemaPreflight();
+    next();
+  } catch (schemaError) {
+    console.error('[cms-schema] CMS API blocked because the configured database does not match the legacy CMS contract');
+    res.status(503).json({ error: 'CMS database schema is incompatible; service unavailable. No content writes were attempted.' });
+  }
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== AUTH HELPERS ====================
@@ -61,6 +90,136 @@ function hashPassword(password) {
 function requireAuth(req, res, next) {
   if (req.session && req.session.authenticated) return next();
   res.status(401).json({ error: 'Unauthorized' });
+}
+
+const PUBLICATION_APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:';
+const PUBLICATION_APPROVAL_TTL_MS = 60 * 60 * 1000;
+
+function publicationDestination() {
+  const raw = process.env.PUBLICATION_DESTINATION || '';
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') return null;
+    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return null;
+    return parsed.origin;
+  } catch { return null; }
+}
+
+function isEditorInChief(req) {
+  const allowed = String(process.env.EDITOR_IN_CHIEF_EMAILS || '')
+    .split(',').map(value => value.trim().toLowerCase()).filter(Boolean);
+  const email = String(req.session?.userEmail || '').trim().toLowerCase();
+  return Boolean(email && allowed.includes(email));
+}
+
+function normalisePublicationList(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch { /* malformed lists are not considered verified data */ }
+  }
+  return [];
+}
+
+// Keep this ordered schema aligned with the other approval validators.
+function storyVersionPayload(story) {
+  return {
+    slug: String(story.slug || ''),
+    title: String(story.title || ''),
+    summary: String(story.summary || ''),
+    body: String(story.body ?? story.content ?? ''),
+    category: String(story.category || 'Uncategorised'),
+    tags: normalisePublicationList(story.tags),
+    hero: String(story.hero ?? story.fact_check_image ?? ''),
+    caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
+    author: String(story.author || 'The Breakdown Desk'),
+    readTime: Number(story.readTime ?? story.read_time ?? 5),
+    sourceUrl: String(story.fact_check_url ?? story.source_url ?? ''),
+    video: String(story.fact_check_video ?? story.video ?? ''),
+    sourceVerification: String(story.source_verification ?? ''),
+    metaTitle: String(story.meta_title ?? story.metaTitle ?? ''),
+    metaDescription: String(story.meta_description ?? story.metaDescription ?? ''),
+    ogImage: String(story.og_image ?? story.ogImage ?? ''),
+    publishAt: String(story.publish_at ?? story.publishAt ?? ''),
+    relatedStoryIds: normalisePublicationList(story.related_story_ids ?? story.relatedStoryIds),
+    storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
+  };
+}
+
+function storyVersionHash(story) {
+  return crypto.createHash('sha256').update(JSON.stringify(storyVersionPayload(story))).digest('hex');
+}
+
+function parsePublicationApproval(note) {
+  if (typeof note !== 'string' || !note.startsWith(PUBLICATION_APPROVAL_PREFIX)) return null;
+  try {
+    const value = JSON.parse(note.slice(PUBLICATION_APPROVAL_PREFIX.length));
+    if (value?.schema !== 1 || typeof value.contentHash !== 'string' ||
+        typeof value.destination !== 'string' || typeof value.approvedBy !== 'string' ||
+        typeof value.approvedAt !== 'string') return null;
+    return value;
+  } catch { return null; }
+}
+
+async function insertPipelineEvent(storyId, fromStatus, toStatus, actor, note) {
+  const { data, error } = await supabase.from('pipeline_log').insert({
+    story_id: storyId,
+    from_status: fromStatus,
+    to_status: toStatus,
+    changed_by: actor,
+    note,
+  }).select('id, story_id, from_status, to_status, changed_by, note, created_at').single();
+  if (error) throw new Error(`Pipeline audit event could not be persisted: ${error.message || error}`);
+  if (!data || data.id == null) throw new Error('Pipeline audit event was not returned by storage');
+  return data;
+}
+
+async function reopenStoryForSourceMutation(storyId, actor, description) {
+  const { data: story, error } = await supabase.from('stories').select('id, status, published_at').eq('id', storyId).single();
+  if (error || !story) return { ok: false, status: 404, error: 'Story for source mutation was not found' };
+  const status = String(story.status || 'draft');
+  if (['draft', 'archived', 'trash'].includes(status)) return { ok: true };
+
+  let deploymentHookUrl = null;
+  if (status === 'published') {
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return { ok: false, status: 503, error: 'DEPLOY_HOOK_URL must be configured before editing sources on a published story; story state remains unchanged.' }; }
+  }
+
+  // First invalidate any current release approval, then use a conditional status
+  // write. Published stories are rebuilt out of the public corpus before source
+  // mutation is allowed to proceed.
+  await insertPipelineEvent(
+    story.id, status, 'source-change-attempted', actor,
+    `Source evidence change requested (${description}); prior editorial approval invalidated`,
+  );
+  const { data: updated, error: updateError } = await supabase.from('stories')
+    .update({ status: 'draft', published_at: null })
+    .eq('id', storyId).eq('status', status)
+    .select('id').maybeSingle();
+  if (updateError) throw updateError;
+  if (!updated) return { ok: false, status: 409, error: 'Story state changed during source mutation; reload and retry after review' };
+
+  let auditFailure = false;
+  try {
+    await insertPipelineEvent(story.id, status, 'draft', actor, `Source evidence changed (${description}); review approval invalidated`);
+  } catch (auditError) {
+    auditFailure = true;
+    console.error('[publication-gate] Source mutation reopened story but final audit write failed');
+  }
+
+  if (status === 'published') {
+    try {
+      await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Source change reopened a published story but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return { ok: false, status: 502, error: 'Story was moved to draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before editing sources.' };
+    }
+  }
+  if (auditFailure) return { ok: false, status: 503, error: 'Story was moved to draft, but audit logging failed; investigate before editing sources' };
+  return { ok: true };
 }
 
 // ==================== AUTH ROUTES ====================
@@ -85,6 +244,7 @@ app.post('/api/auth/login', async (req, res) => {
     req.session.authenticated = true;
     req.session.userId = user.id;
     req.session.userName = user.name;
+    req.session.userEmail = String(user.email || '').toLowerCase().trim();
     res.json({ success: true, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
     console.error('Login error:', err);
@@ -226,7 +386,9 @@ app.post('/api/stories', requireAuth, async (req, res) => {
         category: category || 'Uncategorized',
         summary: summary || '',
         content: content || '',
-        author: req.session.userName || 'The Breakdown'
+        author: req.session.userName || 'The Breakdown',
+        status: 'draft',
+        published_at: null
       })
       .select()
       .single();
@@ -242,41 +404,110 @@ app.post('/api/stories', requireAuth, async (req, res) => {
 // PUT update story
 app.put('/api/stories/:id', requireAuth, async (req, res) => {
   try {
+    const { data: existing, error: fetchError } = await supabase
+      .from('stories').select('*').eq('id', req.params.id).single();
+    if (fetchError || !existing) return res.status(404).json({ error: 'Story not found' });
+
     const updates = { ...req.body };
     delete updates.id;
     delete updates.created_at;
     delete updates.updated_at;
     delete updates.story_sources;
+    // Workflow and publication fields are never writable through a generic edit.
+    delete updates.status;
+    delete updates.published_at;
+    delete updates.deleted_at;
 
-    const { data, error } = await supabase
-      .from('stories')
-      .update(updates)
-      .eq('id', req.params.id)
-      .select()
-      .single();
+    if (Object.keys(updates).length === 0) {
+      return res.json({ story: existing, approvalInvalidated: false });
+    }
+
+    const beforeHash = storyVersionHash(existing);
+    const afterHash = storyVersionHash({ ...existing, ...updates });
+    const contentChanged = beforeHash !== afterHash;
+    const approvalInvalidated = contentChanged && existing.status !== 'draft';
+    let deploymentHookUrl = null;
+    if (approvalInvalidated && existing.status === 'published') {
+      try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+      catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.' }); }
+    }
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    if (approvalInvalidated) {
+      // The attempt entry blocks replay even if the subsequent conditional edit
+      // loses a race against another CMS action.
+      await insertPipelineEvent(
+        existing.id, existing.status, 'content-edit-attempted', actor,
+        'Material edit requested; prior editorial approval invalidated',
+      );
+      updates.status = 'draft';
+      updates.published_at = null;
+    }
+
+    let data, error;
+    ({ data, error } = await supabase
+      .from('stories').update(updates).eq('id', req.params.id).eq('status', existing.status).select().single());
 
     if (error && error.message && error.message.includes('column')) {
-      // Unknown column — remove non-standard fields and retry
-      const knownCols = ['title','slug','category','status','summary','content','fact_check_url','fact_check_image','fact_check_video','source_verification','instagram_caption','instagram_carousel','youtube_script','x_thread','read_time','author','published_at','tags','meta_title','meta_description','og_image','publish_at','related_story_ids','story_template','deleted_at','fact_check_image_caption'];
+      const knownCols = [
+        'title','slug','category','status','summary','content','fact_check_url',
+        'fact_check_image','fact_check_video','source_verification','instagram_caption',
+        'instagram_carousel','youtube_script','x_thread','read_time','author',
+        'published_at','tags','meta_title','meta_description','og_image','publish_at',
+        'related_story_ids','story_template','fact_check_image_caption',
+      ];
       const safeUpdates = {};
-      Object.keys(updates).forEach(k => { if (knownCols.includes(k)) safeUpdates[k] = updates[k]; });
-      const { data: d2, error: e2 } = await supabase.from('stories').update(safeUpdates).eq('id', req.params.id).select().single();
-      if (e2) {
-        // Last resort: try one more time with just the absolute basics
+      Object.keys(updates).forEach(key => { if (knownCols.includes(key)) safeUpdates[key] = updates[key]; });
+      const second = await supabase.from('stories').update(safeUpdates).eq('id', req.params.id).select().single();
+      data = second.data;
+      error = second.error;
+      if (error && error.message && error.message.includes('column')) {
         const basic = {};
-        ['title','slug','category','status','summary','content'].forEach(k => { if (updates[k] !== undefined) basic[k] = updates[k]; });
-        const { data: d3, error: e3 } = await supabase.from('stories').update(basic).eq('id', req.params.id).select().single();
-        if (e3) throw e3;
-        return res.json({ story: d3 });
+        ['title','slug','category','status','summary','content','published_at'].forEach(key => {
+          if (updates[key] !== undefined) basic[key] = updates[key];
+        });
+        const third = await supabase.from('stories').update(basic).eq('id', req.params.id).select().single();
+        data = third.data;
+        error = third.error;
       }
-      return res.json({ story: d2 });
     }
 
     if (error) throw error;
     if (!data) return res.status(404).json({ error: 'Story not found' });
-    // Save revision
+
     saveRevision(req.params.id, req.session.userId, updates);
-    res.json({ story: data });
+    let invalidationAuditFailed = false;
+    if (approvalInvalidated) {
+      try {
+        await insertPipelineEvent(
+          req.params.id, existing.status, 'draft', actor,
+          'Material story edit invalidated prior review/publication approval',
+        );
+      } catch (auditError) {
+        invalidationAuditFailed = true;
+        console.error('[publication-gate] Content was reopened as draft, but the invalidation audit failed');
+      }
+    }
+
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+        data.deployment = { status: 'triggered', httpStatus: acknowledgement.status };
+      } catch (deployError) {
+        console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+        return res.status(502).json({
+          error: 'Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.',
+          approvalInvalidated: true,
+          deploymentStatus: 'not-acknowledged',
+        });
+      }
+    }
+    if (invalidationAuditFailed) {
+      return res.status(503).json({
+        error: 'Story was moved back to draft but final audit logging failed; inspect the story and audit trail.',
+        approvalInvalidated: true,
+      });
+    }
+    res.json({ story: data, approvalInvalidated });
   } catch (err) {
     console.error('Update story error:', err);
     res.status(500).json({ error: 'Failed to update story' });
@@ -286,16 +517,34 @@ app.put('/api/stories/:id', requireAuth, async (req, res) => {
 // DELETE story (soft delete — moves to trash)
 app.delete('/api/stories/:id', requireAuth, async (req, res) => {
   try {
+    const { data: existing, error: fetchError } = await supabase
+      .from('stories').select('id, status').eq('id', req.params.id).single();
+    if (fetchError || !existing) return res.status(404).json({ error: 'Story not found' });
+    if (existing.status !== 'draft') {
+      return res.status(409).json({
+        error: 'Direct trash is available only for drafts. Move workflow items to draft, and use the audited unpublish/archive path for live stories.',
+      });
+    }
+
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    await insertPipelineEvent(existing.id, existing.status, 'trash-attempted', actor, 'Human requested trash of draft story');
     const { data, error } = await supabase
       .from('stories')
-      .update({ status: 'trash', deleted_at: new Date().toISOString() })
-      .eq('id', req.params.id)
-      .select()
-      .single();
+      .update({ status: 'trash', deleted_at: new Date().toISOString(), published_at: null })
+      .eq('id', req.params.id).eq('status', 'draft')
+      .select().maybeSingle();
     if (error) throw error;
+    if (!data) return res.status(409).json({ error: 'Story state changed during trash; reload and retry' });
+
+    try {
+      await insertPipelineEvent(existing.id, 'draft', 'trash', actor, 'Draft moved to trash after conditional state transition');
+    } catch {
+      return res.status(503).json({ error: 'Story was moved to trash but the final audit event failed; inspect before retrying' });
+    }
     res.json({ success: true, story: data });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete story' });
+    console.error('Trash error:', err);
+    res.status(503).json({ error: 'Trash audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
@@ -335,6 +584,11 @@ app.post('/api/stories/:id/sources', requireAuth, async (req, res) => {
     const { label, url, source_type, verified } = req.body;
     if (!label || !url) return res.status(400).json({ error: 'Label and URL required' });
 
+    const reopened = await reopenStoryForSourceMutation(
+      req.params.id, req.session.userEmail || String(req.session.userId || 'system'), 'source added',
+    );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
+
     const { data: countData } = await supabase
       .from('story_sources')
       .select('id', { count: 'exact', head: true })
@@ -362,6 +616,14 @@ app.post('/api/stories/:id/sources', requireAuth, async (req, res) => {
 
 app.put('/api/sources/:id', requireAuth, async (req, res) => {
   try {
+    const { data: source, error: sourceError } = await supabase
+      .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
+    if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
+    const reopened = await reopenStoryForSourceMutation(
+      source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source updated',
+    );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
+
     const updates = { ...req.body };
     delete updates.id;
     delete updates.story_id;
@@ -383,6 +645,13 @@ app.put('/api/sources/:id', requireAuth, async (req, res) => {
 
 app.delete('/api/sources/:id', requireAuth, async (req, res) => {
   try {
+    const { data: source, error: sourceError } = await supabase
+      .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
+    if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
+    const reopened = await reopenStoryForSourceMutation(
+      source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source deleted',
+    );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
     const { error } = await supabase
       .from('story_sources')
       .delete()
@@ -491,98 +760,286 @@ app.post('/api/generate/x-thread', requireAuth, async (req, res) => {
   }
 });
 
-// ==================== PUBLISH ====================
-app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
+// Revoke pending approval and return the story to draft for re-review.
+app.post('/api/stories/:id/return-to-draft', requireAuth, async (req, res) => {
   try {
-    // Get story
+    const { data: story, error } = await supabase.from('stories').select('id, status')
+      .eq('id', req.params.id).single();
+    if (error || !story) return res.status(404).json({ error: 'Story not found' });
+    if (!['approved-for-release', 'ready', 'in-review', 'fact-checking', 'scheduled'].includes(String(story.status))) {
+      return res.status(409).json({ error: 'Only a pending-release or in-review story can be returned to draft; use Unpublish for live stories.' });
+    }
+    const actor = String(req.session.userEmail || req.session.userId || 'cms-user');
+    await insertPipelineEvent(story.id, story.status, 'draft', actor, 'Human returned story to draft; previous release approval revoked');
+    const { data: updated, error: updateError } = await supabase.from('stories')
+      .update({ status: 'draft', published_at: null })
+      .eq('id', story.id).eq('status', story.status).select().maybeSingle();
+    if (updateError) throw updateError;
+    if (!updated) return res.status(409).json({ error: 'Story status changed concurrently; reload and retry' });
+    return res.json({ success: true, story: updated });
+  } catch (err) {
+    console.error('[publication-gate] Failed to revoke approval:', err);
+    return res.status(503).json({ error: 'Could not revoke approval safely; inspect the audit log' });
+  }
+});
+
+// ==================== VERSION-BOUND HUMAN APPROVAL + PUBLISH ====================
+app.post('/api/stories/:id/approve-release', requireAuth, async (req, res) => {
+  try {
+    if (!isEditorInChief(req)) {
+      return res.status(403).json({ error: 'Only an email listed in EDITOR_IN_CHIEF_EMAILS can approve public release' });
+    }
+    const destination = publicationDestination();
+    if (!destination) {
+      return res.status(503).json({ error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+    }
+
     const { data: story, error } = await supabase
-      .from('stories')
-      .select('*')
-      .eq('id', req.params.id)
-      .single();
+      .from('stories').select('*').eq('id', req.params.id).single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
 
-    // Update status
+    const approvalFromStatus = String(story.status || '');
+    if (!['draft', 'ready', 'scheduled'].includes(approvalFromStatus)) {
+      return res.status(409).json({ error: 'Only draft, ready, or due scheduled stories can be approved for release' });
+    }
+    const scheduledAt = story.publish_at ? Date.parse(story.publish_at) : NaN;
+    if (approvalFromStatus === 'scheduled' && !Number.isFinite(scheduledAt)) {
+      return res.status(409).json({ error: 'Scheduled story has no valid publish_at time; resolve scheduling before approval' });
+    }
+    if (Number.isFinite(scheduledAt) && scheduledAt > Date.now()) {
+      return res.status(409).json({ error: 'Scheduled time has not arrived; release approval is not yet available' });
+    }
+
+    const approvedAt = new Date().toISOString();
+    const approvedBy = String(req.session.userEmail || '').trim().toLowerCase();
+    const approval = {
+      schema: 1,
+      contentHash: storyVersionHash(story),
+      destination,
+      approvedBy,
+      approvedAt,
+    };
+    await insertPipelineEvent(
+      story.id, approvalFromStatus, 'approved-for-release', approvedBy,
+      PUBLICATION_APPROVAL_PREFIX + JSON.stringify(approval),
+    );
+
+    // Compare the expected prior status to avoid approving over a concurrent state change.
     const { data: updated, error: updateError } = await supabase
       .from('stories')
-      .update({ status: 'published', published_at: new Date().toISOString() })
+      .update({ status: 'approved-for-release' })
       .eq('id', req.params.id)
+      .eq('status', approvalFromStatus)
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
+    if (!updated) return res.status(409).json({ error: 'Story changed during approval; reload and review the latest version' });
 
-    // Log publish
-    await supabase
-      .from('publish_log')
-      .insert({
-        story_id: req.params.id,
-        published_by: req.session.userId,
-        deploy_status: 'success'
-      });
+    return res.json({
+      success: true,
+      story: updated,
+      approval: { approvedBy, approvedAt, destination, contentHash: approval.contentHash },
+    });
+  } catch (err) {
+    console.error('[publication-gate] Approval failed:', err);
+    return res.status(503).json({ error: 'Could not persist the approval or update story status; release is blocked' });
+  }
+});
 
-    // Update homepage (deploy/index.html)
+app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
+  try {
+    let deploymentHookUrl;
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before publication; story status remains unchanged.' }); }
+    const destination = publicationDestination();
+    if (!destination) {
+      return res.status(503).json({ error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+    }
+
+    const { data: story, error } = await supabase
+      .from('stories').select('*').eq('id', req.params.id).single();
+    if (error || !story) return res.status(404).json({ error: 'Story not found' });
+    if (story.status !== 'approved-for-release') {
+      return res.status(409).json({ error: 'Story is not approved for release; obtain Editor-in-Chief approval first' });
+    }
+
+    const { data: logs, error: logsError } = await supabase
+      .from('pipeline_log')
+      .select('*')
+      .eq('story_id', story.id)
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
+      .limit(1);
+    if (logsError) {
+      console.error('[publication-gate] Approval history unavailable:', logsError);
+      return res.status(503).json({ error: 'Approval history unavailable; release is blocked' });
+    }
+    const latest = Array.isArray(logs) ? logs[0] : null;
+    if (!latest || latest.to_status !== 'approved-for-release') {
+      return res.status(409).json({ error: 'There is no current release approval for this story' });
+    }
+
+    const approval = parsePublicationApproval(latest.note);
+    if (!approval) return res.status(409).json({ error: 'Release approval record is malformed or missing' });
+    if (String(latest.changed_by || '').trim().toLowerCase() !== approval.approvedBy) {
+      return res.status(409).json({ error: 'Approval identity does not match its audit event' });
+    }
+    if (approval.destination !== destination) {
+      return res.status(409).json({ error: 'Approval was recorded for a different publication destination' });
+    }
+    const approvedAt = Date.parse(approval.approvedAt);
+    const now = Date.now();
+    if (!Number.isFinite(approvedAt) || approvedAt > now + 60000 || now - approvedAt > PUBLICATION_APPROVAL_TTL_MS) {
+      return res.status(409).json({ error: 'Release approval expired or has an invalid timestamp' });
+    }
+    if (approval.contentHash !== storyVersionHash(story)) {
+      return res.status(409).json({ error: 'Story content or public metadata changed after approval; release is blocked' });
+    }
+
+    // Write the terminal event first. If the status write fails, this approval
+    // cannot be replayed; a fresh review and approval will be required.
+    await insertPipelineEvent(
+      story.id, 'approved-for-release', 'release-attempted',
+      String(req.session.userEmail || req.session.userId || 'system'),
+      'Approval consumed after version-bound validation; conditional publication transition follows',
+    );
+
+    const publishedAt = new Date().toISOString();
+    const { data: updated, error: updateError } = await supabase
+      .from('stories')
+      .update({ status: 'published', published_at: publishedAt })
+      .eq('id', req.params.id)
+      .eq('status', 'approved-for-release')
+      .select()
+      .maybeSingle();
+    if (updateError) throw updateError;
+    if (!updated) {
+      return res.status(409).json({ error: 'Story status changed during release; approval has been consumed and fresh review is required' });
+    }
+
+    try {
+      await insertPipelineEvent(
+        story.id, 'approved-for-release', 'published',
+        String(req.session.userEmail || req.session.userId || 'system'),
+        'Published after version-bound human approval and successful conditional status transition',
+      );
+    } catch (auditError) {
+      console.error('[publication-gate] Story is published but final release audit could not be recorded:', auditError);
+      return res.status(500).json({ error: 'Story is published but final release audit logging failed; investigate before retrying' });
+    }
+
+    // Secondary publish telemetry is written after the primary, durable pipeline
+    // release event. If it fails, the release is auditable but needs operator review.
+    const { error: publishLogError } = await supabase.from('publish_log').insert({
+      story_id: req.params.id,
+      published_by: req.session.userId,
+      deploy_status: 'success',
+    });
+    if (publishLogError) {
+      console.error('[publication-gate] Published status was saved but publish_log failed:', publishLogError);
+    }
+
+    // Update the legacy static homepage after the gated database transition.
     const deployPath = path.join(__dirname, '..', 'deploy', 'index.html');
     if (fs.existsSync(deployPath)) {
       try {
         let html = fs.readFileSync(deployPath, 'utf8');
-
+        const escapeText = value => String(value || '').replace(/[&<>"]/g, ch => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+        }[ch]));
         const storyCard = `
-                <a href="#" class="story-card reveal">
-                    <p class="story-category">${story.category || 'Latest'}</p>
-                    <h3 class="story-title">${story.title}</h3>
-                    <p class="story-excerpt">${story.summary || 'Full breakdown available.'}</p>
-                    <div class="story-meta"><span>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span><span>${story.read_time || 5} min read</span></div>
+                <a href="/story/${escapeText(story.slug)}" class="story-card reveal">
+                    <p class="story-category">${escapeText(story.category || 'Latest')}</p>
+                    <h3 class="story-title">${escapeText(story.title)}</h3>
+                    <p class="story-excerpt">${escapeText(story.summary || 'Full breakdown available.')}</p>
+                    <div class="story-meta"><span>${new Date(publishedAt).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}</span><span>${Number(story.read_time || 5)} min read</span></div>
                 </a>`;
-
-        // Insert after the featured story or at the beginning of stories grid
         const insertMarker = '<!-- CMS: published stories will appear here -->';
-        if (html.includes(insertMarker)) {
-          html = html.replace(insertMarker, storyCard + '\n                ' + insertMarker);
-        } else {
-          // Fallback: insert before the last story-card in the grid
-          const match = html.match(/<a href="#" class="story-card reveal">/);
-          if (match) {
-            const idx = match.index;
-            html = html.slice(0, idx) + storyCard + '\n                ' + html.slice(idx);
-          }
+        if (html.includes(insertMarker) && !html.includes(`href="/story/${escapeText(story.slug)}"`)) {
+          html = html.replace(insertMarker, storyCard + '\\n                ' + insertMarker);
+          fs.writeFileSync(deployPath, html, 'utf8');
         }
-
-        fs.writeFileSync(deployPath, html, 'utf8');
-        console.log('Homepage updated with new story:', story.title);
       } catch (fileErr) {
-        console.error('Failed to update homepage file:', fileErr.message);
+        console.error('Published in CMS, but legacy homepage file update failed:', fileErr.message);
       }
     }
 
-    res.json({ success: true, story: updated });
+    let deploymentAcknowledgement;
+    try {
+      deploymentAcknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is published and audited, but rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is published and audited in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.',
+        releaseStatus: 'published',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
+
+    return res.json({
+      success: true,
+      story: updated,
+      approval: { approvedBy: approval.approvedBy, approvedAt: approval.approvedAt, destination },
+      deployment: { status: 'triggered', httpStatus: deploymentAcknowledgement.status },
+    });
   } catch (err) {
-    console.error('Publish error:', err);
-    res.status(500).json({ error: 'Failed to publish story' });
+    console.error('[publication-gate] Publish failed:', err);
+    return res.status(503).json({ error: 'Release audit or publication failed; inspect the story and audit log before retrying' });
   }
 });
 
 // ==================== UNPUBLISH / ARCHIVE ====================
 app.post('/api/stories/:id/unpublish', requireAuth, async (req, res) => {
   try {
+    let deploymentHookUrl;
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before unpublishing; story status remains unchanged.' }); }
+
     const { data: story, error } = await supabase
       .from('stories')
-      .select('id, status')
+      .select('id, slug, status')
       .eq('id', req.params.id)
       .single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
     if (story.status !== 'published') return res.status(400).json({ error: 'Only published stories can be unpublished' });
 
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    // Persist an attempt first so a concurrent publisher cannot replay approval
+    // while the takedown status update is in flight.
+    await insertPipelineEvent(
+      story.id, 'published', 'unpublish-attempted', actor,
+      'Human requested takedown; static rebuild acknowledgement is required',
+    );
+
     const { data: updated, error: updateError } = await supabase
       .from('stories')
       .update({ status: 'draft', published_at: null })
       .eq('id', req.params.id)
+      .eq('status', 'published')
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
-    res.json({ success: true, story: updated });
+    if (!updated) return res.status(409).json({ error: 'Story state changed during takedown; reload before retrying' });
+
+    await insertPipelineEvent(story.id, 'published', 'draft', actor, 'Unpublished after conditional state transition');
+    try {
+      const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+      return res.json({
+        success: true,
+        story: updated,
+        deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+      });
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is unpublished in CMS, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is unpublished in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.',
+        releaseStatus: 'draft',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
   } catch (err) {
     console.error('Unpublish error:', err);
-    res.status(500).json({ error: 'Failed to unpublish story' });
+    return res.status(503).json({ error: 'Unpublish audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
@@ -590,23 +1047,57 @@ app.post('/api/stories/:id/archive', requireAuth, async (req, res) => {
   try {
     const { data: story, error } = await supabase
       .from('stories')
-      .select('id, status')
+      .select('id, slug, status')
       .eq('id', req.params.id)
       .single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
     if (story.status === 'archived') return res.status(400).json({ error: 'Story is already archived' });
 
+    const wasPublished = story.status === 'published';
+    let deploymentHookUrl = null;
+    if (wasPublished) {
+      try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+      catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before archiving a published story; status remains unchanged.' }); }
+    }
+
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    await insertPipelineEvent(
+      story.id, story.status, 'archive-attempted', actor,
+      wasPublished ? 'Human requested archive of published content; rebuild acknowledgement is required'
+        : 'Human requested archive; prior release approval will be invalidated',
+    );
+
     const { data: updated, error: updateError } = await supabase
       .from('stories')
-      .update({ status: 'archived' })
+      .update({ status: 'archived', published_at: null })
       .eq('id', req.params.id)
+      .eq('status', story.status)
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
-    res.json({ success: true, story: updated });
+    if (!updated) return res.status(409).json({ error: 'Story state changed during archive; reload before retrying' });
+
+    await insertPipelineEvent(story.id, story.status, 'archived', actor, 'Archived after conditional state transition');
+    if (!wasPublished) return res.json({ success: true, story: updated });
+
+    try {
+      const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+      return res.json({
+        success: true,
+        story: updated,
+        deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+      });
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is archived in CMS, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is archived in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.',
+        releaseStatus: 'archived',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
   } catch (err) {
     console.error('Archive error:', err);
-    res.status(500).json({ error: 'Failed to archive story' });
+    return res.status(503).json({ error: 'Archive audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
@@ -740,23 +1231,10 @@ app.post('/api/upload', requireAuth, upload.single('image'), async (req, res) =>
 });
 
 // ==================== SCHEDULED PUBLISHING ====================
-async function publishScheduled() {
-  try {
-    const { data: due, error } = await supabase
-      .from('stories')
-      .select('id, title')
-      .eq('status', 'scheduled');
-    if (error || !due || due.length === 0) return;
-    // Filter in-memory in case publish_at column doesn't exist
-    const now = new Date().toISOString();
-    for (const story of due) {
-      await supabase.from('stories').update({ status: 'published', published_at: now }).eq('id', story.id);
-    }
-  } catch (e) { /* ignore */ }
-}
-// Run on startup and every 60 seconds
-publishScheduled();
-setInterval(publishScheduled, 60000);
+// Automatic publication is intentionally disabled. A scheduled story stays queued
+// until its publish_at time has arrived and an allowlisted human Editor-in-Chief
+// explicitly approves the exact version. The /approve-release endpoint checks that time.
+// Never add a timer that changes a story to 'published' directly.
 
 // ==================== SITEMAP ====================
 app.get('/api/sitemap.xml', async (req, res) => {
@@ -811,10 +1289,33 @@ app.post('/api/stories/bulk', requireAuth, async (req, res) => {
     if (!action) return res.status(400).json({ error: 'Action required' });
 
     let updates = {};
-    if (action === 'status') updates = { status: value };
-    else if (action === 'category') updates = { category: value };
-    else if (action === 'delete') updates = { status: 'trash', deleted_at: new Date().toISOString() };
-    else return res.status(400).json({ error: 'Invalid action' });
+    if (['status', 'delete', 'category'].includes(action)) {
+      const { data: selected, error: statusError } = await supabase
+        .from('stories').select('id, status').in('id', ids);
+      if (statusError) throw statusError;
+      if ((selected || []).some(story => ['published', 'approved-for-release'].includes(story.status))) {
+        const actionLabel = action === 'category' ? 'category edits' : 'bulk status changes';
+        return res.status(409).json({
+          error: `Bulk ${actionLabel} are blocked for published or approval-pending stories. Use the individual audit/release workflow.`,
+        });
+      }
+    }
+
+    if (action === 'status') {
+      if (['published', 'approved-for-release', 'ready'].includes(String(value))) {
+        return res.status(403).json({ error: 'Bulk status changes cannot publish or approve stories; use the version-bound editorial release workflow.' });
+      }
+      if (!['draft', 'scheduled', 'archived', 'trash'].includes(String(value))) {
+        return res.status(400).json({ error: 'Invalid bulk status value' });
+      }
+      updates = { status: value, published_at: null };
+    } else if (action === 'category') {
+      updates = { category: value };
+    } else if (action === 'delete') {
+      updates = { status: 'trash', deleted_at: new Date().toISOString(), published_at: null };
+    } else {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
 
     const { error } = await supabase.from('stories').update(updates).in('id', ids);
     if (error) throw error;
@@ -836,9 +1337,12 @@ ALTER TABLE stories ADD COLUMN IF NOT EXISTS related_story_ids UUID[] DEFAULT '{
 ALTER TABLE stories ADD COLUMN IF NOT EXISTS story_template TEXT DEFAULT '';
 ALTER TABLE stories ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 ALTER TABLE stories DROP CONSTRAINT IF EXISTS stories_status_check;
-ALTER TABLE stories ADD CONSTRAINT stories_status_check CHECK (status IN ('draft','published','archived','scheduled','trash'));
+ALTER TABLE stories ADD CONSTRAINT stories_status_check CHECK (status IN ('draft','in-review','fact-checking','ready','approved-for-release','published','archived','scheduled','trash'));
 CREATE TABLE IF NOT EXISTS story_revisions (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE, data JSONB NOT NULL, saved_by UUID REFERENCES admin_users(id), created_at TIMESTAMPTZ DEFAULT NOW());
 CREATE INDEX IF NOT EXISTS idx_revisions_story ON story_revisions(story_id, created_at DESC);
+CREATE TABLE IF NOT EXISTS pipeline_log (id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE, from_status TEXT, to_status TEXT NOT NULL, changed_by TEXT NOT NULL DEFAULT 'system', note TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
+CREATE INDEX IF NOT EXISTS idx_pipeline_log_story_created ON pipeline_log (story_id, created_at DESC, id DESC);
+ALTER TABLE pipeline_log ENABLE ROW LEVEL SECURITY;
 CREATE TABLE IF NOT EXISTS story_templates (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), name TEXT NOT NULL, category TEXT DEFAULT '', content TEXT DEFAULT '', summary TEXT DEFAULT '', tags TEXT[] DEFAULT '{}'::text[], created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW());` });
 });
 
@@ -908,6 +1412,8 @@ app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'a
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== START ====================
+// The public static site remains available when CMS integration is misconfigured;
+// only /api requests are blocked by the schema-contract middleware above.
 app.listen(PORT, () => {
   console.log(`\n  🔍 The Breakdown — Fact Check CMS`);
   console.log(`  ═══════════════════════════════════`);

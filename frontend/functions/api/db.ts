@@ -85,6 +85,13 @@ class InMemoryBackend implements DbBackend {
     return this.stories[idx]
   }
 
+  updateStoryIfStatus(slug: string, expectedStatus: string, data: Partial<Story>): Story | null {
+    const idx = this.stories.findIndex(s => s.slug === slug)
+    if (idx === -1 || this.stories[idx].status !== expectedStatus) return null
+    this.stories[idx] = { ...this.stories[idx], ...data, slug, updatedAt: new Date().toISOString() }
+    return this.stories[idx]
+  }
+
   deleteStory(slug: string): boolean {
     const idx = this.stories.findIndex(s => s.slug === slug)
     if (idx === -1) return false
@@ -291,6 +298,22 @@ class TursoBackend implements DbBackend {
              merged.hero, merged.caption, merged.author, merged.readTime, merged.status, now, slug],
     })
     return merged
+  }
+
+  async updateStoryIfStatus(slug: string, expectedStatus: string, data: Partial<Story>): Promise<Story | null> {
+    const existing = await this.getStory(slug)
+    if (!existing || existing.status !== expectedStatus) return null
+
+    const c = await this.getClient()
+    const now = new Date().toISOString()
+    const merged = { ...existing, ...data, slug, updatedAt: now }
+    const result = await c.execute({
+      sql: `UPDATE stories SET title=?, summary=?, body=?, category=?, tags=?, hero=?, caption=?, author=?, read_time=?, status=?, updated_at=? WHERE slug=? AND status=?`,
+      args: [merged.title, merged.summary, merged.body, merged.category, JSON.stringify(merged.tags),
+             merged.hero, merged.caption, merged.author, merged.readTime, merged.status, now, slug, expectedStatus],
+    })
+    if (result.rowsAffected === 0) return null
+    return this.getStory(slug)
   }
 
   async deleteStory(slug: string): Promise<boolean> {

@@ -5,12 +5,12 @@
  * from a topic and optional source URLs using OpenAI.
  *
  * Usage:
- *   node scripts/ai/generate-story.js --topic "..." --sources "url1, url2" [--publish]
+ *   node scripts/ai/generate-story.mjs --topic "..." --sources "url1, url2"
  *
  *   --topic     Required. Story topic / headline.
  *   --sources   Optional. Comma-separated source URLs.
  *   --category  Optional. Override auto-detected category.
- *   --publish   Optional. Also update publish-all-beats.js with this story.
+ *   Public release is intentionally not performed by this generator.
  *
  * Requires OPENAI_API_KEY env var or in .env at project root.
  */
@@ -146,7 +146,7 @@ story:
     - "tag2"
   published_at: "${new Date().toISOString()}"
   updated_at: "${new Date().toISOString()}"
-  status: "published"
+  status: "draft"
   og_image: "https://thebreakdown.in/og-image.png"
 ---
 
@@ -166,7 +166,7 @@ async function generateMainMarkdown(topic, slug, category, sources) {
 Output a complete news article in markdown.
 
 Format:
-- Start with YAML frontmatter (layout, title, slug, category, summary, meta_title, meta_description, tags, author, read_time, published_at, updated_at, status, og_image)
+- Start with YAML frontmatter (layout, title, slug, category, summary, meta_title, meta_description, tags, author, read_time, published_at, updated_at, status, og_image). Set status to "draft".
 - Use ## headings for sections matching the 10-part structure
 - Include data points, statistics, dates, sourced quotes
 - Write 1500-2500 words
@@ -360,38 +360,17 @@ Include proper attribution and sourced data points.`,
     12288);
 }
 
-// ---- Update publish-all-beats.js ----
-function addToPublishScript(slug, title, category, summary, readTime, tags, metaTitle, metaDescription, contentFile) {
-  const scriptPath = join(PROJECT_ROOT, 'fact-check-cms', 'scripts', 'publish-all-beats.js');
-  let content = readFileSync(scriptPath, 'utf-8');
-
-  const tagArray = tags.map(t => `'${t.replace(/'/g, "\\'")}'`).join(',\n    ');
-
-  const newEntry = `  {
-    title: '${title.replace(/'/g, "\\'")}',
-    slug: '${slug}',
-    category: '${category}',
-    summary: '${summary.replace(/'/g, "\\'")}',
-    read_time: ${readTime},
-    tags: [${tagArray}],
-    meta_title: '${metaTitle.replace(/'/g, "\\'")}',
-    meta_description: '${summary.replace(/'/g, "\\'")}',
-    article_section: '${category}',
-    content_file: '${contentFile}',
-    story_dir: '${slug}',
-    fact_check_image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=630&fit=crop'
-  }`;
-
-  // Insert before the closing bracket of the stories array
-  const insertPos = content.lastIndexOf('];');
-  if (insertPos === -1) throw new Error('Could not find end of stories array');
-
-  const before = content.substring(0, insertPos).trimEnd();
-  const after = content.substring(insertPos);
-  content = before + ',\n' + newEntry + '\n' + after;
-
-  writeFileSync(scriptPath, content, 'utf-8');
-  return scriptPath;
+// Generated content is always a draft. Prompt compliance is not trusted for workflow state.
+function enforceDraftFrontmatter(markdown) {
+  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) return markdown;
+  let frontmatter = match[1];
+  if (/^[ \t]*status[ \t]*:/m.test(frontmatter)) {
+    frontmatter = frontmatter.replace(/^([ \t]*)status[ \t]*:.*$/gm, '$1status: "draft"');
+  } else {
+    frontmatter += '\nstatus: "draft"';
+  }
+  return '---\n' + frontmatter + '\n---' + markdown.slice(match[0].length);
 }
 
 // ---- Main ----
@@ -483,7 +462,8 @@ async function main() {
   for (const file of mdFiles) {
     console.log(`\n--- Generating ${file.label}...`);
     try {
-      const content = await file.gen();
+      let content = await file.gen();
+      if (file.name === `${slug}.md`) content = enforceDraftFrontmatter(content);
 
       // Parse metadata from frontmatter if this is the main markdown
       if (file.name === `${slug}.md`) {
@@ -505,19 +485,10 @@ async function main() {
     }
   }
 
-  // --- Update publish script ---
+  // Legacy --publish registration was intentionally removed so generated drafts
+  // cannot be inserted into a direct publishing script without editorial approval.
   if (args.publish) {
-    console.log('\n--- Updating publish-all-beats.js...');
-    try {
-      const scriptPath = addToPublishScript(
-        slug, topic, category, topic, readTime,
-        tags.length > 0 ? tags : [category],
-        metaTitle, topic, contentFile
-      );
-      console.log(`  Updated: fact-check-cms/scripts/publish-all-beats.js`);
-    } catch (err) {
-      console.error(`  FAILED: ${err.message}`);
-    }
+    console.warn('Ignoring --publish: direct publish registration is disabled. The generated story remains a draft; submit it through /newsroom.');
   }
 
   // --- Summary ---
@@ -527,7 +498,7 @@ async function main() {
   console.log(`  Category: ${category}`);
   console.log(`  Directory: stories/${slug}/`);
   console.log(`  Files:    ${mdFiles.length} created`);
-  if (args.publish) console.log(`  Publish:  Added to publish-all-beats.js`);
+  console.log('  Status:   draft (publication requires the newsroom approval gate)');
   console.log('\nNext steps:');
   console.log(`  1. Review/edit files in stories/${slug}/`);
   console.log(`  2. Run: node scripts/ai/generate-story-html.js stories/${slug}/${slug}.md`);

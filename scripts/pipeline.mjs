@@ -139,7 +139,7 @@ async function runWebsite(topic, slug) {
 async function runPublish(topic, slug) {
   log('publish', 'Preparing production package...');
   const storyDir = join(__dirname, '..', 'stories', slug);
-  const outDir = join(__dirname, '..', 'public', 'stories', slug);
+  const outDir = join(__dirname, '..', 'artifacts', 'newsroom', 'stories', slug);
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
   const files = ['index.html', `${slug}.html`, `${slug}.md`, 'images.md', 'charts.md', 'visuals.md', 'seo.md', 'references.md'];
@@ -150,8 +150,8 @@ async function runPublish(topic, slug) {
     }
   }
 
-  log('publish', `Package ready: public/stories/${slug}/`);
-  log('publish', 'Run: node scripts/ai/publish.mjs to deploy to Supabase + Cloudflare');
+  log('publish', `Review package ready: artifacts/newsroom/stories/${slug}/`);
+  log('publish', 'No release was performed. Submit the package through /newsroom for independent verification and human approval.');
 }
 
 // ---- Main ----
@@ -253,8 +253,8 @@ async function main() {
   console.log(`  Discovery:  content/${slug}/discovery.json`);
   console.log(`  Story:      stories/${slug}/`);
   console.log(`  Package:    public/stories/${slug}/`);
-  console.log(`\n  Next: node fact-check-cms/scripts/publish-all-beats.js`);
-  console.log(`        .\\scripts\\deploy.ps1 -PushCMS\n`);
+  console.log('\n  Next: submit the package through /newsroom for independent verification and human approval.');
+  console.log('  This pipeline only prepares local artifacts; it does not authorise public release.\n');
 }
 
 main().catch(err => {

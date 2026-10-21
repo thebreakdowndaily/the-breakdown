@@ -28,7 +28,7 @@ if ($Help) {
 
   USAGE:
     .\scripts\deploy.ps1                  Deploy Cloudflare Pages only
-    .\scripts\deploy.ps1 -PushCMS         Deploy Cloudflare + push CMS to Render
+    .\scripts\deploy.ps1 -PushCMS         BLOCKED until the external CMS release gate is audited
     .\scripts\deploy.ps1 -DryRun          Validate everything, but don't deploy
     .\scripts\deploy.ps1 -SkipValidation  Skip pre-deploy checks (not recommended)
     .\scripts\deploy.ps1 -Rollback        List recent deployments for rollback
@@ -44,7 +44,7 @@ if ($Help) {
        design conflicts, missing meta tags, line ending issues
     2. Injects Google Search Console verification code into all HTML pages
     3. Deploys cloudflare-deploy/ to Cloudflare Pages
-    4. (optional) Pushes fact-check-cms/ to Render for auto-deploy
+    4. CMS push is currently blocked until the separate fact-check-cms/ checkout is audited for the newsroom approval gate
 
 "@
   exit 0
@@ -83,6 +83,16 @@ function Load-EnvFile {
 }
 
 Load-EnvFile -Path $envFile
+
+# FAIL-CLOSED: fact-check-cms/ is a separate checkout and is not present in this
+# repository's tracked tree/CI. Do not push unknown CMS code to Render until its
+# publish APIs, auth, source edits, scheduled jobs and bulk actions are audited.
+# Cloudflare-only deploys remain available without this flag.
+if ($PushCMS) {
+  Write-Err "CMS push BLOCKED: fact-check-cms/ is an external checkout whose publication paths have not been verified against the newsroom approval gate."
+  Write-Err "Audit and test that checkout, then remove this stop only with a reviewed change."
+  exit 1
+}
 
 # ============================================================
 #  VALIDATION GATE (skip with -SkipValidation)

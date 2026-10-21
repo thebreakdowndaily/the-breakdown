@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express'
 import { getDb, queryAll, queryOne, execute } from '../db.js'
-import { authMiddleware } from '../auth.js'
+import { authMiddleware, verifyToken } from '../auth.js'
 
 const router = Router()
 
@@ -29,6 +29,14 @@ router.get('/', (req: Request, res: Response) => {
   const db = getDb()
   const includeAll = req.query.all === 'true'
   const status = req.query.status as string | undefined
+  if (includeAll || (status && status !== 'published')) {
+    const header = req.headers.authorization
+    const user = header?.startsWith('Bearer ') ? verifyToken(header.slice(7)) : null
+    if (!user) {
+      res.status(401).json({ error: 'Unauthorized' })
+      return
+    }
+  }
   const category = req.query.category as string | undefined
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100)
   const offset = parseInt(req.query.offset as string) || 0
@@ -84,7 +92,8 @@ router.get('/:slug', (req: Request, res: Response) => {
 
   if (row.status !== 'published') {
     const authHeader = req.headers.authorization
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const user = authHeader?.startsWith('Bearer ') ? verifyToken(authHeader.slice(7)) : null
+    if (!user) {
       res.status(404).json({ error: 'Story not found' })
       return
     }
@@ -142,7 +151,24 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
     return
   }
 
-  const { title, summary, body, category, tags, hero, caption, author, readTime, status } = req.body
+  const { title, summary, body, category, tags, hero, caption, author, readTime } = req.body
+
+  // The generic story-edit endpoint never accepts workflow status from the caller.
+  // Any material edit to reviewed or published content reopens the editorial workflow.
+  const tagsChanged = tags !== undefined && JSON.stringify(tags) !== JSON.stringify(JSON.parse(existing.tags || '[]'))
+  const materialChanged =
+    (title !== undefined && title !== existing.title) ||
+    (summary !== undefined && summary !== existing.summary) ||
+    (body !== undefined && body !== existing.body) ||
+    (category !== undefined && category !== existing.category) ||
+    tagsChanged ||
+    (hero !== undefined && hero !== existing.hero) ||
+    (caption !== undefined && caption !== existing.caption) ||
+    (author !== undefined && author !== existing.author) ||
+    (readTime !== undefined && Number(readTime) !== Number(existing.read_time))
+  const oldStatus = String(existing.status)
+  const nextStatus = materialChanged && oldStatus !== 'draft' ? 'draft' : oldStatus
+  const invalidatedApproval = materialChanged && oldStatus !== 'draft'
 
   // Save revision before updating
   execute(db, `
@@ -162,7 +188,8 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
       caption = COALESCE(?, caption),
       author = COALESCE(?, author),
       read_time = COALESCE(?, read_time),
-      status = COALESCE(?, status),
+      status = ?,
+      published_at = CASE WHEN ? = 1 THEN NULL ELSE published_at END,
       updated_at = ?
     WHERE slug = ?
   `, [
@@ -170,18 +197,26 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
     summary ?? null,
     body ?? null,
     category ?? null,
-    tags ? JSON.stringify(tags) : null,
+    tags !== undefined ? JSON.stringify(tags) : null,
     hero ?? null,
     caption ?? null,
     author ?? null,
     readTime ?? null,
-    status ?? null,
+    nextStatus,
+    invalidatedApproval ? 1 : 0,
     now,
     req.params.slug,
   ])
 
+  if (invalidatedApproval) {
+    execute(db, `
+      INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
+      VALUES (?, ?, 'draft', ?, 'Material story edit invalidated prior review/publication approval')
+    `, [existing.id, oldStatus, (req as any).user?.username || 'system'])
+  }
+
   const updated = queryOne(db, 'SELECT * FROM stories WHERE slug = ?', [req.params.slug])
-  res.json({ story: rowToStory(updated) })
+  res.json({ story: rowToStory(updated), approvalInvalidated: invalidatedApproval })
 })
 
 // DELETE /api/stories/:slug — archive

@@ -115,12 +115,548 @@ $blockedPatterns = @(
 )
 
 try {
+  $supabaseUrl = $null
   $serviceKey = $null
   $envFile = Join-Path $cmsDir ".env"
   if (Test-Path $envFile) {
     $envVars = Get-Content $envFile
     foreach ($line in $envVars) {
-      if ($line -match '^SUPABASE_SERVICE_KEY=(.+)$') {
+      if ($line.StartsWith('SUPABASE_URL=')) {
+        $supabaseUrl = $line.Substring('SUPABASE_URL='.Length).Trim().Trim('"', "'")
+      }
+      if ($line.StartsWith('SUPABASE_SERVICE_KEY=')) {
+        $serviceKey = $line.Substring('SUPABASE_SERVICE_KEY='.Length).Trim().Trim('"', "'")
+      }
+    }
+  }
+  if ($serviceKey -and $supabaseUrl) {
+    $headers = @{ "Authorization" = "Bearer $serviceKey"; "apikey" = "$serviceKey" }
+    $stories = Invoke-RestMethod -Uri "$supabaseUrl/rest/v1/stories?select=id,title,slug,fact_check_image,og_image&status=eq.published" -Headers $headers -ErrorAction Stop
+    $hotlinked = @()
+    foreach ($story in $stories) {
+      $isHotlinked = $false
+      foreach ($pattern in $blockedPatterns) {
+        if ($story.fact_check_image -match $pattern -or $story.og_image -match $pattern) {
+          $isHotlinked = $true
+        }
+      }
+      if ($isHotlinked) {
+        $hotlinked += $story
+      }
+    }
+    if ($hotlinked.Count -gt 0) {
+      Write-Fail "$($hotlinked.Count) stories have hotlinked/broken images:"
+      foreach ($h in $hotlinked) {
+        $imgPreview = $h.fact_check_image
+        if ($imgPreview.Length -gt 80) { $imgPreview = $imgPreview.Substring(0, 80) + "..." }
+        Write-Host "         $($h.slug): $imgPreview" -ForegroundColor Red
+      }
+      Write-Warn "Run .\scripts\host-images.ps1 to re-host these on Supabase storage"
+    } else {
+      Write-Pass "All $($stories.Count) stories use self-hosted or working image URLs"
+    }
+  } else {
+    Write-Warn "Cannot check images - SUPABASE_URL and SUPABASE_SERVICE_KEY must both be set in fact-check-cms/.env"
+  }
+} catch {
+  Write-Warn "Image check skipped (API error: $($_.Exception.Message))"
+}
+
+# ============================================================
+# 5. META TAG COMPLETENESS
+# ============================================================
+Write-Step "5/10 Story Template Meta Tags"
+
+$requiredMeta = @(
+  '<meta charset="UTF-8">',
+  '<meta name="viewport"',
+  '<meta name="description" content="">',
+  '<meta name="robots" content="index, follow',
+  '<meta property="og:title"',
+  '<meta property="og:description"',
+  '<meta property="og:type"',
+  '<meta property="og:url"',
+  '<meta property="og:image"',
+  '<meta property="article:published_time"',
+  '<meta property="article:tag"',
+  '<meta name="news_keywords"',
+  '<meta name="twitter:card"',
+  '<meta name="twitter:title"',
+  '<meta name="twitter:description"',
+  '<meta name="twitter:image"',
+  '<link rel="canonical"',
+  '<link rel="icon"',
+  'application/ld+json'
+)
+
+$templatesToCheck = @(
+  (Join-Path $cmsDir "public\story.html"),
+  (Join-Path $cfDir "story.html")
+)
+foreach ($tmpl in $templatesToCheck) {
+  if (Test-Path $tmpl) {
+    $content = Get-Content $tmpl -Raw
+    $missingList = @()
+    foreach ($meta in $requiredMeta) {
+      $escaped = [regex]::Escape($meta)
+      if ($content -notmatch $escaped) {
+        $missingList += $meta
+      }
+    }
+    if ($missingList.Count -gt 0) {
+      Write-Fail "$(Split-Path $tmpl -Leaf) missing $($missingList.Count) required meta tags:"
+      foreach ($m in $missingList) {
+        Write-Host "         Missing: $m" -ForegroundColor Red
+      }
+    } else {
+      Write-Pass "$(Split-Path $tmpl -Leaf): all $($requiredMeta.Count) meta tags present"
+    }
+  } else {
+    Write-Fail "Template not found: $tmpl"
+  }
+}
+
+# ============================================================
+# 6. HTML VALIDITY
+# ============================================================
+Write-Step "6/10 HTML Structure"
+
+if (Test-Path $cfDir) {
+  $htmlFiles = Get-ChildItem -Path $cfDir -Filter *.html
+  $validCount = 0
+  foreach ($f in $htmlFiles) {
+    $c = Get-Content $f.FullName -Raw
+    $issuesList = @()
+    if ($c -notmatch '<!DOCTYPE html>') { $issuesList += "missing DOCTYPE" }
+    if ($c -notmatch '</html>') { $issuesList += "missing </html>" }
+    if ($c -match 'YOUR_') { $issuesList += "contains placeholder" }
+    if ($issuesList.Count -eq 0) {
+      $validCount++
+    } else {
+      Write-Fail "$($f.Name): $($issuesList -join ', ')"
+    }
+  }
+  if ($validCount -eq $htmlFiles.Count) {
+    Write-Pass "All $validCount HTML files valid"
+  }
+}
+
+# ============================================================
+# 7. LINE ENDINGS - enforce CRLF for PowerShell compat
+# ============================================================
+Write-Step "7/10 Line Endings (CRLF Enforcement)"
+
+$psScriptsDir = Join-Path $rootDir "scripts"
+if (Test-Path $psScriptsDir) {
+  $psFiles = Get-ChildItem -Path $psScriptsDir -Filter *.ps1
+  $fixedCount = 0
+  $warningCount = 0
+  foreach ($f in $psFiles) {
+    $bytes = [System.IO.File]::ReadAllBytes($f.FullName)
+    $hasCRLF = $false
+    for ($i = 0; $i -lt $bytes.Length - 1; $i++) {
+      if ($bytes[$i] -eq 13 -and $bytes[$i+1] -eq 10) {
+        $hasCRLF = $true
+        break
+      }
+    }
+    if (-not $hasCRLF -and ($bytes -contains 10)) {
+      if ($Fix) {
+        $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+        $text = $text -replace "`r`n", "`n" -replace "(?<!`r)`n", "`r`n"
+        [System.IO.File]::WriteAllText($f.FullName, $text, [System.Text.Encoding]::UTF8)
+        Write-Host "  [FIX] Converted $($f.Name) to CRLF" -ForegroundColor Magenta
+        $fixedCount++
+      } else {
+        Write-Warn "$($f.Name) has LF line endings - run with -Fix to convert"
+        $warningCount++
+      }
+    }
+  }
+  if ($fixedCount -eq 0 -and $warningCount -eq 0) {
+    Write-Pass "All PowerShell scripts use CRLF"
+  } else {
+    if ($fixedCount -gt 0) { Write-Info "Fixed $fixedCount file(s)" }
+  }
+}
+
+# ============================================================
+# 8. WORKER ROUTES
+# ============================================================
+Write-Step "8/10 Worker Route Check"
+
+$workerPath = Join-Path $cfDir "_worker.js"
+if (Test-Path $workerPath) {
+  $worker = Get-Content $workerPath -Raw
+  $routeChecks = @(
+    @{ pattern = '/story/' ; name = 'Story route' }
+    @{ pattern = '/api/' ; name = 'API route' }
+    @{ pattern = '/admin' ; name = 'Admin route' }
+    @{ pattern = '/sitemap.xml' ; name = 'Sitemap route' }
+  )
+  $missingRoutes = @()
+  foreach ($rc in $routeChecks) {
+    if ($worker -notmatch $rc.pattern) {
+      $missingRoutes += $rc.name
+    }
+  }
+  if ($missingRoutes.Count -gt 0) {
+    foreach ($mr in $missingRoutes) {
+      Write-Fail "_worker.js missing $mr"
+    }
+  } else {
+    Write-Pass "All required routes present in _worker.js"
+  }
+} else {
+  Write-Fail "_worker.js not found"
+}
+
+# ============================================================
+# 9. STORY HEALTH CHECK - verify last 3 stories load
+# ============================================================
+Write-Step "9/10 Story Health Check"
+
+try {
+  Write-Info "Fetching recent stories from API..."
+  $storiesResp = Invoke-RestMethod -Uri "https://thebreakdown.in/api/stories/published?limit=3" -TimeoutSec 30 -ErrorAction Stop
+  $stories = $storiesResp.stories
+  $healthyCount = 0
+  $totalToCheck = [Math]::Min(3, $stories.Count)
+  if ($totalToCheck -gt 0) {
+    foreach ($s in $stories[0..($totalToCheck-1)]) {
+      try {
+        $storyResp = Invoke-RestMethod -Uri "https://thebreakdown.in/api/stories/public/$($s.slug)" -TimeoutSec 10 -ErrorAction Stop
+        if ($storyResp.story) {
+          $healthyCount++
+          Write-Info "$($s.slug): loaded OK"
+        }
+      } catch {
+        Write-Warn "$($s.slug): failed to load"
+      }
+    }
+  }
+  if ($healthyCount -eq $totalToCheck -and $totalToCheck -gt 0) {
+    Write-Pass "All $healthyCount recent stories load correctly"
+  } elseif ($healthyCount -gt 0) {
+    Write-Warn "$healthyCount/$totalToCheck recent stories loaded"
+  } else {
+    Write-Warn "No stories could be verified"
+  }
+} catch {
+  Write-Warn "Story health check skipped (API not reachable): $_"
+}
+
+# ============================================================
+# 10. CACHE-BUSTING CHECK
+# ============================================================
+Write-Step "10/10 CSS/JS Cache-Busting"
+
+if (Test-Path $cfDir) {
+  $htmlFiles = Get-ChildItem -Path $cfDir -Filter *.html
+  $missingVersion = @()
+  foreach ($f in $htmlFiles) {
+    $c = Get-Content $f.FullName -Raw
+    # Check for .css or .js in href/src attributes
+    $cssMatches = [regex]::Matches($c, '(?:href|src)="([^"]+\.(css|js)(?:\?[^"]*)?)"')
+    foreach ($m in $cssMatches) {
+      $fullUrl = $m.Groups[1].Value
+      # Skip external/CDN URLs — only check self-hosted assets
+      if ($fullUrl -match '^https?://' -and $fullUrl -notmatch 'thebreakdown\.in') {
+        continue
+      }
+      if ($fullUrl -notmatch '\?v=' -and $fullUrl -notmatch '\?\d+') {
+        $missingVersion += "$($f.Name): $fullUrl"
+      }
+    }
+  }
+  if ($missingVersion.Count -gt 0) {
+    foreach ($mv in $missingVersion) { Write-Warn "Missing cache-busting: $mv" }
+    Write-Host "  [INFO] Add ?v=N to CSS/JS links for cache control" -ForegroundColor Gray
+  } else {
+    Write-Pass "All CSS/JS links have cache-busting version parameters"
+  }
+}
+
+# ============================================================
+# SUMMARY
+# ============================================================
+Write-Host "`n============================================" -ForegroundColor Cyan
+if ($exitCode -eq 0) {
+  Write-Host "  ALL CHECKS PASSED - Ready to Deploy" -ForegroundColor Green
+} else {
+  Write-Host "  ISSUES FOUND - fix before deploy" -ForegroundColor Red
+}
+Write-Host "============================================" -ForegroundColor Cyan
+
+exit $exitCode) {
+        $supabaseUrl = $matches[1].Trim().Trim('\"', "'")
+      }
+      if ($line -match '^SUPABASE_SERVICE_KEY=(.+)
+        $serviceKey = $matches[1].Trim().Trim('"', "'")
+      }
+    }
+  }
+  if ($serviceKey) {
+    $headers = @{ "Authorization" = "Bearer $serviceKey"; "apikey" = "$serviceKey" }
+    $supabaseUrl = "https://lvfovvidtowadmnggzzf.supabase.co"
+    $stories = Invoke-RestMethod -Uri "$supabaseUrl/rest/v1/stories?select=id,title,slug,fact_check_image,og_image&status=eq.published" -Headers $headers -ErrorAction Stop
+    $hotlinked = @()
+    foreach ($story in $stories) {
+      $isHotlinked = $false
+      foreach ($pattern in $blockedPatterns) {
+        if ($story.fact_check_image -match $pattern -or $story.og_image -match $pattern) {
+          $isHotlinked = $true
+        }
+      }
+      if ($isHotlinked) {
+        $hotlinked += $story
+      }
+    }
+    if ($hotlinked.Count -gt 0) {
+      Write-Fail "$($hotlinked.Count) stories have hotlinked/broken images:"
+      foreach ($h in $hotlinked) {
+        $imgPreview = $h.fact_check_image
+        if ($imgPreview.Length -gt 80) { $imgPreview = $imgPreview.Substring(0, 80) + "..." }
+        Write-Host "         $($h.slug): $imgPreview" -ForegroundColor Red
+      }
+      Write-Warn "Run .\scripts\host-images.ps1 to re-host these on Supabase storage"
+    } else {
+      Write-Pass "All $($stories.Count) stories use self-hosted or working image URLs"
+    }
+  } else {
+    Write-Warn "Cannot check images - SUPABASE_SERVICE_KEY not found in .env"
+  }
+} catch {
+  Write-Warn "Image check skipped (API error: $($_.Exception.Message))"
+}
+
+# ============================================================
+# 5. META TAG COMPLETENESS
+# ============================================================
+Write-Step "5/10 Story Template Meta Tags"
+
+$requiredMeta = @(
+  '<meta charset="UTF-8">',
+  '<meta name="viewport"',
+  '<meta name="description" content="">',
+  '<meta name="robots" content="index, follow',
+  '<meta property="og:title"',
+  '<meta property="og:description"',
+  '<meta property="og:type"',
+  '<meta property="og:url"',
+  '<meta property="og:image"',
+  '<meta property="article:published_time"',
+  '<meta property="article:tag"',
+  '<meta name="news_keywords"',
+  '<meta name="twitter:card"',
+  '<meta name="twitter:title"',
+  '<meta name="twitter:description"',
+  '<meta name="twitter:image"',
+  '<link rel="canonical"',
+  '<link rel="icon"',
+  'application/ld+json'
+)
+
+$templatesToCheck = @(
+  (Join-Path $cmsDir "public\story.html"),
+  (Join-Path $cfDir "story.html")
+)
+foreach ($tmpl in $templatesToCheck) {
+  if (Test-Path $tmpl) {
+    $content = Get-Content $tmpl -Raw
+    $missingList = @()
+    foreach ($meta in $requiredMeta) {
+      $escaped = [regex]::Escape($meta)
+      if ($content -notmatch $escaped) {
+        $missingList += $meta
+      }
+    }
+    if ($missingList.Count -gt 0) {
+      Write-Fail "$(Split-Path $tmpl -Leaf) missing $($missingList.Count) required meta tags:"
+      foreach ($m in $missingList) {
+        Write-Host "         Missing: $m" -ForegroundColor Red
+      }
+    } else {
+      Write-Pass "$(Split-Path $tmpl -Leaf): all $($requiredMeta.Count) meta tags present"
+    }
+  } else {
+    Write-Fail "Template not found: $tmpl"
+  }
+}
+
+# ============================================================
+# 6. HTML VALIDITY
+# ============================================================
+Write-Step "6/10 HTML Structure"
+
+if (Test-Path $cfDir) {
+  $htmlFiles = Get-ChildItem -Path $cfDir -Filter *.html
+  $validCount = 0
+  foreach ($f in $htmlFiles) {
+    $c = Get-Content $f.FullName -Raw
+    $issuesList = @()
+    if ($c -notmatch '<!DOCTYPE html>') { $issuesList += "missing DOCTYPE" }
+    if ($c -notmatch '</html>') { $issuesList += "missing </html>" }
+    if ($c -match 'YOUR_') { $issuesList += "contains placeholder" }
+    if ($issuesList.Count -eq 0) {
+      $validCount++
+    } else {
+      Write-Fail "$($f.Name): $($issuesList -join ', ')"
+    }
+  }
+  if ($validCount -eq $htmlFiles.Count) {
+    Write-Pass "All $validCount HTML files valid"
+  }
+}
+
+# ============================================================
+# 7. LINE ENDINGS - enforce CRLF for PowerShell compat
+# ============================================================
+Write-Step "7/10 Line Endings (CRLF Enforcement)"
+
+$psScriptsDir = Join-Path $rootDir "scripts"
+if (Test-Path $psScriptsDir) {
+  $psFiles = Get-ChildItem -Path $psScriptsDir -Filter *.ps1
+  $fixedCount = 0
+  $warningCount = 0
+  foreach ($f in $psFiles) {
+    $bytes = [System.IO.File]::ReadAllBytes($f.FullName)
+    $hasCRLF = $false
+    for ($i = 0; $i -lt $bytes.Length - 1; $i++) {
+      if ($bytes[$i] -eq 13 -and $bytes[$i+1] -eq 10) {
+        $hasCRLF = $true
+        break
+      }
+    }
+    if (-not $hasCRLF -and ($bytes -contains 10)) {
+      if ($Fix) {
+        $text = [System.Text.Encoding]::UTF8.GetString($bytes)
+        $text = $text -replace "`r`n", "`n" -replace "(?<!`r)`n", "`r`n"
+        [System.IO.File]::WriteAllText($f.FullName, $text, [System.Text.Encoding]::UTF8)
+        Write-Host "  [FIX] Converted $($f.Name) to CRLF" -ForegroundColor Magenta
+        $fixedCount++
+      } else {
+        Write-Warn "$($f.Name) has LF line endings - run with -Fix to convert"
+        $warningCount++
+      }
+    }
+  }
+  if ($fixedCount -eq 0 -and $warningCount -eq 0) {
+    Write-Pass "All PowerShell scripts use CRLF"
+  } else {
+    if ($fixedCount -gt 0) { Write-Info "Fixed $fixedCount file(s)" }
+  }
+}
+
+# ============================================================
+# 8. WORKER ROUTES
+# ============================================================
+Write-Step "8/10 Worker Route Check"
+
+$workerPath = Join-Path $cfDir "_worker.js"
+if (Test-Path $workerPath) {
+  $worker = Get-Content $workerPath -Raw
+  $routeChecks = @(
+    @{ pattern = '/story/' ; name = 'Story route' }
+    @{ pattern = '/api/' ; name = 'API route' }
+    @{ pattern = '/admin' ; name = 'Admin route' }
+    @{ pattern = '/sitemap.xml' ; name = 'Sitemap route' }
+  )
+  $missingRoutes = @()
+  foreach ($rc in $routeChecks) {
+    if ($worker -notmatch $rc.pattern) {
+      $missingRoutes += $rc.name
+    }
+  }
+  if ($missingRoutes.Count -gt 0) {
+    foreach ($mr in $missingRoutes) {
+      Write-Fail "_worker.js missing $mr"
+    }
+  } else {
+    Write-Pass "All required routes present in _worker.js"
+  }
+} else {
+  Write-Fail "_worker.js not found"
+}
+
+# ============================================================
+# 9. STORY HEALTH CHECK - verify last 3 stories load
+# ============================================================
+Write-Step "9/10 Story Health Check"
+
+try {
+  Write-Info "Fetching recent stories from API..."
+  $storiesResp = Invoke-RestMethod -Uri "https://thebreakdown.in/api/stories/published?limit=3" -TimeoutSec 30 -ErrorAction Stop
+  $stories = $storiesResp.stories
+  $healthyCount = 0
+  $totalToCheck = [Math]::Min(3, $stories.Count)
+  if ($totalToCheck -gt 0) {
+    foreach ($s in $stories[0..($totalToCheck-1)]) {
+      try {
+        $storyResp = Invoke-RestMethod -Uri "https://thebreakdown.in/api/stories/public/$($s.slug)" -TimeoutSec 10 -ErrorAction Stop
+        if ($storyResp.story) {
+          $healthyCount++
+          Write-Info "$($s.slug): loaded OK"
+        }
+      } catch {
+        Write-Warn "$($s.slug): failed to load"
+      }
+    }
+  }
+  if ($healthyCount -eq $totalToCheck -and $totalToCheck -gt 0) {
+    Write-Pass "All $healthyCount recent stories load correctly"
+  } elseif ($healthyCount -gt 0) {
+    Write-Warn "$healthyCount/$totalToCheck recent stories loaded"
+  } else {
+    Write-Warn "No stories could be verified"
+  }
+} catch {
+  Write-Warn "Story health check skipped (API not reachable): $_"
+}
+
+# ============================================================
+# 10. CACHE-BUSTING CHECK
+# ============================================================
+Write-Step "10/10 CSS/JS Cache-Busting"
+
+if (Test-Path $cfDir) {
+  $htmlFiles = Get-ChildItem -Path $cfDir -Filter *.html
+  $missingVersion = @()
+  foreach ($f in $htmlFiles) {
+    $c = Get-Content $f.FullName -Raw
+    # Check for .css or .js in href/src attributes
+    $cssMatches = [regex]::Matches($c, '(?:href|src)="([^"]+\.(css|js)(?:\?[^"]*)?)"')
+    foreach ($m in $cssMatches) {
+      $fullUrl = $m.Groups[1].Value
+      # Skip external/CDN URLs — only check self-hosted assets
+      if ($fullUrl -match '^https?://' -and $fullUrl -notmatch 'thebreakdown\.in') {
+        continue
+      }
+      if ($fullUrl -notmatch '\?v=' -and $fullUrl -notmatch '\?\d+') {
+        $missingVersion += "$($f.Name): $fullUrl"
+      }
+    }
+  }
+  if ($missingVersion.Count -gt 0) {
+    foreach ($mv in $missingVersion) { Write-Warn "Missing cache-busting: $mv" }
+    Write-Host "  [INFO] Add ?v=N to CSS/JS links for cache control" -ForegroundColor Gray
+  } else {
+    Write-Pass "All CSS/JS links have cache-busting version parameters"
+  }
+}
+
+# ============================================================
+# SUMMARY
+# ============================================================
+Write-Host "`n============================================" -ForegroundColor Cyan
+if ($exitCode -eq 0) {
+  Write-Host "  ALL CHECKS PASSED - Ready to Deploy" -ForegroundColor Green
+} else {
+  Write-Host "  ISSUES FOUND - fix before deploy" -ForegroundColor Red
+}
+Write-Host "============================================" -ForegroundColor Cyan
+
+exit $exitCode) {
         $serviceKey = $matches[1].Trim().Trim('"', "'")
       }
     }
