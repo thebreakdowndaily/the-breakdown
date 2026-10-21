@@ -370,21 +370,23 @@ exports.handler = async (event) => {
         }
         if (approval.contentHash !== storyVersionHash(story)) return json(409, { error: 'Story changed after approval; release is blocked' });
 
+        // Persist a terminal release event first. If the story mutation then
+        // fails, the approval cannot be replayed; the story remains non-public.
+        const { error: eventError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
+          changed_by: user.email || String(user.id), note: 'Release event recorded after version-bound approval validation',
+        });
+        if (eventError) return json(503, { error: 'Release audit could not be persisted; publication is blocked' });
+
         const { data: updated, error: updateError } = await supabase.from('stories')
           .update({ status: 'published', published_at: new Date().toISOString() })
           .eq('id', storyId).eq('status', 'approved-for-release').select().maybeSingle();
-        if (updateError || !updated) return json(409, { error: 'Story status changed during publication; reload before retrying' });
-
-        const { error: eventError } = await supabase.from('pipeline_log').insert({
-          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
-          changed_by: user.email || String(user.id), note: 'Published after version-bound human approval',
-        });
-        if (eventError) return json(500, { error: 'Story status changed to published but audit logging failed; investigate immediately' });
+        if (updateError || !updated) return json(409, { error: 'Story status changed during publication; release is blocked and requires fresh review' });
 
         const { error: publishLogError } = await supabase.from('publish_log').insert({
           story_id: storyId, published_by: user.id, deploy_status: 'success',
         });
-        if (publishLogError) return json(500, { error: 'Story published but publish logging failed; investigate immediately' });
+        if (publishLogError) return json(500, { error: 'Story status changed to published but publish logging failed; investigate immediately' });
 
         return json(200, { success: true, story: updated });
       }
