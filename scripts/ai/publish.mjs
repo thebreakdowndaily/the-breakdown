@@ -2,12 +2,12 @@
  * THE BREAKDOWN OS — Phase 7: Production Package
  *
  * Prepares a complete production-ready package for a story:
- *   - Copies all assets to public/
+ *   - Copies all assets to a non-public review-artifact directory
  *   - Generates SEO metadata JSON
  *   - Generates sitemap entry
  *   - Generates Open Graph / Schema.org JSON-LD
  *   - Generates RSS entry
- *   - Updates publish-all-beats.js
+ *   - Prepares metadata only; never publishes
  *
  * Usage:
  *   node scripts/ai/publish.mjs --slug <slug>
@@ -49,7 +49,7 @@ async function main() {
     process.exit(1);
   }
 
-  const outDir = join(PROJECT_ROOT, 'public', 'stories', slug);
+  const outDir = join(PROJECT_ROOT, 'artifacts', 'newsroom', 'stories', slug);
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 
   console.log(`\n=== Phase 7 — Production Package ===\n`);
@@ -179,6 +179,7 @@ async function main() {
   console.log(`\n  Package: public/stories/${slug}/`);
   console.log('  Release: NOT performed by this script. Package preparation is not editorial approval.');
   console.log('  Next: submit the package through /newsroom and obtain version-specific human approval.');
+  console.log('  This directory is not a public web root; release only through the gated CMS.');
   console.log('  Do not invoke legacy direct-upsert or deployment commands to bypass the approval gate.\n');
 }
 
