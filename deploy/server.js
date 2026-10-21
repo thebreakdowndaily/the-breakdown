@@ -178,21 +178,48 @@ async function insertPipelineEvent(storyId, fromStatus, toStatus, actor, note) {
 
 async function reopenStoryForSourceMutation(storyId, actor, description) {
   const { data: story, error } = await supabase.from('stories').select('id, status, published_at').eq('id', storyId).single();
-  if (error || !story) throw new Error('Story for source mutation was not found');
+  if (error || !story) return { ok: false, status: 404, error: 'Story for source mutation was not found' };
   const status = String(story.status || 'draft');
-  if (['draft', 'archived', 'trash'].includes(status)) return;
-  // Persist a blocking event first; source changes are refused if the story cannot
-  // be safely reopened or the audit trail cannot be written.
+  if (['draft', 'archived', 'trash'].includes(status)) return { ok: true };
+
+  let deploymentHookUrl = null;
+  if (status === 'published') {
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return { ok: false, status: 503, error: 'DEPLOY_HOOK_URL must be configured before editing sources on a published story; story state remains unchanged.' }; }
+  }
+
+  // First invalidate any current release approval, then use a conditional status
+  // write. Published stories are rebuilt out of the public corpus before source
+  // mutation is allowed to proceed.
   await insertPipelineEvent(
-    story.id, status, 'draft', actor,
-    `Source evidence changed (${description}); prior editorial review/publication approval invalidated`,
+    story.id, status, 'source-change-attempted', actor,
+    `Source evidence change requested (${description}); prior editorial approval invalidated`,
   );
   const { data: updated, error: updateError } = await supabase.from('stories')
     .update({ status: 'draft', published_at: null })
     .eq('id', storyId).eq('status', status)
     .select('id').maybeSingle();
   if (updateError) throw updateError;
-  if (!updated) throw new Error('Story state changed during source mutation; reload and retry after review');
+  if (!updated) return { ok: false, status: 409, error: 'Story state changed during source mutation; reload and retry after review' };
+
+  let auditFailure = false;
+  try {
+    await insertPipelineEvent(story.id, status, 'draft', actor, `Source evidence changed (${description}); review approval invalidated`);
+  } catch (auditError) {
+    auditFailure = true;
+    console.error('[publication-gate] Source mutation reopened story but final audit write failed');
+  }
+
+  if (status === 'published') {
+    try {
+      await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Source change reopened a published story but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return { ok: false, status: 502, error: 'Story was moved to draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before editing sources.' };
+    }
+  }
+  if (auditFailure) return { ok: false, status: 503, error: 'Story was moved to draft, but audit logging failed; investigate before editing sources' };
+  return { ok: true };
 }
 
 // ==================== AUTH ROUTES ====================
@@ -399,14 +426,26 @@ app.put('/api/stories/:id', requireAuth, async (req, res) => {
     const afterHash = storyVersionHash({ ...existing, ...updates });
     const contentChanged = beforeHash !== afterHash;
     const approvalInvalidated = contentChanged && existing.status !== 'draft';
+    let deploymentHookUrl = null;
+    if (approvalInvalidated && existing.status === 'published') {
+      try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+      catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.' }); }
+    }
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
     if (approvalInvalidated) {
+      // The attempt entry blocks replay even if the subsequent conditional edit
+      // loses a race against another CMS action.
+      await insertPipelineEvent(
+        existing.id, existing.status, 'content-edit-attempted', actor,
+        'Material edit requested; prior editorial approval invalidated',
+      );
       updates.status = 'draft';
       updates.published_at = null;
     }
 
     let data, error;
     ({ data, error } = await supabase
-      .from('stories').update(updates).eq('id', req.params.id).select().single());
+      .from('stories').update(updates).eq('id', req.params.id).eq('status', existing.status).select().single());
 
     if (error && error.message && error.message.includes('column')) {
       const knownCols = [
@@ -436,20 +475,37 @@ app.put('/api/stories/:id', requireAuth, async (req, res) => {
     if (!data) return res.status(404).json({ error: 'Story not found' });
 
     saveRevision(req.params.id, req.session.userId, updates);
+    let invalidationAuditFailed = false;
     if (approvalInvalidated) {
       try {
         await insertPipelineEvent(
-          req.params.id, existing.status, 'draft',
-          req.session.userEmail || String(req.session.userId || 'system'),
+          req.params.id, existing.status, 'draft', actor,
           'Material story edit invalidated prior review/publication approval',
         );
       } catch (auditError) {
-        console.error('[publication-gate] Content was reopened as draft, but the invalidation audit failed:', auditError);
-        return res.status(500).json({
-          error: 'Story was moved back to draft but the audit record failed; investigate before release.',
+        invalidationAuditFailed = true;
+        console.error('[publication-gate] Content was reopened as draft, but the invalidation audit failed');
+      }
+    }
+
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+        data.deployment = { status: 'triggered', httpStatus: acknowledgement.status };
+      } catch (deployError) {
+        console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+        return res.status(502).json({
+          error: 'Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.',
           approvalInvalidated: true,
+          deploymentStatus: 'not-acknowledged',
         });
       }
+    }
+    if (invalidationAuditFailed) {
+      return res.status(503).json({
+        error: 'Story was moved back to draft but final audit logging failed; inspect the story and audit trail.',
+        approvalInvalidated: true,
+      });
     }
     res.json({ story: data, approvalInvalidated });
   } catch (err) {
@@ -510,9 +566,10 @@ app.post('/api/stories/:id/sources', requireAuth, async (req, res) => {
     const { label, url, source_type, verified } = req.body;
     if (!label || !url) return res.status(400).json({ error: 'Label and URL required' });
 
-    await reopenStoryForSourceMutation(
+    const reopened = await reopenStoryForSourceMutation(
       req.params.id, req.session.userEmail || String(req.session.userId || 'system'), 'source added',
     );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
 
     const { data: countData } = await supabase
       .from('story_sources')
@@ -544,9 +601,10 @@ app.put('/api/sources/:id', requireAuth, async (req, res) => {
     const { data: source, error: sourceError } = await supabase
       .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
     if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
-    await reopenStoryForSourceMutation(
+    const reopened = await reopenStoryForSourceMutation(
       source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source updated',
     );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
 
     const updates = { ...req.body };
     delete updates.id;
@@ -572,9 +630,10 @@ app.delete('/api/sources/:id', requireAuth, async (req, res) => {
     const { data: source, error: sourceError } = await supabase
       .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
     if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
-    await reopenStoryForSourceMutation(
+    const reopened = await reopenStoryForSourceMutation(
       source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source deleted',
     );
+    if (!reopened.ok) return res.status(reopened.status || 503).json({ error: reopened.error });
     const { error } = await supabase
       .from('story_sources')
       .delete()
