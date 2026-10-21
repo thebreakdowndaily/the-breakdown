@@ -614,7 +614,7 @@ function updateBulkBar() {
   if (count === 0) { bar.style.display = 'none'; bar.innerHTML = ''; return; }
   bar.style.display = 'block';
   bar.innerHTML = '<div class="bulk-bar"><span class="bulk-count">' + count + ' selected</span>' +
-    '<select id="bulkAction"><option value="">Bulk action...</option><option value="publish">Publish</option><option value="draft">Move to Draft</option><option value="archive">Archive</option><option value="trash">Delete</option>' +
+    '<select id="bulkAction"><option value="">Bulk action...</option><option value="draft">Move to Draft</option><option value="archive">Archive</option><option value="trash">Delete</option>' +
     '<option value="category">Change Category</option></select>' +
     '<select id="bulkCategory" style="display:none">' + ALL_CATEGORIES.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('') + '</select>' +
     '<button class="btn btn-gold btn-sm" onclick="executeBulk()">Apply</button>' +
@@ -628,8 +628,7 @@ async function executeBulk() {
   var ids = Array.from(state.selectedIds);
   if (!action || ids.length === 0) return;
   var value = null;
-  if (action === 'publish') { action = 'status'; value = 'published'; }
-  else if (action === 'draft') { action = 'status'; value = 'draft'; }
+  if (action === 'draft') { action = 'status'; value = 'draft'; }
   else if (action === 'archive') { action = 'status'; value = 'archived'; }
   else if (action === 'trash') { action = 'delete'; }
   else if (action === 'category') { action = 'category'; value = document.getElementById('bulkCategory').value; }
@@ -722,7 +721,7 @@ async function renderEditor(storyId) {
     if (s.status==='approved-for-release') {
       actionBtns += '<button class="btn btn-green btn-sm" onclick="publishStory()">📌 Publish Approved Version</button>';
       actionBtns += '<button class="btn btn-ghost btn-sm" onclick="returnToDraft()">↩ Return to Draft</button>';
-    } else if (s.status!=='published' && s.status!=='archived' && s.status!=='trash') {
+    } else if (['draft','ready','scheduled'].includes(s.status)) {
       actionBtns += '<button class="btn btn-green btn-sm" onclick="approveRelease()">✓ Approve for Release</button>';
     }
     if (s.status==='published') actionBtns += '<button class="btn btn-ghost btn-sm" onclick="unpublishStory()">↩ Unpublish</button>';
