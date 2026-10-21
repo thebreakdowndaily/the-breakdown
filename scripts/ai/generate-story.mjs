@@ -360,47 +360,13 @@ Include proper attribution and sourced data points.`,
     12288);
 }
 
-// ---- Update publish-all-beats.js ----
-function addToPublishScript(slug, title, category, summary, readTime, tags, metaTitle, metaDescription, contentFile) {
-  const scriptPath = join(PROJECT_ROOT, 'fact-check-cms', 'scripts', 'publish-all-beats.js');
-  let content = readFileSync(scriptPath, 'utf-8');
-
-  const tagArray = tags.map(t => `'${t.replace(/'/g, "\\'")}'`).join(',\n    ');
-
-  const newEntry = `  {
-    title: '${title.replace(/'/g, "\\'")}',
-    slug: '${slug}',
-    category: '${category}',
-    summary: '${summary.replace(/'/g, "\\'")}',
-    read_time: ${readTime},
-    tags: [${tagArray}],
-    meta_title: '${metaTitle.replace(/'/g, "\\'")}',
-    meta_description: '${summary.replace(/'/g, "\\'")}',
-    article_section: '${category}',
-    content_file: '${contentFile}',
-    story_dir: '${slug}',
-    fact_check_image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=630&fit=crop'
-  }`;
-
-  // Insert before the closing bracket of the stories array
-  const insertPos = content.lastIndexOf('];');
-  if (insertPos === -1) throw new Error('Could not find end of stories array');
-
-  const before = content.substring(0, insertPos).trimEnd();
-  const after = content.substring(insertPos);
-  content = before + ',\n' + newEntry + '\n' + after;
-
-  writeFileSync(scriptPath, content, 'utf-8');
-  return scriptPath;
-}
-
 // Generated content is always a draft. Prompt compliance is not trusted for workflow state.
 function enforceDraftFrontmatter(markdown) {
   const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return markdown;
   let frontmatter = match[1];
-  if (/^\s*status\s*:/m.test(frontmatter)) {
-    frontmatter = frontmatter.replace(/^(\s*)status\s*:.*$/gm, '$1status: "draft"');
+  if (/^[ \t]*status[ \t]*:/m.test(frontmatter)) {
+    frontmatter = frontmatter.replace(/^([ \t]*)status[ \t]*:.*$/gm, '$1status: "draft"');
   } else {
     frontmatter += '\nstatus: "draft"';
   }
