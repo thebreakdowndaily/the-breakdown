@@ -40,13 +40,13 @@ async function hmacKey(secret: string, usages: KeyUsage[]): Promise<CryptoKey> {
   );
 }
 
-async function createToken(username: string, secret: string): Promise<string> {
+async function createToken(username: string, role: 'admin' | 'editor-in-chief', secret: string): Promise<string> {
   if (!secretIsConfigured(secret)) throw new Error('PAGES_JWT_SECRET must be configured with at least 32 characters');
   const now = Math.floor(Date.now() / 1000);
   const head = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const body = base64UrlEncode(JSON.stringify({
     iss: 'the-breakdown-pages-api', aud: 'the-breakdown-pages-admin',
-    sub: username, username, role: 'admin', iat: now, exp: now + 3600,
+    sub: username, username, role, iat: now, exp: now + 3600,
   }));
   const signingInput = head + '.' + body;
   const key = await hmacKey(secret, ['sign']);
@@ -70,7 +70,7 @@ async function verifyToken(token: string, secret: string): Promise<any> {
     if (!Number.isInteger(payload.exp) || payload.exp <= now) return null;
     if (!Number.isInteger(payload.iat) || payload.iat > now + 60) return null;
     if (payload.iss !== 'the-breakdown-pages-api' || payload.aud !== 'the-breakdown-pages-admin') return null;
-    if (payload.sub !== payload.username || typeof payload.username !== 'string' || payload.role !== 'admin') return null;
+    if (payload.sub !== payload.username || typeof payload.username !== 'string' || !['admin', 'editor-in-chief'].includes(payload.role)) return null;
     return payload;
   } catch {
     return null;
@@ -120,14 +120,40 @@ function constantTimeEqual(a: string, b: string): boolean {
 async function handleAuth(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
   const jwtSecret = env.PAGES_JWT_SECRET || ''
   const adminPass = env.PAGES_ADMIN_PASSWORD || ''
+  const eicUsername = String(env.PAGES_EDITOR_IN_CHIEF_USERNAME || '').trim()
+  const eicPassword = env.PAGES_EDITOR_IN_CHIEF_PASSWORD || ''
+  const eicAllowlist = new Set(
+    String(env.PAGES_EDITOR_IN_CHIEF_USERNAMES || '')
+      .split(',')
+      .map(value => value.trim().toLowerCase())
+      .filter(Boolean)
+  )
 
   if (path === '/api/auth/login' && request.method === 'POST') {
     if (jwtSecret.length < 32 || !adminPass) {
       return error('Authentication is not configured. Set PAGES_JWT_SECRET (32+ characters) and PAGES_ADMIN_PASSWORD.', 503)
     }
-    const { username, password } = await request.json()
-    if (username === 'admin' && constantTimeEqual(String(password || ''), adminPass)) {
-      const token = await createToken(username, jwtSecret)
+    const { username: submittedUsername, password } = await request.json()
+    const username = String(submittedUsername || '').trim()
+    const normalisedUsername = username.toLowerCase()
+    const submittedPassword = String(password || '')
+
+    // The EIC is a distinct principal with independent credentials; being the
+    // ordinary shared admin does not grant authority to approve public release.
+    if (eicUsername && eicPassword && normalisedUsername === eicUsername.toLowerCase() &&
+        normalisedUsername !== 'admin' && constantTimeEqual(submittedPassword, eicPassword)) {
+      if (!eicAllowlist.has(normalisedUsername)) {
+        return error('Editor-in-Chief username is not present in PAGES_EDITOR_IN_CHIEF_USERNAMES.', 503)
+      }
+      const token = await createToken(eicUsername, 'editor-in-chief', jwtSecret)
+      return json({
+        token,
+        user: { id: 'editor-in-chief', username: eicUsername, displayName: 'Editor-in-Chief', role: 'editor-in-chief' },
+      })
+    }
+
+    if (normalisedUsername === 'admin' && constantTimeEqual(submittedPassword, adminPass)) {
+      const token = await createToken('admin', 'admin', jwtSecret)
       return json({
         token,
         user: { id: 1, username: 'admin', displayName: 'Admin', role: 'admin' },
@@ -312,8 +338,8 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
           .filter(Boolean)
       )
       const username = String(user.username || '').trim().toLowerCase()
-      if (!username || !authorisedEic.has(username)) {
-        return error('Only a username explicitly listed in PAGES_EDITOR_IN_CHIEF_USERNAMES may approve public release', 403)
+      if (user.role !== 'editor-in-chief' || !username || !authorisedEic.has(username)) {
+        return error('Only a separately authenticated Editor-in-Chief with an allowlisted username may approve public release', 403)
       }
     }
 
