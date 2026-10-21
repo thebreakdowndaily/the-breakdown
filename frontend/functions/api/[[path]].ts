@@ -358,7 +358,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
         return error('Approval history is unavailable; release is blocked', 503)
       }
       const result = await validatePublicationApproval({ logs, story, destination, now: Date.now() })
-      if (!result.ok) return error(`Publication blocked: ${result.reason}`, 409)
+      if (result.ok === false) return error(`Publication blocked: ${result.reason}`, 409)
 
       // Write the durable release event BEFORE changing public status. If the
       // following update fails, this approval cannot be replayed accidentally.
