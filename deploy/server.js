@@ -8,6 +8,8 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const { assertLegacyCmsSchema } = require('./lib/cms-schema-contract.cjs');
+const { validateDeploymentHookUrl, triggerDeploymentHook } = require('./lib/publication-deploy-hook.cjs');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -749,6 +751,9 @@ app.post('/api/stories/:id/approve-release', requireAuth, async (req, res) => {
 
 app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
   try {
+    let deploymentHookUrl;
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before publication; story status remains unchanged.' }); }
     const destination = publicationDestination();
     if (!destination) {
       return res.status(503).json({ error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
@@ -862,7 +867,24 @@ app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
       }
     }
 
-    return res.json({ success: true, story: updated, approval: { approvedBy: approval.approvedBy, approvedAt: approval.approvedAt, destination } });
+    let deploymentAcknowledgement;
+    try {
+      deploymentAcknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is published and audited, but rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is published and audited in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.',
+        releaseStatus: 'published',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
+
+    return res.json({
+      success: true,
+      story: updated,
+      approval: { approvedBy: approval.approvedBy, approvedAt: approval.approvedAt, destination },
+      deployment: { status: 'triggered', httpStatus: deploymentAcknowledgement.status },
+    });
   } catch (err) {
     console.error('[publication-gate] Publish failed:', err);
     return res.status(503).json({ error: 'Release audit or publication failed; inspect the story and audit log before retrying' });
@@ -1223,11 +1245,24 @@ app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'a
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== START ====================
-app.listen(PORT, () => {
-  console.log(`\n  🔍 The Breakdown — Fact Check CMS`);
-  console.log(`  ═══════════════════════════════════`);
-  console.log(`  🚀  Server:  http://localhost:${PORT}`);
-  console.log(`  📋  Admin:   http://localhost:${PORT}/admin`);
-  console.log(`  📡  API:     http://localhost:${PORT}/api`);
-  console.log(`  ═══════════════════════════════════\n`);
-});
+// Refuse to serve a CMS API that is connected to the canonical blocks schema
+// instead of the legacy CMS schema it writes. This probe is read-only.
+async function startServer() {
+  try {
+    await assertLegacyCmsSchema({ baseUrl: supabaseUrl, serviceKey: supabaseKey });
+  } catch (schemaError) {
+    console.error('[cms-schema] Refusing to start because the configured database does not match the legacy CMS contract. No content writes were attempted.');
+    process.exit(1);
+    return;
+  }
+
+  app.listen(PORT, () => {
+    console.log(`\n  🔍 The Breakdown — Fact Check CMS`);
+    console.log(`  ═══════════════════════════════════`);
+    console.log(`  🚀  Server:  http://localhost:${PORT}`);
+    console.log(`  📋  Admin:   http://localhost:${PORT}/admin`);
+    console.log(`  📡  API:     http://localhost:${PORT}/api`);
+    console.log(`  ═══════════════════════════════════\n`);
+  });
+}
+startServer();
