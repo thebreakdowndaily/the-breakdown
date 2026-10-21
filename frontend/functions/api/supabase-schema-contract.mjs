@@ -106,11 +106,14 @@ export async function assertSupabaseCmsSchema({ baseUrl, serviceKey, fetchImpl =
   }
 
   if (failures.length) {
-    throw new Error(
+    const error = new Error(
       'Supabase database does not match the required legacy Pages CMS schema. ' +
-      'No seed writes were attempted. Configure the intended CMS database or migrate it deliberately. ' +
+      'No content writes were attempted. Configure the intended CMS database or migrate it deliberately. ' +
       failures.join('; ')
     );
+    error.name = 'SupabaseCmsSchemaError';
+    error.code = 'SUPABASE_CMS_SCHEMA_MISMATCH';
+    throw error;
   }
 
   return { checkedTables: SUPABASE_CMS_SCHEMA_PROBES.length, checkedStatuses: REQUIRED_CMS_WORKFLOW_STATUSES.length };
