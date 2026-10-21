@@ -339,11 +339,14 @@ export class SupabaseBackend implements DbBackend {
     }
   }
 
-  async getPipelineLogs(_storySlug?: string): Promise<PipelineLog[]> {
-    const rows = await this.safeQuery(
-      'pipeline_log',
-      'select=*&order=created_at.desc&limit=100'
-    )
+  async getPipelineLogs(storySlug?: string): Promise<PipelineLog[]> {
+    let query = 'select=*&order=created_at.desc&limit=100'
+    if (storySlug) {
+      const story = await this.getStory(storySlug)
+      if (!story) return []
+      query = `story_id=eq.${encodeURIComponent(String(story.id))}&select=*&order=created_at.desc&limit=100`
+    }
+    const rows = await this.safeQuery('pipeline_log', query)
     return rows.map((r: any) => ({
       id: r.id,
       story_id: r.story_id,
