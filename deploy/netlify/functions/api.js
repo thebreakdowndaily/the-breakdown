@@ -324,8 +324,14 @@ exports.handler = async (event) => {
 
         const { data: story, error } = await supabase.from('stories').select('*').eq('id', storyId).single();
         if (error || !story) return json(404, { error: 'Story not found' });
-        if (story.status !== 'ready') return json(409, { error: 'Only a ready story can be approved for public release' });
+        // This CMS has its own draft-based lifecycle. The explicit, allowlisted
+        // Editor-in-Chief action is the final human release approval for the saved
+        // draft; the UI must not publish as part of this action.
+        if (!['draft', 'ready'].includes(String(story.status))) {
+          return json(409, { error: 'Only a draft or ready story can be approved for public release' });
+        }
 
+        const approvalFromStatus = story.status;
         const approvedAt = new Date().toISOString();
         const approvedBy = String(user.email).toLowerCase();
         const approval = {
@@ -338,7 +344,7 @@ exports.handler = async (event) => {
         if (logError) return json(503, { error: 'Could not persist approval record; release is blocked' });
 
         const { data: updated, error: updateError } = await supabase.from('stories')
-          .update({ status: 'approved-for-release' }).eq('id', storyId).eq('status', 'ready').select().maybeSingle();
+          .update({ status: 'approved-for-release' }).eq('id', storyId).eq('status', approvalFromStatus).select().maybeSingle();
         if (updateError || !updated) return json(409, { error: 'Story changed during approval; reload and review again' });
         return json(200, { success: true, story: updated, approval: { approvedBy, approvedAt, destination, contentHash: approval.contentHash } });
       }
