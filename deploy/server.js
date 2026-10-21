@@ -60,6 +60,26 @@ app.use(session({
   proxy: true,
   cookie: { secure: true, httpOnly: true, sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }
 }));
+
+// Cache a read-only CMS schema preflight for API routes only. A mismatched CMS
+// database must block writes without taking the static public website offline.
+let cmsSchemaPreflightPromise;
+async function ensureCmsSchemaPreflight() {
+  if (!cmsSchemaPreflightPromise) {
+    cmsSchemaPreflightPromise = assertLegacyCmsSchema({ baseUrl: supabaseUrl, serviceKey: supabaseKey });
+  }
+  return cmsSchemaPreflightPromise;
+}
+app.use('/api', async (req, res, next) => {
+  try {
+    await ensureCmsSchemaPreflight();
+    next();
+  } catch (schemaError) {
+    console.error('[cms-schema] CMS API blocked because the configured database does not match the legacy CMS contract');
+    res.status(503).json({ error: 'CMS database schema is incompatible; service unavailable. No content writes were attempted.' });
+  }
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== AUTH HELPERS ====================
@@ -1245,24 +1265,13 @@ app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'a
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ==================== START ====================
-// Refuse to serve a CMS API that is connected to the canonical blocks schema
-// instead of the legacy CMS schema it writes. This probe is read-only.
-async function startServer() {
-  try {
-    await assertLegacyCmsSchema({ baseUrl: supabaseUrl, serviceKey: supabaseKey });
-  } catch (schemaError) {
-    console.error('[cms-schema] Refusing to start because the configured database does not match the legacy CMS contract. No content writes were attempted.');
-    process.exit(1);
-    return;
-  }
-
-  app.listen(PORT, () => {
-    console.log(`\n  🔍 The Breakdown — Fact Check CMS`);
-    console.log(`  ═══════════════════════════════════`);
-    console.log(`  🚀  Server:  http://localhost:${PORT}`);
-    console.log(`  📋  Admin:   http://localhost:${PORT}/admin`);
-    console.log(`  📡  API:     http://localhost:${PORT}/api`);
-    console.log(`  ═══════════════════════════════════\n`);
-  });
-}
-startServer();
+// The public static site remains available when CMS integration is misconfigured;
+// only /api requests are blocked by the schema-contract middleware above.
+app.listen(PORT, () => {
+  console.log(`\n  🔍 The Breakdown — Fact Check CMS`);
+  console.log(`  ═══════════════════════════════════`);
+  console.log(`  🚀  Server:  http://localhost:${PORT}`);
+  console.log(`  📋  Admin:   http://localhost:${PORT}/admin`);
+  console.log(`  📡  API:     http://localhost:${PORT}/api`);
+  console.log(`  ═══════════════════════════════════\n`);
+});
