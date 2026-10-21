@@ -546,7 +546,7 @@ function renderPipelineButtons(s) {
     btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Draft</button>`)
   }
   if (s.status === 'approved-for-release') {
-    btns.push(`<button class="btn btn-sm btn-primary" onclick="views.pipelineAction('${s.slug}','publish')">Publish Approved Version</button>`)
+    btns.push('<span class="btn btn-sm btn-outline" title="This local SQLite workflow is not connected to the canonical public publisher.">Public release unavailable here</span>')
     btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Return to Draft</button>`)
   }
   if (s.status === 'published') {
