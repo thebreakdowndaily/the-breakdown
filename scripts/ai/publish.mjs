@@ -177,8 +177,9 @@ async function main() {
   console.log(`  Read time:  ${readTime} min`);
   console.log(`  Tags:       ${tags.join(', ')}`);
   console.log(`\n  Package: public/stories/${slug}/`);
-  console.log(`  Run: node fact-check-cms/scripts/publish-all-beats.js`);
-  console.log(`       .\\scripts\\deploy.ps1 -PushCMS\n`);
+  console.log('  Release: NOT performed by this script. Package preparation is not editorial approval.');
+  console.log('  Next: submit the package through /newsroom and obtain version-specific human approval.');
+  console.log('  Do not invoke legacy direct-upsert or deployment commands to bypass the approval gate.\n');
 }
 
 main().catch(err => {
