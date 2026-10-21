@@ -78,6 +78,32 @@ function parseApproval(note) {
   } catch { return null; }
 }
 
+async function reopenStoryForSourceMutation(storyId, user, description) {
+  const { data: story, error } = await supabase.from('stories')
+    .select('id, status, published_at').eq('id', storyId).single();
+  if (error || !story) return { ok: false, error: 'Story for source mutation was not found' };
+  const status = String(story.status || 'draft');
+  if (['draft', 'archived', 'trash'].includes(status)) return { ok: true };
+
+  const actor = String(user?.email || user?.name || user?.id || 'cms-user').trim().toLowerCase();
+  const { error: logError } = await supabase.from('pipeline_log').insert({
+    story_id: story.id,
+    from_status: status,
+    to_status: 'draft',
+    changed_by: actor,
+    note: `Source evidence changed (${description}); prior editorial review/publication approval invalidated`,
+  });
+  if (logError) return { ok: false, error: 'Could not persist source-change invalidation audit; source change is blocked' };
+
+  const { data: updated, error: updateError } = await supabase.from('stories')
+    .update({ status: 'draft', published_at: null })
+    .eq('id', storyId).eq('status', status).select('id').maybeSingle();
+  if (updateError || !updated) {
+    return { ok: false, error: 'Story state changed during source editing; reload and retry after review' };
+  }
+  return { ok: true };
+}
+
 function signToken(payload) {
   if (!sessionSecretIsConfigured()) throw new Error('SESSION_SECRET must be configured with at least 32 characters');
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
@@ -311,6 +337,9 @@ exports.handler = async (event) => {
         const { label, url, source_type, verified } = body;
         if (!label || !url) return json(400, { error: 'Label and URL required' });
 
+        const reopened = await reopenStoryForSourceMutation(storyId, user, 'source added');
+        if (!reopened.ok) return json(503, { error: reopened.error });
+
         const { count } = await supabase
           .from('story_sources').select('id', { count: 'exact', head: true }).eq('story_id', storyId);
 
@@ -415,6 +444,12 @@ exports.handler = async (event) => {
     // ===== SOURCES (standalone) =====
     // PUT /api/sources/:id
     if (segments.length === 2 && segments[0] === 'sources' && method === 'PUT') {
+      const { data: source, error: sourceError } = await supabase
+        .from('story_sources').select('id, story_id').eq('id', segments[1]).single();
+      if (sourceError || !source) return json(404, { error: 'Source not found' });
+      const reopened = await reopenStoryForSourceMutation(source.story_id, user, 'source updated');
+      if (!reopened.ok) return json(503, { error: reopened.error });
+
       const updates = { ...body }; delete updates.id; delete updates.story_id; delete updates.created_at;
       const { data, error } = await supabase.from('story_sources').update(updates).eq('id', segments[1]).select().single();
       if (error) return json(500, { error: 'Failed to update source' });
@@ -423,6 +458,12 @@ exports.handler = async (event) => {
 
     // DELETE /api/sources/:id
     if (segments.length === 2 && segments[0] === 'sources' && method === 'DELETE') {
+      const { data: source, error: sourceError } = await supabase
+        .from('story_sources').select('id, story_id').eq('id', segments[1]).single();
+      if (sourceError || !source) return json(404, { error: 'Source not found' });
+      const reopened = await reopenStoryForSourceMutation(source.story_id, user, 'source deleted');
+      if (!reopened.ok) return json(503, { error: reopened.error });
+
       const { error } = await supabase.from('story_sources').delete().eq('id', segments[1]);
       if (error) return json(500, { error: 'Failed to delete source' });
       return json(200, { success: true });
