@@ -11,7 +11,7 @@
  */
 
 import { type Story, type User, type PipelineLog, type DbBackend } from './types'
-import { SEED_STORIES } from './seed-data'
+import { assertSupabaseCmsSchema } from './supabase-schema-contract.mjs'
 
 interface SupabaseConfig {
   url: string
@@ -79,54 +79,13 @@ export class SupabaseBackend implements DbBackend {
   }
 
   async ensureSchema(): Promise<void> {
-    // The Supabase project already has:
-    //   - admin_users table (CMS users)
-    //   - stories table (CMS content, 48 existing stories)
-    //
-    // A pipeline_log table needs to be created via Supabase SQL editor:
-    //   CREATE TABLE IF NOT EXISTS pipeline_log (
-    //     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    //     story_id UUID NOT NULL,
-    //     from_status TEXT,
-    //     to_status TEXT NOT NULL,
-    //     changed_by TEXT NOT NULL DEFAULT 'system',
-    //     note TEXT NOT NULL DEFAULT '',
-    //     created_at TIMESTAMPTZ DEFAULT NOW()
-    //   );
-    //
-    // We gracefully handle its absence — pipeline features will
-    // return empty logs until the table is created.
-
-    // Seed our 30 stories into the stories table if they don't exist by slug
-    for (const s of SEED_STORIES) {
-      const resp = await fetch(
-        `${this.cfg.url}/rest/v1/stories?slug=eq.${encodeURIComponent(s.slug)}&select=id`,
-        { headers: headers(this.cfg, true) }
-      )
-      const existing = await resp.json()
-      if (!Array.isArray(existing) || existing.length === 0) {
-        await fetch(`${this.cfg.url}/rest/v1/stories`, {
-          method: 'POST',
-          headers: headers(this.cfg, true),
-          body: JSON.stringify({
-            slug: s.slug,
-            title: s.title,
-            summary: s.summary,
-            content: s.body,
-            category: s.category,
-            tags: JSON.stringify(s.tags),
-            fact_check_image: s.hero,
-            fact_check_image_caption: s.caption,
-            author: s.author,
-            read_time: s.readTime,
-            published_at: null,
-            status: 'draft',
-            created_at: s.createdAt,
-            updated_at: s.updatedAt,
-          }),
-        })
-      }
-    }
+    // Fail before any writes if Pages points at the canonical site database or an
+    // incomplete CMS schema. This is a read-only schema contract check; it never
+    // creates tables or seeds content.
+    await assertSupabaseCmsSchema({
+      baseUrl: this.cfg.url,
+      serviceKey: this.cfg.serviceKey,
+    })
   }
 
   /** Helper to safely query a table that may not exist */
