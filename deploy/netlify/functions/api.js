@@ -1,4 +1,6 @@
 const { supabase } = require('./lib/supabase');
+const { assertLegacyCmsSchema } = require('../../lib/cms-schema-contract.cjs');
+const { validateDeploymentHookUrl, triggerDeploymentHook } = require('../../lib/publication-deploy-hook.cjs');
 const crypto = require('crypto');
 
 const COOKIE_SECRET = process.env.SESSION_SECRET || '';
@@ -163,7 +165,24 @@ function hashPassword(password) {
 }
 
 // ==================== ROUTER ====================
+let schemaPreflightPromise;
+async function ensureSchemaPreflight() {
+  if (!schemaPreflightPromise) {
+    schemaPreflightPromise = assertLegacyCmsSchema({
+      baseUrl: process.env.SUPABASE_URL || '',
+      serviceKey: process.env.SUPABASE_SERVICE_KEY || '',
+    });
+  }
+  return schemaPreflightPromise;
+}
+
 exports.handler = async (event) => {
+  try {
+    await ensureSchemaPreflight();
+  } catch (schemaError) {
+    console.error('[cms-schema] API blocked because the configured database does not match the legacy CMS contract');
+    return json(503, { error: 'CMS database schema is incompatible; service unavailable. No content writes were attempted.' });
+  }
   const path = event.path.replace('/.netlify/functions/api', '') || '/';
   const method = event.httpMethod;
   const body = event.body ? JSON.parse(event.body) : {};
@@ -415,6 +434,9 @@ exports.handler = async (event) => {
 
       // POST /api/stories/:id/publish — approval is necessary but not sufficient.
       if (segments.length === 3 && segments[2] === 'publish' && method === 'POST') {
+        let deploymentHookUrl;
+        try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+        catch { return json(503, { error: 'DEPLOY_HOOK_URL must be configured before publication; story status remains unchanged.' }); }
         const destination = publicationDestination();
         if (!destination) return json(503, { error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
 
@@ -462,9 +484,30 @@ exports.handler = async (event) => {
         const { error: publishLogError } = await supabase.from('publish_log').insert({
           story_id: storyId, published_by: user.id, deploy_status: 'success',
         });
-        if (publishLogError) return json(500, { error: 'Story status changed to published but publish logging failed; investigate immediately' });
+        if (publishLogError) {
+          // The version-bound pipeline log is the primary audit record. Telemetry
+          // failure must not silently suppress the public rebuild after publication.
+          console.error('[publication-gate] publish_log telemetry failed after primary audit succeeded');
+        }
 
-        return json(200, { success: true, story: updated });
+        let deploymentAcknowledgement;
+        try {
+          deploymentAcknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+        } catch (deployError) {
+          console.error('[deploy-hook] Story is published and audited, but rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+          return json(502, {
+            error: 'Story is published and audited in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.',
+            releaseStatus: 'published',
+            deploymentStatus: 'not-acknowledged',
+          });
+        }
+
+        return json(200, {
+          success: true,
+          story: updated,
+          deployment: { status: 'triggered', httpStatus: deploymentAcknowledgement.status },
+          telemetryStatus: publishLogError ? 'degraded' : 'recorded',
+        });
       }
     }
 
