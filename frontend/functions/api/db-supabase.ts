@@ -310,20 +310,6 @@ export class SupabaseBackend implements DbBackend {
     by: string,
     note: string,
   ): Promise<PipelineLog> {
-    const rows = await this.safeQuery('pipeline_log', 'select=id&limit=1')
-    if (rows.length === 0) {
-      // pipeline_log table doesn't exist yet — return a fake log
-      return {
-        id: 0,
-        story_id: storyId,
-        from_status: from,
-        to_status: to,
-        changed_by: by,
-        note: note + ' (table not created)',
-        created_at: new Date().toISOString(),
-      }
-    }
-
     const resp = await fetch(`${this.cfg.url}/rest/v1/pipeline_log`, {
       method: 'POST',
       headers: headers(this.cfg, true),
@@ -335,8 +321,13 @@ export class SupabaseBackend implements DbBackend {
         note,
       }),
     })
+    if (!resp.ok) {
+      const detail = await resp.text().catch(() => '')
+      throw new Error(`Could not persist pipeline audit event (${resp.status}): ${detail.slice(0, 300)}`)
+    }
     const result = await resp.json()
     const row = Array.isArray(result) ? result[0] : result
+    if (!row || row.id == null) throw new Error('Pipeline audit event was not returned by storage')
     return {
       id: row.id,
       story_id: row.story_id,
