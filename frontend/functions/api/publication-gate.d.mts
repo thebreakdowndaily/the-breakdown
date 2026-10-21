@@ -1,6 +1,5 @@
 export const APPROVAL_NOTE_PREFIX: string;
 export const APPROVAL_TTL_MS: number;
-export const DEFAULT_PUBLICATION_DESTINATION: string;
 export function storyVersionPayload(story: any): Record<string, unknown>;
 export function hashStoryVersion(story: any): Promise<string>;
 export function createApprovalNote(value: { contentHash: string; destination: string; approvedBy: string; approvedAt: string }): string;
