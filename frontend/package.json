@@ -9,7 +9,7 @@
     "postbuild": "node scripts/postbuild.mjs",
     "start": "next start",
     "lint": "eslint",
-    "test:publication-gate": "node --test scripts/test-publication-gate.mjs"
+    "test:publication-gate": "node --test scripts/test-*.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
