@@ -29,6 +29,7 @@ on:
       - 'frontend/public/admin/index.html'
       - 'scripts/ai/publish.mjs'
       - 'scripts/pipeline.mjs'
+      - 'scripts/deploy.ps1'
       - '.github/workflows/publication-gate-tests.yml'
   workflow_dispatch:
 
