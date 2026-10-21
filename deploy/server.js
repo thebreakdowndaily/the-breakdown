@@ -914,25 +914,55 @@ app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
 // ==================== UNPUBLISH / ARCHIVE ====================
 app.post('/api/stories/:id/unpublish', requireAuth, async (req, res) => {
   try {
+    let deploymentHookUrl;
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before unpublishing; story status remains unchanged.' }); }
+
     const { data: story, error } = await supabase
       .from('stories')
-      .select('id, status')
+      .select('id, slug, status')
       .eq('id', req.params.id)
       .single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
     if (story.status !== 'published') return res.status(400).json({ error: 'Only published stories can be unpublished' });
 
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    // Persist an attempt first so a concurrent publisher cannot replay approval
+    // while the takedown status update is in flight.
+    await insertPipelineEvent(
+      story.id, 'published', 'unpublish-attempted', actor,
+      'Human requested takedown; static rebuild acknowledgement is required',
+    );
+
     const { data: updated, error: updateError } = await supabase
       .from('stories')
       .update({ status: 'draft', published_at: null })
       .eq('id', req.params.id)
+      .eq('status', 'published')
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
-    res.json({ success: true, story: updated });
+    if (!updated) return res.status(409).json({ error: 'Story state changed during takedown; reload before retrying' });
+
+    await insertPipelineEvent(story.id, 'published', 'draft', actor, 'Unpublished after conditional state transition');
+    try {
+      const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+      return res.json({
+        success: true,
+        story: updated,
+        deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+      });
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is unpublished in CMS, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is unpublished in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.',
+        releaseStatus: 'draft',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
   } catch (err) {
     console.error('Unpublish error:', err);
-    res.status(500).json({ error: 'Failed to unpublish story' });
+    return res.status(503).json({ error: 'Unpublish audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
@@ -940,23 +970,57 @@ app.post('/api/stories/:id/archive', requireAuth, async (req, res) => {
   try {
     const { data: story, error } = await supabase
       .from('stories')
-      .select('id, status')
+      .select('id, slug, status')
       .eq('id', req.params.id)
       .single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
     if (story.status === 'archived') return res.status(400).json({ error: 'Story is already archived' });
 
+    const wasPublished = story.status === 'published';
+    let deploymentHookUrl = null;
+    if (wasPublished) {
+      try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+      catch { return res.status(503).json({ error: 'DEPLOY_HOOK_URL must be configured before archiving a published story; status remains unchanged.' }); }
+    }
+
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    await insertPipelineEvent(
+      story.id, story.status, 'archive-attempted', actor,
+      wasPublished ? 'Human requested archive of published content; rebuild acknowledgement is required'
+        : 'Human requested archive; prior release approval will be invalidated',
+    );
+
     const { data: updated, error: updateError } = await supabase
       .from('stories')
-      .update({ status: 'archived' })
+      .update({ status: 'archived', published_at: null })
       .eq('id', req.params.id)
+      .eq('status', story.status)
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
-    res.json({ success: true, story: updated });
+    if (!updated) return res.status(409).json({ error: 'Story state changed during archive; reload before retrying' });
+
+    await insertPipelineEvent(story.id, story.status, 'archived', actor, 'Archived after conditional state transition');
+    if (!wasPublished) return res.json({ success: true, story: updated });
+
+    try {
+      const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+      return res.json({
+        success: true,
+        story: updated,
+        deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+      });
+    } catch (deployError) {
+      console.error('[deploy-hook] Story is archived in CMS, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return res.status(502).json({
+        error: 'Story is archived in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.',
+        releaseStatus: 'archived',
+        deploymentStatus: 'not-acknowledged',
+      });
+    }
   } catch (err) {
     console.error('Archive error:', err);
-    res.status(500).json({ error: 'Failed to archive story' });
+    return res.status(503).json({ error: 'Archive audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
@@ -1148,6 +1212,18 @@ app.post('/api/stories/bulk', requireAuth, async (req, res) => {
     if (!action) return res.status(400).json({ error: 'Action required' });
 
     let updates = {};
+    if (['status', 'delete', 'category'].includes(action)) {
+      const { data: selected, error: statusError } = await supabase
+        .from('stories').select('id, status').in('id', ids);
+      if (statusError) throw statusError;
+      if ((selected || []).some(story => ['published', 'approved-for-release'].includes(story.status))) {
+        const actionLabel = action === 'category' ? 'category edits' : 'bulk status changes';
+        return res.status(409).json({
+          error: `Bulk ${actionLabel} are blocked for published or approval-pending stories. Use the individual audit/release workflow.`,
+        });
+      }
+    }
+
     if (action === 'status') {
       if (['published', 'approved-for-release', 'ready'].includes(String(value))) {
         return res.status(403).json({ error: 'Bulk status changes cannot publish or approve stories; use the version-bound editorial release workflow.' });
@@ -1155,14 +1231,8 @@ app.post('/api/stories/bulk', requireAuth, async (req, res) => {
       if (!['draft', 'scheduled', 'archived', 'trash'].includes(String(value))) {
         return res.status(400).json({ error: 'Invalid bulk status value' });
       }
-      updates = { status: value };
+      updates = { status: value, published_at: null };
     } else if (action === 'category') {
-      const { data: selected, error: statusError } = await supabase
-        .from('stories').select('id, status').in('id', ids);
-      if (statusError) throw statusError;
-      if ((selected || []).some(story => ['published', 'approved-for-release'].includes(story.status))) {
-        return res.status(409).json({ error: 'Bulk category edits are blocked for published or approval-pending stories. Edit one story at a time so its approval is invalidated.' });
-      }
       updates = { category: value };
     } else if (action === 'delete') {
       updates = { status: 'trash', deleted_at: new Date().toISOString(), published_at: null };
