@@ -235,19 +235,58 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const nextHash = await hashStoryVersion({ ...existing, ...data, slug })
     const updateData: Record<string, any> = { ...data }
     const contentChanged = previousHash !== nextHash
-    if (contentChanged && existing.status !== 'draft') {
+    const approvalInvalidated = contentChanged && existing.status !== 'draft'
+    let deploymentHookUrl: string | null = null
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        deploymentHookUrl = validateDeploymentHookUrl(env.DEPLOY_HOOK_URL || '')
+      } catch {
+        return error('DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.', 503)
+      }
+    }
+
+    if (approvalInvalidated) {
+      try {
+        await db.createPipelineLog(existing.id!, existing.status, 'content-edit-attempted', user.username || 'system',
+          'Material edit requested; prior editorial approval invalidated')
+      } catch (auditError) {
+        console.error('[publication-gate] Could not persist edit invalidation attempt:', auditError)
+        return error('Edit invalidation audit could not be persisted; story was not changed', 503)
+      }
       // Reopen the editorial workflow whenever reviewed material changes.
       updateData.status = 'draft'
       updateData.publishedAt = null
     }
 
-    const story = await db.updateStory(slug, updateData)
-    if (!story) return error('Story not found', 404)
-    if (contentChanged && existing.status !== story.status) {
-      await db.createPipelineLog(existing.id!, existing.status, 'draft', user.username || 'system',
-        'Story content changed; prior review/publication approval invalidated')
+    const story = approvalInvalidated
+      ? await db.updateStoryIfStatus(slug, existing.status, updateData)
+      : await db.updateStory(slug, updateData)
+    if (!story) return error('Story state changed during edit; reload and retry against the latest version', 409)
+
+    let finalAuditFailed = false
+    if (approvalInvalidated) {
+      try {
+        await db.createPipelineLog(existing.id!, existing.status, 'draft', user.username || 'system',
+          'Story content changed; prior review/publication approval invalidated')
+      } catch (auditError) {
+        finalAuditFailed = true
+        console.error('[publication-gate] Story was moved to draft but final invalidation audit failed')
+      }
     }
-    return json({ story, approvalInvalidated: contentChanged && existing.status !== 'draft' })
+
+    if (approvalInvalidated && existing.status === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        return json({ story, approvalInvalidated: true, deployment: { status: 'triggered', httpStatus: acknowledgement.status } })
+      } catch (deployError: any) {
+        console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError?.code || 'unknown failure')
+        return error('Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.', 502)
+      }
+    }
+    if (finalAuditFailed) {
+      return error('Story was moved to draft but final audit logging failed; inspect the story and audit records before release', 503)
+    }
+    return json({ story, approvalInvalidated })
   }
 
   // DELETE /api/stories/:slug
@@ -255,6 +294,11 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = singleMatch[1]
+    const existing = await db.getStory(slug)
+    if (!existing) return error('Story not found', 404)
+    if (['published', 'approved-for-release'].includes(existing.status)) {
+      return error('Direct delete is blocked for published or approval-pending stories. Use the audited pipeline takedown action.', 409)
+    }
     await db.deleteStory(slug)
     return json({ message: 'Story archived' })
   }
@@ -322,11 +366,12 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     // A CMS status change alone does not update the public static site. Require
     // a configured deployment hook before consuming approval or mutating status.
     let deploymentHookUrl: string | null = null
-    if (action === 'publish') {
+    const removesLiveStory = action === 'archive' && story.status === 'published'
+    if (action === 'publish' || removesLiveStory) {
       try {
         deploymentHookUrl = validateDeploymentHookUrl(env.DEPLOY_HOOK_URL || '')
       } catch {
-        return error('DEPLOY_HOOK_URL must be configured with a valid HTTPS endpoint before publication; story status remains unchanged.', 503)
+        return error('DEPLOY_HOOK_URL must be configured before changing a live story; story status remains unchanged.', 503)
       }
     }
 
@@ -385,6 +430,20 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       approvalLogRecorded = true
     }
 
+    let removalAuditWritten = false
+    if (removesLiveStory) {
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, 'archive-attempted', String(user.username || 'system'),
+          'Human requested archive of live content; static rebuild acknowledgement is required',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist archive attempt:', err)
+        return error('Archive audit could not be persisted; live story was not changed', 503)
+      }
+      removalAuditWritten = true
+    }
+
     let publicationAuditWritten = false
     if (action === 'publish') {
       if (!destination) return error('PUBLICATION_DESTINATION is required for publication', 503)
@@ -414,7 +473,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
 
     const updateData: Record<string, any> = { status: toStatus }
     if (toStatus === 'published') updateData.publishedAt = new Date().toISOString()
-    if (toStatus === 'draft') updateData.publishedAt = null
+    if (toStatus === 'draft' || toStatus === 'archived') updateData.publishedAt = null
 
     const updated = await db.updateStoryIfStatus(slug, story.status, updateData)
     if (!updated) return error('Story update failed; no state transition recorded', 500)
@@ -428,6 +487,31 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       } catch (err) {
         console.error('[publication-gate] Story is published but the final release audit could not be recorded:', err)
         return error('Story status changed to published but final audit logging failed; investigate before retrying', 500)
+      }
+    }
+
+    if (removalAuditWritten) {
+      let removalAuditFailed = false
+      try {
+        await db.createPipelineLog(
+          story.id!, 'published', 'archived', String(user.username || 'system'),
+          'Archived after conditional takedown state transition',
+        )
+      } catch (err) {
+        removalAuditFailed = true
+        console.error('[publication-gate] Live story was archived but final takedown audit could not be recorded')
+      }
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        if (removalAuditFailed) return error('Story was archived and rebuild acknowledged, but final takedown audit failed; inspect logs', 503)
+        return json({
+          message: `Story moved from '${story.status}' to 'archived'; public rebuild request acknowledged`,
+          story: { slug, title: story.title, status: toStatus },
+          deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+        })
+      } catch (deployError: any) {
+        console.error('[deploy-hook] Live story archived, but public rebuild was not acknowledged:', deployError?.code || 'unknown failure')
+        return error('Story is archived in CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually.', 502)
       }
     }
 
