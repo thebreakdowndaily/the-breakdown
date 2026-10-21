@@ -28,7 +28,7 @@ function publicationDestination() {
 const APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:';
 const APPROVAL_TTL_MS = 60 * 60 * 1000;
 
-function normaliseTags(value) {
+function normaliseList(value) {
   if (Array.isArray(value)) return value.map(String);
   if (typeof value === 'string') {
     try {
@@ -39,6 +39,26 @@ function normaliseTags(value) {
   return [];
 }
 
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(key => [key, stableValue(value[key])]));
+  }
+  return value;
+}
+
+function normaliseRichField(value) {
+  if (value === null || value === undefined || value === '') return '';
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed && typeof parsed === 'object') return stableValue(parsed);
+    } catch {}
+    return value;
+  }
+  return stableValue(value);
+}
+
 function storyVersionPayload(story) {
   return {
     slug: String(story.slug || ''),
@@ -46,11 +66,24 @@ function storyVersionPayload(story) {
     summary: String(story.summary || ''),
     body: String(story.body ?? story.content ?? ''),
     category: String(story.category || 'Uncategorised'),
-    tags: normaliseTags(story.tags),
+    tags: normaliseList(story.tags),
     hero: String(story.hero ?? story.fact_check_image ?? ''),
     caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
     author: String(story.author || 'The Breakdown Desk'),
     readTime: Number(story.readTime ?? story.read_time ?? 5),
+    sourceUrl: String(story.fact_check_url ?? story.source_url ?? ''),
+    video: String(story.fact_check_video ?? story.video ?? ''),
+    sourceVerification: String(story.source_verification ?? ''),
+    metaTitle: String(story.meta_title ?? story.metaTitle ?? ''),
+    metaDescription: String(story.meta_description ?? story.metaDescription ?? ''),
+    ogImage: String(story.og_image ?? story.ogImage ?? ''),
+    publishAt: String(story.publish_at ?? story.publishAt ?? ''),
+    relatedStoryIds: normaliseList(story.related_story_ids ?? story.relatedStoryIds),
+    storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
+    instagramCaption: String(story.instagram_caption ?? story.instagramCaption ?? ''),
+    instagramCarousel: normaliseRichField(story.instagram_carousel ?? story.instagramCarousel),
+    youtubeScript: String(story.youtube_script ?? story.youtubeScript ?? ''),
+    xThread: String(story.x_thread ?? story.xThread ?? ''),
   };
 }
 
