@@ -1,7 +1,6 @@
 /** Shared, fail-closed publication approval checks for Cloudflare Pages API. */
 export const APPROVAL_NOTE_PREFIX = 'PUBLICATION_APPROVAL_V1:';
 export const APPROVAL_TTL_MS = 60 * 60 * 1000;
-export const DEFAULT_PUBLICATION_DESTINATION = 'https://thebreakdown.in';
 
 function normaliseTags(value) {
   if (Array.isArray(value)) return value.map(String);
