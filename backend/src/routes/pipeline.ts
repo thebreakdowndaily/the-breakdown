@@ -132,7 +132,7 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
   const status = story.status as string
   const currentUser = (req as any).user || {}
   const username = String(currentUser.username || 'system')
-  if (action === 'approve-release' && !['admin', 'editor-in-chief'].includes(String(currentUser.role))) {
+  if (action === 'approve-release' && String(currentUser.role) !== 'editor-in-chief') {
     res.status(403).json({ error: 'Only an authorised Editor-in-Chief can approve public release' })
     return
   }
