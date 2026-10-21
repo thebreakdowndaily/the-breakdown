@@ -123,6 +123,16 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
     return
   }
 
+  // This server writes an isolated local sql.js database. The public static
+  // builder consumes the canonical Supabase store, not this file. Refuse to
+  // call a local status change "publication" until a canonical handoff exists.
+  if (action === 'publish') {
+    res.status(503).json({
+      error: 'Public release is disabled in the standalone SQLite backend because it is not connected to the canonical public content store. No state was changed; use the gated canonical CMS release path.',
+    })
+    return
+  }
+
   const story = queryOne(db, 'SELECT * FROM stories WHERE slug = ?', [slug])
   if (!story) {
     res.status(404).json({ error: 'Story not found' })
