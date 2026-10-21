@@ -193,10 +193,29 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = putMatch[1]
-    const data = await request.json()
-    const story = await db.updateStory(slug, data)
+    const incoming = await request.json()
+    // Status is controlled only by the pipeline endpoint, never by a generic edit.
+    const { status: _ignoredStatus, ...data } = incoming || {}
+    const existing = await db.getStory(slug)
+    if (!existing) return error('Story not found', 404)
+
+    const previousHash = await hashStoryVersion(existing)
+    const nextHash = await hashStoryVersion({ ...existing, ...data, slug })
+    const updateData: Record<string, any> = { ...data }
+    const contentChanged = previousHash !== nextHash
+    if (contentChanged && existing.status !== 'draft') {
+      // Reopen the editorial workflow whenever reviewed material changes.
+      updateData.status = 'draft'
+      updateData.publishedAt = null
+    }
+
+    const story = await db.updateStory(slug, updateData)
     if (!story) return error('Story not found', 404)
-    return json({ story })
+    if (contentChanged && existing.status !== story.status) {
+      await db.createPipelineLog(existing.id!, existing.status, 'draft', user.username || 'system',
+        'Story content changed; prior review/publication approval invalidated')
+    }
+    return json({ story, approvalInvalidated: contentChanged && existing.status !== 'draft' })
   }
 
   // DELETE /api/stories/:slug
@@ -218,6 +237,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     submit: 'in-review',
     approve: 'fact-checking',
     verify: 'ready',
+    'approve-release': 'approved-for-release',
     publish: 'published',
     reject: 'draft',
     archive: 'archived',
@@ -228,7 +248,8 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     draft: ['in-review'],
     'in-review': ['fact-checking', 'draft'],
     'fact-checking': ['ready', 'draft'],
-    ready: ['published', 'draft'],
+    ready: ['approved-for-release', 'draft'],
+    'approved-for-release': ['published', 'draft'],
     published: ['archived'],
     archived: ['draft'],
   }
@@ -257,20 +278,88 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
 
+    if (action === 'approve-release' && !['admin', 'editor-in-chief'].includes(String(user.role))) {
+      return error('Only an authorised Editor-in-Chief can approve public release', 403)
+    }
+
     const allowed = VALID_TRANSITIONS[story.status] || []
     if (!allowed.includes(toStatus)) {
       return error(`Cannot transition from '${story.status}' to '${toStatus}'`)
     }
 
-    const updateData: Record<string, any> = { status: toStatus }
-    if (toStatus === 'published') {
-      updateData.publishedAt = new Date().toISOString()
+    let approvalLogRecorded = false
+    const destinationRaw = env.PUBLICATION_DESTINATION || ''
+    let destination = ''
+    try {
+      const parsed = new URL(destinationRaw)
+      if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') {
+        return error('PUBLICATION_DESTINATION must be an HTTPS origin', 503)
+      }
+      destination = parsed.origin
+    } catch {
+      if (action === 'approve-release' || action === 'publish') {
+        return error('PUBLICATION_DESTINATION is not configured as a valid URL origin', 503)
+      }
     }
-    await db.updateStory(slug, updateData)
 
-    // When publishing, trigger the Cloudflare Pages deploy hook
+    if (action === 'approve-release') {
+      if (!destination) return error('PUBLICATION_DESTINATION is required for release approval', 503)
+      const approvedAt = new Date().toISOString()
+      const contentHash = await hashStoryVersion(story)
+      const approvalNote = createApprovalNote({
+        contentHash, destination, approvedBy: String(user.username), approvedAt,
+      })
+      let savedApproval
+      try {
+        savedApproval = await db.createPipelineLog(
+          story.id!, story.status, 'approved-for-release', String(user.username), approvalNote,
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist approval:', err)
+        return error('Approval record could not be persisted; release is blocked', 503)
+      }
+      if (!savedApproval?.id || String(savedApproval.id) === '0' || savedApproval.note?.includes('table not created')) {
+        return error('Durable approval log is unavailable; release is blocked. Apply the pipeline_log migration.', 503)
+      }
+      approvalLogRecorded = true
+    }
+
+    if (action === 'publish') {
+      if (!destination) return error('PUBLICATION_DESTINATION is required for publication', 503)
+      let logs
+      try {
+        logs = await db.getPipelineLogs()
+      } catch (err) {
+        console.error('[publication-gate] Could not read approval log:', err)
+        return error('Approval history is unavailable; release is blocked', 503)
+      }
+      const result = await validatePublicationApproval({ logs, story, destination, now: Date.now() })
+      if (!result.ok) return error(`Publication blocked: ${result.reason}`, 409)
+    }
+
+    const updateData: Record<string, any> = { status: toStatus }
+    if (toStatus === 'published') updateData.publishedAt = new Date().toISOString()
+    if (toStatus === 'draft') updateData.publishedAt = null
+
+    const updated = await db.updateStory(slug, updateData)
+    if (!updated) return error('Story update failed; no state transition recorded', 500)
+
+    if (!approvalLogRecorded) {
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, toStatus, String(user.username || 'system'),
+          (typeof note === 'string' && note) || `Pipeline action: ${action}`,
+        )
+      } catch (err) {
+        console.error('[pipeline] Failed to persist state transition log:', err)
+        if (toStatus === 'published') {
+          return error('Story status changed but publication audit log failed; check state and do not retry blindly', 500)
+        }
+      }
+    }
+
+    // When publishing, trigger the Cloudflare Pages deploy hook.
     if (toStatus === 'published' && env.DEPLOY_HOOK_URL) {
-      // Fire-and-forget — don't block response on deploy trigger
       fetch(env.DEPLOY_HOOK_URL, { method: 'POST' }).catch(err => {
         console.error('[deploy-hook] Failed to trigger rebuild:', err)
       })
