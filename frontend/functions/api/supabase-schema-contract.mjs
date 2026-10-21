@@ -1,9 +1,9 @@
 /**
  * Read-only startup preflight for the legacy Pages CMS Supabase contract.
  *
- * This adapter uses the legacy CMS schema (content/fact_check_image/read_time).
+ * The Pages adapter writes the legacy CMS schema (content/fact_check_image/read_time).
  * The canonical site schema (blocks/hero_image/reading_time) is not compatible.
- * Probe with SELECT ... LIMIT 0 so a wrong project fails before any writes/seeding.
+ * Probe with SELECT ... LIMIT 0 so a wrong project fails before any content writes.
  */
 export const SUPABASE_CMS_SCHEMA_PROBES = Object.freeze([
   Object.freeze({
@@ -26,13 +26,23 @@ export const SUPABASE_CMS_SCHEMA_PROBES = Object.freeze([
   }),
 ]);
 
+export const REQUIRED_CMS_WORKFLOW_STATUSES = Object.freeze([
+  'draft',
+  'in-review',
+  'fact-checking',
+  'ready',
+  'approved-for-release',
+  'published',
+  'archived',
+]);
+
 function compactError(value) {
   return String(value || '').replace(/\s+/g, ' ').trim().slice(0, 180);
 }
 
 /**
- * Verify the CMS table/column contract with read-only REST requests.
- * Does not create tables, seed stories, or mutate database state.
+ * Verify the CMS table/column and workflow-state contract with read-only REST
+ * requests. No table creation, story seeding, or database mutation occurs here.
  */
 export async function assertSupabaseCmsSchema({ baseUrl, serviceKey, fetchImpl = fetch }) {
   if (!baseUrl || !serviceKey) {
@@ -66,6 +76,35 @@ export async function assertSupabaseCmsSchema({ baseUrl, serviceKey, fetchImpl =
     }
   }
 
+  // A status enum that cannot represent every workflow state is a schema
+  // mismatch too. PostgREST casts enum filters to the underlying database type.
+  for (const status of REQUIRED_CMS_WORKFLOW_STATUSES) {
+    const url = new URL('/rest/v1/stories', baseUrl);
+    url.searchParams.set('select', 'status');
+    url.searchParams.set('status', `eq.${status}`);
+    url.searchParams.set('limit', '0');
+
+    let response;
+    try {
+      response = await fetchImpl(url, {
+        method: 'GET',
+        headers: {
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
+          Accept: 'application/json',
+        },
+      });
+    } catch (error) {
+      failures.push(`stories.status=${status}: request failed (${compactError(error?.message || error)})`);
+      continue;
+    }
+
+    if (!response.ok) {
+      const detail = compactError(await response.text().catch(() => ''));
+      failures.push(`stories.status does not support "${status}": HTTP ${response.status}${detail ? ` — ${detail}` : ''}`);
+    }
+  }
+
   if (failures.length) {
     throw new Error(
       'Supabase database does not match the required legacy Pages CMS schema. ' +
@@ -74,5 +113,5 @@ export async function assertSupabaseCmsSchema({ baseUrl, serviceKey, fetchImpl =
     );
   }
 
-  return { checkedTables: SUPABASE_CMS_SCHEMA_PROBES.length };
+  return { checkedTables: SUPABASE_CMS_SCHEMA_PROBES.length, checkedStatuses: REQUIRED_CMS_WORKFLOW_STATUSES.length };
 }
