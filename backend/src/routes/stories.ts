@@ -142,7 +142,24 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
     return
   }
 
-  const { title, summary, body, category, tags, hero, caption, author, readTime, status } = req.body
+  const { title, summary, body, category, tags, hero, caption, author, readTime } = req.body
+
+  // The generic story-edit endpoint never accepts workflow status from the caller.
+  // Any material edit to reviewed or published content reopens the editorial workflow.
+  const tagsChanged = tags !== undefined && JSON.stringify(tags) !== JSON.stringify(JSON.parse(existing.tags || '[]'))
+  const materialChanged =
+    (title !== undefined && title !== existing.title) ||
+    (summary !== undefined && summary !== existing.summary) ||
+    (body !== undefined && body !== existing.body) ||
+    (category !== undefined && category !== existing.category) ||
+    tagsChanged ||
+    (hero !== undefined && hero !== existing.hero) ||
+    (caption !== undefined && caption !== existing.caption) ||
+    (author !== undefined && author !== existing.author) ||
+    (readTime !== undefined && Number(readTime) !== Number(existing.read_time))
+  const oldStatus = String(existing.status)
+  const nextStatus = materialChanged && oldStatus !== 'draft' ? 'draft' : oldStatus
+  const invalidatedApproval = materialChanged && oldStatus !== 'draft'
 
   // Save revision before updating
   execute(db, `
@@ -162,7 +179,8 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
       caption = COALESCE(?, caption),
       author = COALESCE(?, author),
       read_time = COALESCE(?, read_time),
-      status = COALESCE(?, status),
+      status = ?,
+      published_at = CASE WHEN ? = 1 THEN NULL ELSE published_at END,
       updated_at = ?
     WHERE slug = ?
   `, [
@@ -170,18 +188,26 @@ router.put('/:slug', authMiddleware, (req: Request, res: Response) => {
     summary ?? null,
     body ?? null,
     category ?? null,
-    tags ? JSON.stringify(tags) : null,
+    tags !== undefined ? JSON.stringify(tags) : null,
     hero ?? null,
     caption ?? null,
     author ?? null,
     readTime ?? null,
-    status ?? null,
+    nextStatus,
+    invalidatedApproval ? 1 : 0,
     now,
     req.params.slug,
   ])
 
+  if (invalidatedApproval) {
+    execute(db, `
+      INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
+      VALUES (?, ?, 'draft', ?, 'Material story edit invalidated prior review/publication approval')
+    `, [existing.id, oldStatus, (req as any).user?.username || 'system'])
+  }
+
   const updated = queryOne(db, 'SELECT * FROM stories WHERE slug = ?', [req.params.slug])
-  res.json({ story: rowToStory(updated) })
+  res.json({ story: rowToStory(updated), approvalInvalidated: invalidatedApproval })
 })
 
 // DELETE /api/stories/:slug — archive
