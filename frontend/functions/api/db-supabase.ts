@@ -218,7 +218,6 @@ export class SupabaseBackend implements DbBackend {
 
     const row = storyToRow(data)
     row.updated_at = new Date().toISOString()
-    // Don't overwrite slug
     delete row.slug
 
     const resp = await fetch(
@@ -231,6 +230,25 @@ export class SupabaseBackend implements DbBackend {
     )
     if (!resp.ok) return null
     return this.getStory(slug)
+  }
+
+  async updateStoryIfStatus(slug: string, expectedStatus: string, data: Partial<Story>): Promise<Story | null> {
+    const row = storyToRow(data)
+    row.updated_at = new Date().toISOString()
+    delete row.slug
+
+    const resp = await fetch(
+      `${this.cfg.url}/rest/v1/stories?slug=eq.${encodeURIComponent(slug)}&status=eq.${encodeURIComponent(expectedStatus)}&select=*`,
+      {
+        method: 'PATCH',
+        headers: headers(this.cfg, true),
+        body: JSON.stringify(row),
+      }
+    )
+    if (!resp.ok) return null
+    const rows = await resp.json().catch(() => null)
+    if (!Array.isArray(rows) || rows.length !== 1) return null
+    return rowToStory(rows[0])
   }
 
   async deleteStory(slug: string): Promise<boolean> {
