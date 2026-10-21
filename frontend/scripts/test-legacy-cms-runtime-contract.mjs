@@ -77,7 +77,7 @@ test('every legacy CMS runtime fails closed on schema mismatch and awaits deploy
 
   assert.match(expressServer, /await assertLegacyCmsSchema/);
   assert.match(expressServer, /await triggerDeploymentHook\(deploymentHookUrl\)/);
-  assert.match(expressServer, /Refusing to start because the configured database does not match/i);
+  assert.match(expressServer, /CMS API blocked because the configured database does not match/i);
   assert.match(netlifyApi, /await ensureSchemaPreflight\(\)/);
   assert.match(netlifyApi, /await triggerDeploymentHook\(deploymentHookUrl\)/);
   assert.match(pagesApi, /validateDeploymentHookUrl\(env\.DEPLOY_HOOK_URL/);
