@@ -161,6 +161,7 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
     `, [story.id, status, 'approved-for-release', username, logNote])
   }
 
+  let publicationAuditWritten = false
   if (action === 'publish') {
     if (!['admin', 'editor-in-chief', 'publisher'].includes(String(currentUser.role))) {
       res.status(403).json({ error: 'Not authorised to execute publication' })
@@ -171,6 +172,14 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
       res.status(409).json({ error: `Publication blocked: ${validation.reason}` })
       return
     }
+
+    // Write the release event before changing public status. If the status
+    // update fails, the prior approval cannot be replayed accidentally.
+    execute(db, `
+      INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
+      VALUES (?, ?, 'published', ?, 'Release event recorded after version-bound approval validation')
+    `, [story.id, status, username])
+    publicationAuditWritten = true
   }
 
   const updateFields = ["status = ?", "updated_at = ?"]
@@ -187,7 +196,7 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
   execute(db, `UPDATE stories SET ${updateFields.join(', ')} WHERE slug = ?`, updateParams)
 
   // The approval event itself is already the latest audit event on this path.
-  if (action !== 'approve-release') {
+  if (action !== 'approve-release' && !publicationAuditWritten) {
     execute(db, `
       INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
       VALUES (?, ?, ?, ?, ?)
