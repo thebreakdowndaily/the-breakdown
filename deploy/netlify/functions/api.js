@@ -443,8 +443,8 @@ exports.handler = async (event) => {
         // Persist a terminal release event first. If the story mutation then
         // fails, the approval cannot be replayed; the story remains non-public.
         const { error: eventError } = await supabase.from('pipeline_log').insert({
-          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
-          changed_by: user.email || String(user.id), note: 'Release event recorded after version-bound approval validation',
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'release-attempted',
+          changed_by: user.email || String(user.id), note: 'Approval consumed after version-bound validation; conditional publication transition follows',
         });
         if (eventError) return json(503, { error: 'Release audit could not be persisted; publication is blocked' });
 
@@ -452,6 +452,12 @@ exports.handler = async (event) => {
           .update({ status: 'published', published_at: new Date().toISOString() })
           .eq('id', storyId).eq('status', 'approved-for-release').select().maybeSingle();
         if (updateError || !updated) return json(409, { error: 'Story status changed during publication; release is blocked and requires fresh review' });
+
+        const { error: publishedEventError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
+          changed_by: user.email || String(user.id), note: 'Published after version-bound human approval and successful conditional status transition',
+        });
+        if (publishedEventError) return json(500, { error: 'Story is published but final release audit logging failed; investigate before retrying' });
 
         const { error: publishLogError } = await supabase.from('publish_log').insert({
           story_id: storyId, published_by: user.id, deploy_status: 'success',
