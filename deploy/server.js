@@ -703,14 +703,12 @@ app.post('/api/stories/:id/approve-release', requireAuth, async (req, res) => {
     if (!['draft', 'ready', 'scheduled'].includes(approvalFromStatus)) {
       return res.status(409).json({ error: 'Only draft, ready, or due scheduled stories can be approved for release' });
     }
-    if (approvalFromStatus === 'scheduled') {
-      const dueAt = Date.parse(story.publish_at || '');
-      if (!Number.isFinite(dueAt)) {
-        return res.status(409).json({ error: 'Scheduled story has no valid publish_at time; resolve scheduling before approval' });
-      }
-      if (dueAt > Date.now()) {
-        return res.status(409).json({ error: 'Scheduled time has not arrived; release approval is not yet available' });
-      }
+    const scheduledAt = story.publish_at ? Date.parse(story.publish_at) : NaN;
+    if (approvalFromStatus === 'scheduled' && !Number.isFinite(scheduledAt)) {
+      return res.status(409).json({ error: 'Scheduled story has no valid publish_at time; resolve scheduling before approval' });
+    }
+    if (Number.isFinite(scheduledAt) && scheduledAt > Date.now()) {
+      return res.status(409).json({ error: 'Scheduled time has not arrived; release approval is not yet available' });
     }
 
     const approvedAt = new Date().toISOString();
