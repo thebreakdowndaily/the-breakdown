@@ -263,6 +263,15 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     return json({ stats, total })
   }
 
+  // GET /api/pipeline/:slug/log — authenticated audit history.
+  const logMatch = path.match(/^\/api\/pipeline\/([^/]+)\/log$/)
+  if (logMatch && request.method === 'GET') {
+    const user = await getAuthUser(request, jwtSecret)
+    if (!user) return error('Unauthorized', 401)
+    const logs = await db.getPipelineLogs(logMatch[1])
+    return json({ logs })
+  }
+
   // POST /api/pipeline/:slug/:action
   const actionMatch = path.match(/^\/api\/pipeline\/([^/]+)\/([^/]+)$/)
   if (actionMatch && request.method === 'POST') {
@@ -328,7 +337,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       if (!destination) return error('PUBLICATION_DESTINATION is required for publication', 503)
       let logs
       try {
-        logs = await db.getPipelineLogs()
+        logs = await db.getPipelineLogs(slug)
       } catch (err) {
         console.error('[publication-gate] Could not read approval log:', err)
         return error('Approval history is unavailable; release is blocked', 503)
@@ -366,13 +375,6 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     }
 
     return json({ message: `Story moved from '${story.status}' to '${toStatus}'`, story: { slug, title: story.title, status: toStatus } })
-  }
-
-  // GET /api/pipeline/:slug/log
-  const logMatch = path.match(/^\/api\/pipeline\/([^/]+)\/log$/)
-  if (logMatch && request.method === 'GET') {
-    const logs = await db.getPipelineLogs()
-    return json({ logs })
   }
 
   return error('Not found', 404)
