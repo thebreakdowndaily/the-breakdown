@@ -2,7 +2,7 @@
 
 ## AI-Generate a Story Package
 ```powershell
-node scripts/ai/generate-story.mjs --topic "..." --sources "url1, url2" [--publish]
+node scripts/ai/generate-story.mjs --topic "..." --sources "url1, url2"
 ```
 
 Creates `stories/[slug]/` with `[slug].md`, `images.md`, `charts.md`, `videos.md`, `seo.md`, `references.md`, and `[slug].html`.
@@ -14,7 +14,7 @@ Flags:
 - `--topic` — story headline (required)
 - `--sources` — comma-separated URLs
 - `--category` — override auto-detect
-- `--publish` — also add entry to `publish-all-beats.js`
+- Story generation always creates a draft; it cannot authorise publication.
 
 Requires `OPENAI_API_KEY` in `.env` at project root.
 
@@ -31,34 +31,21 @@ Ctrl+A → Ctrl+C → paste into ChatGPT. Raw SVG code returned per chart. Inser
 
 Standalone SVG prompt reference: `scripts/ai/svg-prompt.md`
 
-## Publish All Stories to Supabase
-```powershell
-node fact-check-cms/scripts/publish-all-beats.js
+## Submit for Newsroom Review and Release
+
+Use the newsroom workflow after preparing the local package:
+
+```text
+/newsroom <topic-or-story-slug>
 ```
 
-Upserts all stories from the `stories` array into Supabase `stories` table. Sets `fact_check_image` (hero bg) and `og_image` per category.
+The workflow must route the draft through independent verification, standards review, copy editing, and technical QA. Public release requires an explicit human Editor-in-Chief approval for the exact version and destination, followed by the gated CMS publish endpoint. Do not use direct Supabase upserts, `publish-all-beats.js`, manual status edits, or a direct production deploy to bypass the gate.
 
-## Deploy to Production
-Full deploy (Cloudflare + CMS push to Render):
-```powershell
-.\scripts\deploy.ps1 -PushCMS
-```
+`scripts/ai/publish.mjs --slug <slug>` and `scripts/pipeline.mjs --topic <topic>` prepare local review artifacts only. Their output is under `artifacts/newsroom/stories/`, which is not a public web root.
 
-Cloudflare only:
-```powershell
-.\scripts\deploy.ps1 -CloudflareOnly
-```
+## Deployment Notes
 
-Dry run:
-```powershell
-.\scripts\deploy.ps1 -DryRun
-```
-
-Rollback:
-```powershell
-.\scripts\deploy.ps1 -Rollback
-.\scripts\deploy.ps1 -Rollback -RollbackTo <deployment-id>
-```
+Production deployments should follow the repository's validated release process. A code or site deploy is not publication approval for a story. Never push new story content to a live site unless it came through the gated release workflow.
 
 ## Anatomy of a Story
 
@@ -73,7 +60,7 @@ stories/[slug]/
 └── references.md      # Source URLs with attribution
 ```
 
-`publish-all-beats.js` reads `[slug].html` and upserts to Supabase. The Render server renders `story.html` template with the Supabase record.
+The gated CMS release endpoint stores the approved story version in Supabase; the Render server renders `story.html` from the published record.
 
 ## Hero Images
 - Set per-story via `fact_check_image` field in `publish-all-beats.js` entries
