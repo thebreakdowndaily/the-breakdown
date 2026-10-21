@@ -83,26 +83,52 @@ function parseApproval(note) {
 async function reopenStoryForSourceMutation(storyId, user, description) {
   const { data: story, error } = await supabase.from('stories')
     .select('id, status, published_at').eq('id', storyId).single();
-  if (error || !story) return { ok: false, error: 'Story for source mutation was not found' };
+  if (error || !story) return { ok: false, status: 404, error: 'Story for source mutation was not found' };
   const status = String(story.status || 'draft');
   if (['draft', 'archived', 'trash'].includes(status)) return { ok: true };
 
   const actor = String(user?.email || user?.name || user?.id || 'cms-user').trim().toLowerCase();
-  const { error: logError } = await supabase.from('pipeline_log').insert({
+  let deploymentHookUrl = null;
+  if (status === 'published') {
+    try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+    catch { return { ok: false, status: 503, error: 'DEPLOY_HOOK_URL must be configured before editing sources on a published story; story state remains unchanged.' }; }
+  }
+
+  const { error: attemptError } = await supabase.from('pipeline_log').insert({
     story_id: story.id,
     from_status: status,
-    to_status: 'draft',
+    to_status: 'source-change-attempted',
     changed_by: actor,
-    note: `Source evidence changed (${description}); prior editorial review/publication approval invalidated`,
+    note: `Source evidence change requested (${description}); prior editorial approval invalidated`,
   });
-  if (logError) return { ok: false, error: 'Could not persist source-change invalidation audit; source change is blocked' };
+  if (attemptError) return { ok: false, status: 503, error: 'Could not persist source-change audit; source change is blocked' };
 
   const { data: updated, error: updateError } = await supabase.from('stories')
     .update({ status: 'draft', published_at: null })
     .eq('id', storyId).eq('status', status).select('id').maybeSingle();
   if (updateError || !updated) {
-    return { ok: false, error: 'Story state changed during source editing; reload and retry after review' };
+    return { ok: false, status: 409, error: 'Story state changed during source editing; reload and retry after review' };
   }
+
+  let auditFailure = false;
+  const { error: finalAuditError } = await supabase.from('pipeline_log').insert({
+    story_id: story.id,
+    from_status: status,
+    to_status: 'draft',
+    changed_by: actor,
+    note: `Source evidence changed (${description}); prior editorial approval invalidated`,
+  });
+  if (finalAuditError) auditFailure = true;
+
+  if (status === 'published') {
+    try {
+      await triggerDeploymentHook(deploymentHookUrl);
+    } catch (deployError) {
+      console.error('[deploy-hook] Source change reopened a published story but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+      return { ok: false, status: 502, error: 'Story was moved to draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before editing sources.' };
+    }
+  }
+  if (auditFailure) return { ok: false, status: 503, error: 'Story was moved to draft, but final audit logging failed; investigate before editing sources' };
   return { ok: true };
 }
 
@@ -315,23 +341,51 @@ exports.handler = async (event) => {
         const afterHash = storyVersionHash({ ...existing, ...updates });
         const materialChanged = beforeHash !== afterHash;
         const invalidatedApproval = materialChanged && existing.status !== 'draft';
+        let deploymentHookUrl = null;
+        if (invalidatedApproval && existing.status === 'published') {
+          try { deploymentHookUrl = validateDeploymentHookUrl(process.env.DEPLOY_HOOK_URL || ''); }
+          catch { return json(503, { error: 'DEPLOY_HOOK_URL must be configured before editing a published story; story remains unchanged.' }); }
+        }
+
+        const actor = String(user.email || user.id || 'cms-user');
         if (invalidatedApproval) {
+          const { error: attemptError } = await supabase.from('pipeline_log').insert({
+            story_id: storyId, from_status: existing.status, to_status: 'content-edit-attempted',
+            changed_by: actor, note: 'Material edit requested; prior editorial approval invalidated',
+          });
+          if (attemptError) return json(503, { error: 'Could not persist edit invalidation audit; story was not changed' });
           updates.status = 'draft';
           updates.published_at = null;
         }
 
-        const { data, error } = await supabase.from('stories').update(updates).eq('id', storyId).select().single();
+        const { data, error } = await supabase.from('stories')
+          .update(updates).eq('id', storyId).eq('status', existing.status).select().maybeSingle();
         if (error) return json(500, { error: 'Failed to update story' });
-        if (!data) return json(404, { error: 'Story not found' });
+        if (!data) return json(409, { error: 'Story state changed during edit; reload and retry against the latest version' });
 
+        let auditFailure = false;
         if (invalidatedApproval) {
           const { error: logError } = await supabase.from('pipeline_log').insert({
             story_id: storyId, from_status: existing.status, to_status: 'draft',
-            changed_by: user.email || String(user.id),
-            note: 'Material story edit invalidated prior review/publication approval',
+            changed_by: actor, note: 'Material story edit invalidated prior review/publication approval',
           });
-          if (logError) return json(500, { error: 'Story was moved to draft but audit logging failed; investigate before release' });
+          if (logError) auditFailure = true;
         }
+
+        if (invalidatedApproval && existing.status === 'published') {
+          try {
+            const acknowledgement = await triggerDeploymentHook(deploymentHookUrl);
+            data.deployment = { status: 'triggered', httpStatus: acknowledgement.status };
+          } catch (deployError) {
+            console.error('[deploy-hook] Published story was moved to draft, but public rebuild was not acknowledged:', deployError && deployError.code || 'unknown failure');
+            return json(502, {
+              error: 'Story was saved as draft, but the public rebuild was not acknowledged. Re-trigger deployment manually before re-approving.',
+              approvalInvalidated: true,
+              deploymentStatus: 'not-acknowledged',
+            });
+          }
+        }
+        if (auditFailure) return json(503, { error: 'Story was moved to draft but audit logging failed; inspect story and audit records before release' });
         return json(200, { story: data, approvalInvalidated: invalidatedApproval });
       }
 
