@@ -8,30 +8,63 @@ const router = Router()
 const PUBLICATION_APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:'
 const APPROVAL_TTL_MS = 60 * 60 * 1000
 
-function parseTags(value: unknown): string[] {
+function normaliseList(value: unknown): string[] {
   if (Array.isArray(value)) return value.map(String)
   if (typeof value === 'string') {
     try {
       const parsed = JSON.parse(value)
       if (Array.isArray(parsed)) return parsed.map(String)
-    } catch { /* invalid stored tags are normalised to empty */ }
+    } catch { /* malformed lists are not treated as verified data */ }
   }
   return []
 }
 
+function stableValue(value: any): any {
+  if (Array.isArray(value)) return value.map(stableValue)
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(key => [key, stableValue(value[key])]))
+  }
+  return value
+}
+
+function normaliseRichField(value: any): any {
+  if (value === null || value === undefined || value === '') return ''
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      if (parsed && typeof parsed === 'object') return stableValue(parsed)
+    } catch { /* ordinary text content */ }
+    return value
+  }
+  return stableValue(value)
+}
+
 function storyContentHash(story: any): string {
-  // Keep the canonical property order aligned with frontend/functions/api/publication-gate.mjs.
+  // Keep property order and normalisation aligned with the other publishing APIs.
   const payload = {
     slug: String(story.slug || ''),
     title: String(story.title || ''),
     summary: String(story.summary || ''),
     body: String(story.body ?? story.content ?? ''),
     category: String(story.category || 'Uncategorised'),
-    tags: parseTags(story.tags),
+    tags: normaliseList(story.tags),
     hero: String(story.hero ?? story.fact_check_image ?? ''),
     caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
     author: String(story.author || 'The Breakdown Desk'),
     readTime: Number(story.readTime ?? story.read_time ?? 5),
+    sourceUrl: String(story.fact_check_url ?? story.source_url ?? ''),
+    video: String(story.fact_check_video ?? story.video ?? ''),
+    sourceVerification: String(story.source_verification ?? ''),
+    metaTitle: String(story.meta_title ?? story.metaTitle ?? ''),
+    metaDescription: String(story.meta_description ?? story.metaDescription ?? ''),
+    ogImage: String(story.og_image ?? story.ogImage ?? ''),
+    publishAt: String(story.publish_at ?? story.publishAt ?? ''),
+    relatedStoryIds: normaliseList(story.related_story_ids ?? story.relatedStoryIds),
+    storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
+    instagramCaption: String(story.instagram_caption ?? story.instagramCaption ?? ''),
+    instagramCarousel: normaliseRichField(story.instagram_carousel ?? story.instagramCarousel),
+    youtubeScript: String(story.youtube_script ?? story.youtubeScript ?? ''),
+    xThread: String(story.x_thread ?? story.xThread ?? ''),
   }
   return createHash('sha256').update(JSON.stringify(payload)).digest('hex')
 }
