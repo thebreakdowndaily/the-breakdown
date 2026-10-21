@@ -292,8 +292,17 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
 
-    if (action === 'approve-release' && !['admin', 'editor-in-chief'].includes(String(user.role))) {
-      return error('Only an authorised Editor-in-Chief can approve public release', 403)
+    if (action === 'approve-release') {
+      const authorisedEic = new Set(
+        String(env.PAGES_EDITOR_IN_CHIEF_USERNAMES || '')
+          .split(',')
+          .map(value => value.trim().toLowerCase())
+          .filter(Boolean)
+      )
+      const username = String(user.username || '').trim().toLowerCase()
+      if (!username || !authorisedEic.has(username)) {
+        return error('Only a username explicitly listed in PAGES_EDITOR_IN_CHIEF_USERNAMES may approve public release', 403)
+      }
     }
 
     const allowed = VALID_TRANSITIONS[story.status] || []
