@@ -18,6 +18,7 @@ on:
       - 'backend/src/routes/pipeline.ts'
       - 'backend/src/routes/stories.ts'
       - 'backend/src/auth.ts'
+      - 'backend/src/seed.ts'
       - 'backend/package.json'
       - 'backend/package-lock.json'
       - '.env.example'
