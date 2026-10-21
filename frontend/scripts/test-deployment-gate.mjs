@@ -24,3 +24,11 @@ test('unverified external CMS pushes fail before deployment begins', () => {
   assert.ok(cloudflareDeploy > blocker, 'CMS-push guard must precede all deployment side effects');
   assert.match(deploy.slice(pushFlag, cloudflareDeploy), /exit 1/);
 });
+
+test('backend startup seeding cannot publish from frontmatter or overwrite CMS edits', () => {
+  const seed = read('backend/src/seed.ts');
+  assert.match(seed, /INSERT OR IGNORE INTO stories/);
+  assert.match(seed, /NULL, 'draft'/);
+  assert.match(seed, /existing CMS record preserved/);
+  assert.doesNotMatch(seed, /INSERT OR REPLACE INTO stories/);
+});
