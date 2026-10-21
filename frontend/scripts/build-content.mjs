@@ -49,7 +49,7 @@ function gitBlobHash(filePath) {
     }).trim()
     if (/^[a-f0-9]{40}$/.test(hash)) return hash
   } catch { /* use raw Git blob hash below */ }
-  return createHash('sha1').update(`blob ${bytes.length}\\0`).update(bytes).digest('hex')
+  return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex')
 }
 
 /**
