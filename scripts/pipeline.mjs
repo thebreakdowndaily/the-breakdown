@@ -253,8 +253,8 @@ async function main() {
   console.log(`  Discovery:  content/${slug}/discovery.json`);
   console.log(`  Story:      stories/${slug}/`);
   console.log(`  Package:    public/stories/${slug}/`);
-  console.log(`\n  Next: node fact-check-cms/scripts/publish-all-beats.js`);
-  console.log(`        .\\scripts\\deploy.ps1 -PushCMS\n`);
+  console.log('\n  Next: submit the package through /newsroom for independent verification and human approval.');
+  console.log('  This pipeline only prepares local artifacts; it does not authorise public release.\n');
 }
 
 main().catch(err => {
