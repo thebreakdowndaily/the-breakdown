@@ -623,73 +623,179 @@ app.post('/api/generate/x-thread', requireAuth, async (req, res) => {
   }
 });
 
-// ==================== PUBLISH ====================
-app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
+// ==================== VERSION-BOUND HUMAN APPROVAL + PUBLISH ====================
+app.post('/api/stories/:id/approve-release', requireAuth, async (req, res) => {
   try {
-    // Get story
+    if (!isEditorInChief(req)) {
+      return res.status(403).json({ error: 'Only an email listed in EDITOR_IN_CHIEF_EMAILS can approve public release' });
+    }
+    const destination = publicationDestination();
+    if (!destination) {
+      return res.status(503).json({ error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+    }
+
     const { data: story, error } = await supabase
-      .from('stories')
-      .select('*')
-      .eq('id', req.params.id)
-      .single();
+      .from('stories').select('*').eq('id', req.params.id).single();
     if (error || !story) return res.status(404).json({ error: 'Story not found' });
 
-    // Update status
+    const approvalFromStatus = String(story.status || '');
+    if (!['draft', 'ready', 'scheduled'].includes(approvalFromStatus)) {
+      return res.status(409).json({ error: 'Only draft, ready, or due scheduled stories can be approved for release' });
+    }
+    if (approvalFromStatus === 'scheduled') {
+      const dueAt = Date.parse(story.publish_at || '');
+      if (!Number.isFinite(dueAt)) {
+        return res.status(409).json({ error: 'Scheduled story has no valid publish_at time; resolve scheduling before approval' });
+      }
+      if (dueAt > Date.now()) {
+        return res.status(409).json({ error: 'Scheduled time has not arrived; release approval is not yet available' });
+      }
+    }
+
+    const approvedAt = new Date().toISOString();
+    const approvedBy = String(req.session.userEmail || '').trim().toLowerCase();
+    const approval = {
+      schema: 1,
+      contentHash: storyVersionHash(story),
+      destination,
+      approvedBy,
+      approvedAt,
+    };
+    await insertPipelineEvent(
+      story.id, approvalFromStatus, 'approved-for-release', approvedBy,
+      PUBLICATION_APPROVAL_PREFIX + JSON.stringify(approval),
+    );
+
+    // Compare the expected prior status to avoid approving over a concurrent state change.
     const { data: updated, error: updateError } = await supabase
       .from('stories')
-      .update({ status: 'published', published_at: new Date().toISOString() })
+      .update({ status: 'approved-for-release' })
       .eq('id', req.params.id)
+      .eq('status', approvalFromStatus)
       .select()
-      .single();
+      .maybeSingle();
     if (updateError) throw updateError;
+    if (!updated) return res.status(409).json({ error: 'Story changed during approval; reload and review the latest version' });
 
-    // Log publish
-    await supabase
-      .from('publish_log')
-      .insert({
-        story_id: req.params.id,
-        published_by: req.session.userId,
-        deploy_status: 'success'
-      });
+    return res.json({
+      success: true,
+      story: updated,
+      approval: { approvedBy, approvedAt, destination, contentHash: approval.contentHash },
+    });
+  } catch (err) {
+    console.error('[publication-gate] Approval failed:', err);
+    return res.status(503).json({ error: 'Could not persist the approval or update story status; release is blocked' });
+  }
+});
 
-    // Update homepage (deploy/index.html)
+app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
+  try {
+    const destination = publicationDestination();
+    if (!destination) {
+      return res.status(503).json({ error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+    }
+
+    const { data: story, error } = await supabase
+      .from('stories').select('*').eq('id', req.params.id).single();
+    if (error || !story) return res.status(404).json({ error: 'Story not found' });
+    if (story.status !== 'approved-for-release') {
+      return res.status(409).json({ error: 'Story is not approved for release; obtain Editor-in-Chief approval first' });
+    }
+
+    const { data: logs, error: logsError } = await supabase
+      .from('pipeline_log')
+      .select('*')
+      .eq('story_id', story.id)
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
+      .limit(1);
+    if (logsError) {
+      console.error('[publication-gate] Approval history unavailable:', logsError);
+      return res.status(503).json({ error: 'Approval history unavailable; release is blocked' });
+    }
+    const latest = Array.isArray(logs) ? logs[0] : null;
+    if (!latest || latest.to_status !== 'approved-for-release') {
+      return res.status(409).json({ error: 'There is no current release approval for this story' });
+    }
+
+    const approval = parsePublicationApproval(latest.note);
+    if (!approval) return res.status(409).json({ error: 'Release approval record is malformed or missing' });
+    if (String(latest.changed_by || '').trim().toLowerCase() !== approval.approvedBy) {
+      return res.status(409).json({ error: 'Approval identity does not match its audit event' });
+    }
+    if (approval.destination !== destination) {
+      return res.status(409).json({ error: 'Approval was recorded for a different publication destination' });
+    }
+    const approvedAt = Date.parse(approval.approvedAt);
+    const now = Date.now();
+    if (!Number.isFinite(approvedAt) || approvedAt > now + 60000 || now - approvedAt > PUBLICATION_APPROVAL_TTL_MS) {
+      return res.status(409).json({ error: 'Release approval expired or has an invalid timestamp' });
+    }
+    if (approval.contentHash !== storyVersionHash(story)) {
+      return res.status(409).json({ error: 'Story content or public metadata changed after approval; release is blocked' });
+    }
+
+    // Write the terminal event first. If the status write fails, this approval
+    // cannot be replayed; a fresh review and approval will be required.
+    await insertPipelineEvent(
+      story.id, 'approved-for-release', 'published',
+      String(req.session.userEmail || req.session.userId || 'system'),
+      'Release event recorded after version-bound human approval validation',
+    );
+
+    const publishedAt = new Date().toISOString();
+    const { data: updated, error: updateError } = await supabase
+      .from('stories')
+      .update({ status: 'published', published_at: publishedAt })
+      .eq('id', req.params.id)
+      .eq('status', 'approved-for-release')
+      .select()
+      .maybeSingle();
+    if (updateError) throw updateError;
+    if (!updated) {
+      return res.status(409).json({ error: 'Story status changed during release; approval has been consumed and fresh review is required' });
+    }
+
+    // Secondary publish telemetry is written after the primary, durable pipeline
+    // release event. If it fails, the release is auditable but needs operator review.
+    const { error: publishLogError } = await supabase.from('publish_log').insert({
+      story_id: req.params.id,
+      published_by: req.session.userId,
+      deploy_status: 'success',
+    });
+    if (publishLogError) {
+      console.error('[publication-gate] Published status was saved but publish_log failed:', publishLogError);
+    }
+
+    // Update the legacy static homepage after the gated database transition.
     const deployPath = path.join(__dirname, '..', 'deploy', 'index.html');
     if (fs.existsSync(deployPath)) {
       try {
         let html = fs.readFileSync(deployPath, 'utf8');
-
+        const escapeText = value => String(value || '').replace(/[&<>"]/g, ch => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+        }[ch]));
         const storyCard = `
-                <a href="#" class="story-card reveal">
-                    <p class="story-category">${story.category || 'Latest'}</p>
-                    <h3 class="story-title">${story.title}</h3>
-                    <p class="story-excerpt">${story.summary || 'Full breakdown available.'}</p>
-                    <div class="story-meta"><span>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span><span>${story.read_time || 5} min read</span></div>
+                <a href="/story/${escapeText(story.slug)}" class="story-card reveal">
+                    <p class="story-category">${escapeText(story.category || 'Latest')}</p>
+                    <h3 class="story-title">${escapeText(story.title)}</h3>
+                    <p class="story-excerpt">${escapeText(story.summary || 'Full breakdown available.')}</p>
+                    <div class="story-meta"><span>${new Date(publishedAt).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}</span><span>${Number(story.read_time || 5)} min read</span></div>
                 </a>`;
-
-        // Insert after the featured story or at the beginning of stories grid
         const insertMarker = '<!-- CMS: published stories will appear here -->';
-        if (html.includes(insertMarker)) {
-          html = html.replace(insertMarker, storyCard + '\n                ' + insertMarker);
-        } else {
-          // Fallback: insert before the last story-card in the grid
-          const match = html.match(/<a href="#" class="story-card reveal">/);
-          if (match) {
-            const idx = match.index;
-            html = html.slice(0, idx) + storyCard + '\n                ' + html.slice(idx);
-          }
+        if (html.includes(insertMarker) && !html.includes(`href="/story/${escapeText(story.slug)}"`)) {
+          html = html.replace(insertMarker, storyCard + '\\n                ' + insertMarker);
+          fs.writeFileSync(deployPath, html, 'utf8');
         }
-
-        fs.writeFileSync(deployPath, html, 'utf8');
-        console.log('Homepage updated with new story:', story.title);
       } catch (fileErr) {
-        console.error('Failed to update homepage file:', fileErr.message);
+        console.error('Published in CMS, but legacy homepage file update failed:', fileErr.message);
       }
     }
 
-    res.json({ success: true, story: updated });
+    return res.json({ success: true, story: updated, approval: { approvedBy: approval.approvedBy, approvedAt: approval.approvedAt, destination } });
   } catch (err) {
-    console.error('Publish error:', err);
-    res.status(500).json({ error: 'Failed to publish story' });
+    console.error('[publication-gate] Publish failed:', err);
+    return res.status(503).json({ error: 'Release audit or publication failed; inspect the story and audit log before retrying' });
   }
 });
 
