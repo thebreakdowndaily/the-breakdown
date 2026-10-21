@@ -4,6 +4,7 @@
 import { getDb } from './db'
 import { type Story, type DbBackend } from './types'
 import { createApprovalNote, hashStoryVersion, validatePublicationApproval } from './publication-gate.mjs'
+import { validateDeploymentHookUrl, triggerDeploymentHook } from './deployment-hook.mjs'
 
 // ---------------------------------------------------------------------------
 // JWT HS256 — Web Crypto HMAC signature verification (fail closed).
@@ -292,6 +293,17 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
 
+    // A CMS status change alone does not update the public static site. Require
+    // a configured deployment hook before consuming approval or mutating status.
+    let deploymentHookUrl: string | null = null
+    if (action === 'publish') {
+      try {
+        deploymentHookUrl = validateDeploymentHookUrl(env.DEPLOY_HOOK_URL || '')
+      } catch {
+        return error('DEPLOY_HOOK_URL must be configured with a valid HTTPS endpoint before publication; story status remains unchanged.', 503)
+      }
+    }
+
     if (action === 'approve-release') {
       const authorisedEic = new Set(
         String(env.PAGES_EDITOR_IN_CHIEF_USERNAMES || '')
@@ -407,11 +419,18 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       }
     }
 
-    // When publishing, trigger the Cloudflare Pages deploy hook.
-    if (toStatus === 'published' && env.DEPLOY_HOOK_URL) {
-      fetch(env.DEPLOY_HOOK_URL, { method: 'POST' }).catch(err => {
-        console.error('[deploy-hook] Failed to trigger rebuild:', err)
-      })
+    if (toStatus === 'published') {
+      try {
+        const acknowledgement = await triggerDeploymentHook(deploymentHookUrl || env.DEPLOY_HOOK_URL || '')
+        return json({
+          message: `Story moved from '${story.status}' to 'published'; deployment hook acknowledged a rebuild request`,
+          story: { slug, title: story.title, status: toStatus },
+          deployment: { status: 'triggered', httpStatus: acknowledgement.status },
+        })
+      } catch (err: any) {
+        console.error('[deploy-hook] Story is published and audit-logged, but the rebuild request was not acknowledged:', err?.code || 'unknown failure')
+        return error('Story is published and audit-logged in the CMS, but the public rebuild was not acknowledged. Re-trigger deployment manually; do not retry publication.', 502)
+      }
     }
 
     return json({ message: `Story moved from '${story.status}' to '${toStatus}'`, story: { slug, title: story.title, status: toStatus } })
