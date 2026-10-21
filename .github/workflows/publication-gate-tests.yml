@@ -7,7 +7,7 @@ on:
   pull_request:
     paths:
       - 'frontend/functions/api/publication-gate.*'
-      - 'frontend/functions/api/[[path]].ts'
+      - 'frontend/functions/api/**'
       - 'frontend/functions/api/db-supabase.ts'
       - 'frontend/scripts/test-*.mjs'
       - 'frontend/scripts/content-publication-policy.mjs'
