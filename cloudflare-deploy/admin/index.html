@@ -721,6 +721,7 @@ async function renderEditor(storyId) {
     actionBtns += '<button class="btn btn-blue btn-sm" onclick="previewStory()">👁 Preview</button>';
     if (s.status==='approved-for-release') {
       actionBtns += '<button class="btn btn-green btn-sm" onclick="publishStory()">📌 Publish Approved Version</button>';
+      actionBtns += '<button class="btn btn-ghost btn-sm" onclick="returnToDraft()">↩ Return to Draft</button>';
     } else if (s.status!=='published' && s.status!=='archived' && s.status!=='trash') {
       actionBtns += '<button class="btn btn-green btn-sm" onclick="approveRelease()">✓ Approve for Release</button>';
     }
@@ -788,7 +789,7 @@ async function renderEditor(storyId) {
 
     // TAB: Schedule
     '<div class="tab-panel" id="tab-schedule">' +
-    '<div class="field"><label>Schedule Publish Date/Time</label><input id="ef-publish-at" type="datetime-local" value="' + (publishAt ? publishAt.slice(0,16) : '') + '"><div class="hint">Set a date/time to automatically publish the story. Leave empty for manual publishing.</div></div>' +
+    '<div class="field"><label>Schedule Publish Date/Time</label><input id="ef-publish-at" type="datetime-local" value="' + (publishAt ? publishAt.slice(0,16) : '') + '"><div class="hint">A future time blocks approval until the time arrives. Stories still require explicit Editor-in-Chief approval; this date never publishes automatically.</div></div>' +
     '<div class="field"><label>Workflow Status</label><input id="ef-status" value="' + escAttr(currStatus) + '" readonly></div>' +
     '<p style="color:var(--muted2);font-size:13px">Workflow status is controlled by the newsroom release process. Save edits first, obtain explicit Editor-in-Chief approval for the saved version, then publish the approved version. Status cannot be set directly from this form.</p></div>' +
 
@@ -1138,6 +1139,17 @@ async function approveRelease() {
     const result = await api('POST', '/api/stories/' + editorStory.id + '/approve-release');
     editorStory = result.story;
     showToast('Release approval recorded for this version. Publish it separately after reviewing the approval status.');
+    showView('editor', editorStory.id);
+  } catch (err) { showToast(err.message, 'error'); }
+}
+
+async function returnToDraft() {
+  if (!editorStory || !editorStory.id) return;
+  if (!confirm('Revoke the pending release approval and return this story to draft?')) return;
+  try {
+    const result = await api('POST', '/api/stories/' + editorStory.id + '/return-to-draft');
+    editorStory = result.story;
+    showToast('Approval revoked. Story returned to draft for review.');
     showView('editor', editorStory.id);
   } catch (err) { showToast(err.message, 'error'); }
 }
