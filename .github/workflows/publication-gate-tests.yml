@@ -18,6 +18,9 @@ on:
       - 'backend/src/routes/pipeline.ts'
       - 'backend/src/routes/stories.ts'
       - 'backend/src/auth.ts'
+      - 'backend/package.json'
+      - 'backend/package-lock.json'
+      - '.env.example'
       - 'deploy/netlify/functions/api.js'
       - '.github/workflows/publication-gate-tests.yml'
   workflow_dispatch:
@@ -54,3 +57,9 @@ jobs:
           node --check ../deploy/netlify/functions/api.js
       - name: Build and validate the static story corpus
         run: node scripts/build-content.mjs
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+      - name: Compile backend TypeScript
+        run: npm run build
+        working-directory: backend
