@@ -318,7 +318,9 @@ app.post('/api/stories', requireAuth, async (req, res) => {
         category: category || 'Uncategorized',
         summary: summary || '',
         content: content || '',
-        author: req.session.userName || 'The Breakdown'
+        author: req.session.userName || 'The Breakdown',
+        status: 'draft',
+        published_at: null
       })
       .select()
       .single();
@@ -978,23 +980,10 @@ app.post('/api/upload', requireAuth, upload.single('image'), async (req, res) =>
 });
 
 // ==================== SCHEDULED PUBLISHING ====================
-async function publishScheduled() {
-  try {
-    const { data: due, error } = await supabase
-      .from('stories')
-      .select('id, title')
-      .eq('status', 'scheduled');
-    if (error || !due || due.length === 0) return;
-    // Filter in-memory in case publish_at column doesn't exist
-    const now = new Date().toISOString();
-    for (const story of due) {
-      await supabase.from('stories').update({ status: 'published', published_at: now }).eq('id', story.id);
-    }
-  } catch (e) { /* ignore */ }
-}
-// Run on startup and every 60 seconds
-publishScheduled();
-setInterval(publishScheduled, 60000);
+// Automatic publication is intentionally disabled. A scheduled story stays queued
+// until its publish_at time has arrived and an allowlisted human Editor-in-Chief
+// explicitly approves the exact version. The /approve-release endpoint checks that time.
+// Never add a timer that changes a story to 'published' directly.
 
 // ==================== SITEMAP ====================
 app.get('/api/sitemap.xml', async (req, res) => {
@@ -1049,10 +1038,27 @@ app.post('/api/stories/bulk', requireAuth, async (req, res) => {
     if (!action) return res.status(400).json({ error: 'Action required' });
 
     let updates = {};
-    if (action === 'status') updates = { status: value };
-    else if (action === 'category') updates = { category: value };
-    else if (action === 'delete') updates = { status: 'trash', deleted_at: new Date().toISOString() };
-    else return res.status(400).json({ error: 'Invalid action' });
+    if (action === 'status') {
+      if (['published', 'approved-for-release', 'ready'].includes(String(value))) {
+        return res.status(403).json({ error: 'Bulk status changes cannot publish or approve stories; use the version-bound editorial release workflow.' });
+      }
+      if (!['draft', 'scheduled', 'archived', 'trash'].includes(String(value))) {
+        return res.status(400).json({ error: 'Invalid bulk status value' });
+      }
+      updates = { status: value };
+    } else if (action === 'category') {
+      const { data: selected, error: statusError } = await supabase
+        .from('stories').select('id, status').in('id', ids);
+      if (statusError) throw statusError;
+      if ((selected || []).some(story => ['published', 'approved-for-release'].includes(story.status))) {
+        return res.status(409).json({ error: 'Bulk category edits are blocked for published or approval-pending stories. Edit one story at a time so its approval is invalidated.' });
+      }
+      updates = { category: value };
+    } else if (action === 'delete') {
+      updates = { status: 'trash', deleted_at: new Date().toISOString(), published_at: null };
+    } else {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
 
     const { error } = await supabase.from('stories').update(updates).in('id', ids);
     if (error) throw error;
@@ -1074,9 +1080,12 @@ ALTER TABLE stories ADD COLUMN IF NOT EXISTS related_story_ids UUID[] DEFAULT '{
 ALTER TABLE stories ADD COLUMN IF NOT EXISTS story_template TEXT DEFAULT '';
 ALTER TABLE stories ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
 ALTER TABLE stories DROP CONSTRAINT IF EXISTS stories_status_check;
-ALTER TABLE stories ADD CONSTRAINT stories_status_check CHECK (status IN ('draft','published','archived','scheduled','trash'));
+ALTER TABLE stories ADD CONSTRAINT stories_status_check CHECK (status IN ('draft','in-review','fact-checking','ready','approved-for-release','published','archived','scheduled','trash'));
 CREATE TABLE IF NOT EXISTS story_revisions (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE, data JSONB NOT NULL, saved_by UUID REFERENCES admin_users(id), created_at TIMESTAMPTZ DEFAULT NOW());
 CREATE INDEX IF NOT EXISTS idx_revisions_story ON story_revisions(story_id, created_at DESC);
+CREATE TABLE IF NOT EXISTS pipeline_log (id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE, from_status TEXT, to_status TEXT NOT NULL, changed_by TEXT NOT NULL DEFAULT 'system', note TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
+CREATE INDEX IF NOT EXISTS idx_pipeline_log_story_created ON pipeline_log (story_id, created_at DESC, id DESC);
+ALTER TABLE pipeline_log ENABLE ROW LEVEL SECURITY;
 CREATE TABLE IF NOT EXISTS story_templates (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), name TEXT NOT NULL, category TEXT DEFAULT '', content TEXT DEFAULT '', summary TEXT DEFAULT '', tags TEXT[] DEFAULT '{}'::text[], created_at TIMESTAMPTZ DEFAULT NOW(), updated_at TIMESTAMPTZ DEFAULT NOW());` });
 });
 
