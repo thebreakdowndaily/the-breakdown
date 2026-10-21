@@ -8,7 +8,7 @@ const TABLE_PROBES = Object.freeze([
   Object.freeze({ table: 'stories', columns: [
     'id', 'slug', 'title', 'summary', 'content', 'category', 'tags',
     'fact_check_image', 'fact_check_image_caption', 'author', 'read_time',
-    'published_at', 'status', 'created_at', 'updated_at',
+    'published_at', 'deleted_at', 'status', 'created_at', 'updated_at',
   ] }),
   Object.freeze({ table: 'admin_users', columns: ['id', 'email', 'name', 'password_hash'] }),
   Object.freeze({ table: 'pipeline_log', columns: [
