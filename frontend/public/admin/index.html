@@ -555,7 +555,7 @@ function renderPipelineButtons(s) {
   if (s.status === 'archived') {
     btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Restore</button>`)
   }
-  btns.push(`<button class="btn btn-sm btn-outline" onclick="views.deleteStory('${s.slug}')" style="color:var(--destructive)">Delete</button>`)
+  if (s.status === 'draft') btns.push(`<button class="btn btn-sm btn-outline" onclick="views.deleteStory('${s.slug}')" style="color:var(--destructive)">Delete</button>`)
   return btns.join('')
 }
 
