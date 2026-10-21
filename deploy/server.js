@@ -517,16 +517,34 @@ app.put('/api/stories/:id', requireAuth, async (req, res) => {
 // DELETE story (soft delete — moves to trash)
 app.delete('/api/stories/:id', requireAuth, async (req, res) => {
   try {
+    const { data: existing, error: fetchError } = await supabase
+      .from('stories').select('id, status').eq('id', req.params.id).single();
+    if (fetchError || !existing) return res.status(404).json({ error: 'Story not found' });
+    if (existing.status !== 'draft') {
+      return res.status(409).json({
+        error: 'Direct trash is available only for drafts. Move workflow items to draft, and use the audited unpublish/archive path for live stories.',
+      });
+    }
+
+    const actor = String(req.session.userEmail || req.session.userId || 'system');
+    await insertPipelineEvent(existing.id, existing.status, 'trash-attempted', actor, 'Human requested trash of draft story');
     const { data, error } = await supabase
       .from('stories')
-      .update({ status: 'trash', deleted_at: new Date().toISOString() })
-      .eq('id', req.params.id)
-      .select()
-      .single();
+      .update({ status: 'trash', deleted_at: new Date().toISOString(), published_at: null })
+      .eq('id', req.params.id).eq('status', 'draft')
+      .select().maybeSingle();
     if (error) throw error;
+    if (!data) return res.status(409).json({ error: 'Story state changed during trash; reload and retry' });
+
+    try {
+      await insertPipelineEvent(existing.id, 'draft', 'trash', actor, 'Draft moved to trash after conditional state transition');
+    } catch {
+      return res.status(503).json({ error: 'Story was moved to trash but the final audit event failed; inspect before retrying' });
+    }
     res.json({ success: true, story: data });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete story' });
+    console.error('Trash error:', err);
+    res.status(503).json({ error: 'Trash audit or state transition failed; inspect the story and audit log before retrying' });
   }
 });
 
