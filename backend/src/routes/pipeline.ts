@@ -182,11 +182,11 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
       return
     }
 
-    // Write the release event before changing public status. If the status
-    // update fails, the prior approval cannot be replayed accidentally.
+    // Consume the one-time approval before mutating public status. If a later
+    // action fails, the approval cannot be replayed accidentally.
     execute(db, `
       INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
-      VALUES (?, ?, 'published', ?, 'Release event recorded after version-bound approval validation')
+      VALUES (?, ?, 'release-attempted', ?, 'Approval consumed after version-bound validation; publication transition follows')
     `, [story.id, status, username])
     publicationAuditWritten = true
   }
@@ -203,6 +203,13 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
 
   updateParams.push(slug)
   execute(db, `UPDATE stories SET ${updateFields.join(', ')} WHERE slug = ?`, updateParams)
+
+  if (publicationAuditWritten) {
+    execute(db, `
+      INSERT INTO pipeline_log (story_id, from_status, to_status, changed_by, note)
+      VALUES (?, 'approved-for-release', 'published', ?, 'Published after version-bound human approval')
+    `, [story.id, username])
+  }
 
   // The approval event itself is already the latest audit event on this path.
   if (action !== 'approve-release' && !publicationAuditWritten) {
