@@ -333,6 +333,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       approvalLogRecorded = true
     }
 
+    let publicationAuditWritten = false
     if (action === 'publish') {
       if (!destination) return error('PUBLICATION_DESTINATION is required for publication', 503)
       let logs
@@ -344,6 +345,19 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       }
       const result = await validatePublicationApproval({ logs, story, destination, now: Date.now() })
       if (!result.ok) return error(`Publication blocked: ${result.reason}`, 409)
+
+      // Write the durable release event BEFORE changing public status. If the
+      // following update fails, this approval cannot be replayed accidentally.
+      try {
+        await db.createPipelineLog(
+          story.id!, story.status, 'published', String(user.username || 'system'),
+          'Release event recorded after validating version-bound human approval',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Could not persist release event:', err)
+        return error('Release audit could not be persisted; publication is blocked', 503)
+      }
+      publicationAuditWritten = true
     }
 
     const updateData: Record<string, any> = { status: toStatus }
@@ -353,7 +367,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     const updated = await db.updateStory(slug, updateData)
     if (!updated) return error('Story update failed; no state transition recorded', 500)
 
-    if (!approvalLogRecorded) {
+    if (!approvalLogRecorded && !publicationAuditWritten) {
       try {
         await db.createPipelineLog(
           story.id!, story.status, toStatus, String(user.username || 'system'),
