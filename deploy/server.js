@@ -154,6 +154,25 @@ async function insertPipelineEvent(storyId, fromStatus, toStatus, actor, note) {
   return data;
 }
 
+async function reopenStoryForSourceMutation(storyId, actor, description) {
+  const { data: story, error } = await supabase.from('stories').select('id, status, published_at').eq('id', storyId).single();
+  if (error || !story) throw new Error('Story for source mutation was not found');
+  const status = String(story.status || 'draft');
+  if (['draft', 'archived', 'trash'].includes(status)) return;
+  // Persist a blocking event first; source changes are refused if the story cannot
+  // be safely reopened or the audit trail cannot be written.
+  await insertPipelineEvent(
+    story.id, status, 'draft', actor,
+    `Source evidence changed (${description}); prior editorial review/publication approval invalidated`,
+  );
+  const { data: updated, error: updateError } = await supabase.from('stories')
+    .update({ status: 'draft', published_at: null })
+    .eq('id', storyId).eq('status', status)
+    .select('id').maybeSingle();
+  if (updateError) throw updateError;
+  if (!updated) throw new Error('Story state changed during source mutation; reload and retry after review');
+}
+
 // ==================== AUTH ROUTES ====================
 app.post('/api/auth/login', async (req, res) => {
   try {
@@ -469,6 +488,10 @@ app.post('/api/stories/:id/sources', requireAuth, async (req, res) => {
     const { label, url, source_type, verified } = req.body;
     if (!label || !url) return res.status(400).json({ error: 'Label and URL required' });
 
+    await reopenStoryForSourceMutation(
+      req.params.id, req.session.userEmail || String(req.session.userId || 'system'), 'source added',
+    );
+
     const { data: countData } = await supabase
       .from('story_sources')
       .select('id', { count: 'exact', head: true })
@@ -496,6 +519,13 @@ app.post('/api/stories/:id/sources', requireAuth, async (req, res) => {
 
 app.put('/api/sources/:id', requireAuth, async (req, res) => {
   try {
+    const { data: source, error: sourceError } = await supabase
+      .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
+    if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
+    await reopenStoryForSourceMutation(
+      source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source updated',
+    );
+
     const updates = { ...req.body };
     delete updates.id;
     delete updates.story_id;
@@ -517,6 +547,12 @@ app.put('/api/sources/:id', requireAuth, async (req, res) => {
 
 app.delete('/api/sources/:id', requireAuth, async (req, res) => {
   try {
+    const { data: source, error: sourceError } = await supabase
+      .from('story_sources').select('id, story_id').eq('id', req.params.id).single();
+    if (sourceError || !source) return res.status(404).json({ error: 'Source not found' });
+    await reopenStoryForSourceMutation(
+      source.story_id, req.session.userEmail || String(req.session.userId || 'system'), 'source deleted',
+    );
     const { error } = await supabase
       .from('story_sources')
       .delete()
