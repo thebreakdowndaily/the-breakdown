@@ -40,10 +40,11 @@ async function hmacKey(secret: string, usages: KeyUsage[]): Promise<CryptoKey> {
 }
 
 async function createToken(username: string, secret: string): Promise<string> {
-  if (!secretIsConfigured(secret)) throw new Error('JWT_SECRET must be configured with at least 32 characters');
+  if (!secretIsConfigured(secret)) throw new Error('PAGES_JWT_SECRET must be configured with at least 32 characters');
   const now = Math.floor(Date.now() / 1000);
   const head = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const body = base64UrlEncode(JSON.stringify({
+    iss: 'the-breakdown-pages-api', aud: 'the-breakdown-pages-admin',
     sub: username, username, role: 'admin', iat: now, exp: now + 3600,
   }));
   const signingInput = head + '.' + body;
@@ -67,7 +68,8 @@ async function verifyToken(token: string, secret: string): Promise<any> {
     const now = Math.floor(Date.now() / 1000);
     if (!Number.isInteger(payload.exp) || payload.exp <= now) return null;
     if (!Number.isInteger(payload.iat) || payload.iat > now + 60) return null;
-    if (typeof payload.username !== 'string' || typeof payload.role !== 'string') return null;
+    if (payload.iss !== 'the-breakdown-pages-api' || payload.aud !== 'the-breakdown-pages-admin') return null;
+    if (payload.sub !== payload.username || typeof payload.username !== 'string' || payload.role !== 'admin') return null;
     return payload;
   } catch {
     return null;
@@ -115,12 +117,12 @@ function constantTimeEqual(a: string, b: string): boolean {
 }
 
 async function handleAuth(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || ''
-  const adminPass = env.ADMIN_PASSWORD || ''
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
+  const adminPass = env.PAGES_ADMIN_PASSWORD || ''
 
   if (path === '/api/auth/login' && request.method === 'POST') {
     if (jwtSecret.length < 32 || !adminPass) {
-      return error('Authentication is not configured. Set JWT_SECRET (32+ characters) and ADMIN_PASSWORD.', 503)
+      return error('Authentication is not configured. Set PAGES_JWT_SECRET (32+ characters) and PAGES_ADMIN_PASSWORD.', 503)
     }
     const { username, password } = await request.json()
     if (username === 'admin' && constantTimeEqual(String(password || ''), adminPass)) {
@@ -143,7 +145,7 @@ async function handleAuth(request: Request, db: DbBackend, env: Record<string, s
 }
 
 async function handleStories(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || ''
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
 
   // GET /api/stories
   if (path === '/api/stories' && request.method === 'GET') {
@@ -231,7 +233,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
 }
 
 async function handlePipeline(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || ''
+  const jwtSecret = env.PAGES_JWT_SECRET || ''
 
   const ACTION_MAP: Record<string, string> = {
     submit: 'in-review',
