@@ -84,3 +84,12 @@ test('every legacy CMS runtime fails closed on schema mismatch and awaits deploy
   assert.match(pagesApi, /await triggerDeploymentHook\(deploymentHookUrl/);
   assert.match(pagesApi, /public rebuild was not acknowledged/i);
 });
+
+test('standalone SQLite workflow cannot claim publication to the public site', () => {
+  const localPipeline = readRepositoryFile('backend/src/routes/pipeline.ts');
+  const localAdmin = readRepositoryFile('backend/admin/index.html');
+  assert.match(localPipeline, /Public release is disabled in the standalone SQLite backend/i);
+  assert.match(localPipeline, /if \(action === 'publish'\)[\s\S]{0,350}res\.status\(503\)/);
+  assert.doesNotMatch(localAdmin, /Publish Approved Version/);
+  assert.match(localAdmin, /Public release unavailable here/);
+});
