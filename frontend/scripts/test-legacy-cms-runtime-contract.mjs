@@ -63,3 +63,24 @@ test('deploy hook acknowledgement is awaited and non-2xx responses fail truthful
     error => error.code === 'DEPLOY_HOOK_REJECTED' && error.status === 503 && !/secret/.test(error.message),
   );
 });
+
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const repositoryRoot = resolve(process.cwd(), '..');
+const readRepositoryFile = path => readFileSync(resolve(repositoryRoot, path), 'utf8');
+
+test('every legacy CMS runtime fails closed on schema mismatch and awaits deploy acknowledgement', () => {
+  const expressServer = readRepositoryFile('deploy/server.js');
+  const netlifyApi = readRepositoryFile('deploy/netlify/functions/api.js');
+  const pagesApi = readRepositoryFile('frontend/functions/api/[[path]].ts');
+
+  assert.match(expressServer, /await assertLegacyCmsSchema/);
+  assert.match(expressServer, /await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(expressServer, /Refusing to start because the configured database does not match/i);
+  assert.match(netlifyApi, /await ensureSchemaPreflight\(\)/);
+  assert.match(netlifyApi, /await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(pagesApi, /validateDeploymentHookUrl\(env\.DEPLOY_HOOK_URL/);
+  assert.match(pagesApi, /await triggerDeploymentHook\(deploymentHookUrl/);
+  assert.match(pagesApi, /public rebuild was not acknowledged/i);
+});
