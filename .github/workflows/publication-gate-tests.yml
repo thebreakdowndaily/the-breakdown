@@ -1,0 +1,33 @@
+name: Publication gate tests
+
+on:
+  push:
+    branches:
+      - feat/newsroom-agency-agents-2026-10-21
+  pull_request:
+    paths:
+      - 'frontend/functions/api/publication-gate.*'
+      - 'frontend/scripts/test-publication-gate.mjs'
+      - 'frontend/package.json'
+      - '.github/workflows/publication-gate-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publication-gate:
+    name: Version-bound approval validation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run publication gate tests
+        run: npm run test:publication-gate
