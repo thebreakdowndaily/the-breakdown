@@ -54,6 +54,7 @@ export interface DbBackend {
   createStory(data: Partial<Story>): Promise<Story> | Story
 
   updateStory(slug: string, data: Partial<Story>): Promise<Story | null> | Story | null
+  updateStoryIfStatus(slug: string, expectedStatus: string, data: Partial<Story>): Promise<Story | null> | Story | null
 
   deleteStory(slug: string): Promise<boolean> | boolean
 
