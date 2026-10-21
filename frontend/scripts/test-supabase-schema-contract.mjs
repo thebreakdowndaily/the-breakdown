@@ -90,3 +90,22 @@ test('declares required legacy CMS columns and every pipeline state', () => {
     'draft', 'in-review', 'fact-checking', 'ready', 'approved-for-release', 'published', 'archived',
   ]);
 });
+
+test('schema mismatch has a stable code for a safe HTTP 503 response', async () => {
+  await assert.rejects(
+    () => assertSupabaseCmsSchema({
+      baseUrl: 'https://cms-example.supabase.co',
+      serviceKey: 'test-service-key',
+      fetchImpl: async () => ({
+        ok: false,
+        status: 400,
+        text: async () => 'schema is incompatible',
+      }),
+    }),
+    error => {
+      assert.equal(error.code, 'SUPABASE_CMS_SCHEMA_MISMATCH');
+      assert.equal(error.name, 'SupabaseCmsSchemaError');
+      return true;
+    },
+  );
+});
