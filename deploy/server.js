@@ -334,41 +334,81 @@ app.post('/api/stories', requireAuth, async (req, res) => {
 // PUT update story
 app.put('/api/stories/:id', requireAuth, async (req, res) => {
   try {
+    const { data: existing, error: fetchError } = await supabase
+      .from('stories').select('*').eq('id', req.params.id).single();
+    if (fetchError || !existing) return res.status(404).json({ error: 'Story not found' });
+
     const updates = { ...req.body };
     delete updates.id;
     delete updates.created_at;
     delete updates.updated_at;
     delete updates.story_sources;
+    // Workflow and publication fields are never writable through a generic edit.
+    delete updates.status;
+    delete updates.published_at;
+    delete updates.deleted_at;
 
-    const { data, error } = await supabase
-      .from('stories')
-      .update(updates)
-      .eq('id', req.params.id)
-      .select()
-      .single();
+    if (Object.keys(updates).length === 0) {
+      return res.json({ story: existing, approvalInvalidated: false });
+    }
+
+    const beforeHash = storyVersionHash(existing);
+    const afterHash = storyVersionHash({ ...existing, ...updates });
+    const contentChanged = beforeHash !== afterHash;
+    const approvalInvalidated = contentChanged && existing.status !== 'draft';
+    if (approvalInvalidated) {
+      updates.status = 'draft';
+      updates.published_at = null;
+    }
+
+    let data, error;
+    ({ data, error } = await supabase
+      .from('stories').update(updates).eq('id', req.params.id).select().single());
 
     if (error && error.message && error.message.includes('column')) {
-      // Unknown column — remove non-standard fields and retry
-      const knownCols = ['title','slug','category','status','summary','content','fact_check_url','fact_check_image','fact_check_video','source_verification','instagram_caption','instagram_carousel','youtube_script','x_thread','read_time','author','published_at','tags','meta_title','meta_description','og_image','publish_at','related_story_ids','story_template','deleted_at','fact_check_image_caption'];
+      const knownCols = [
+        'title','slug','category','status','summary','content','fact_check_url',
+        'fact_check_image','fact_check_video','source_verification','instagram_caption',
+        'instagram_carousel','youtube_script','x_thread','read_time','author',
+        'published_at','tags','meta_title','meta_description','og_image','publish_at',
+        'related_story_ids','story_template','fact_check_image_caption',
+      ];
       const safeUpdates = {};
-      Object.keys(updates).forEach(k => { if (knownCols.includes(k)) safeUpdates[k] = updates[k]; });
-      const { data: d2, error: e2 } = await supabase.from('stories').update(safeUpdates).eq('id', req.params.id).select().single();
-      if (e2) {
-        // Last resort: try one more time with just the absolute basics
+      Object.keys(updates).forEach(key => { if (knownCols.includes(key)) safeUpdates[key] = updates[key]; });
+      const second = await supabase.from('stories').update(safeUpdates).eq('id', req.params.id).select().single();
+      data = second.data;
+      error = second.error;
+      if (error && error.message && error.message.includes('column')) {
         const basic = {};
-        ['title','slug','category','status','summary','content'].forEach(k => { if (updates[k] !== undefined) basic[k] = updates[k]; });
-        const { data: d3, error: e3 } = await supabase.from('stories').update(basic).eq('id', req.params.id).select().single();
-        if (e3) throw e3;
-        return res.json({ story: d3 });
+        ['title','slug','category','status','summary','content','published_at'].forEach(key => {
+          if (updates[key] !== undefined) basic[key] = updates[key];
+        });
+        const third = await supabase.from('stories').update(basic).eq('id', req.params.id).select().single();
+        data = third.data;
+        error = third.error;
       }
-      return res.json({ story: d2 });
     }
 
     if (error) throw error;
     if (!data) return res.status(404).json({ error: 'Story not found' });
-    // Save revision
+
     saveRevision(req.params.id, req.session.userId, updates);
-    res.json({ story: data });
+    if (approvalInvalidated) {
+      try {
+        await insertPipelineEvent(
+          req.params.id, existing.status, 'draft',
+          req.session.userEmail || String(req.session.userId || 'system'),
+          'Material story edit invalidated prior review/publication approval',
+        );
+      } catch (auditError) {
+        console.error('[publication-gate] Content was reopened as draft, but the invalidation audit failed:', auditError);
+        return res.status(500).json({
+          error: 'Story was moved back to draft but the audit record failed; investigate before release.',
+          approvalInvalidated: true,
+        });
+      }
+    }
+    res.json({ story: data, approvalInvalidated });
   } catch (err) {
     console.error('Update story error:', err);
     res.status(500).json({ error: 'Failed to update story' });
