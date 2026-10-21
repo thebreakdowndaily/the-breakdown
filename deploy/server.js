@@ -797,9 +797,9 @@ app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
     // Write the terminal event first. If the status write fails, this approval
     // cannot be replayed; a fresh review and approval will be required.
     await insertPipelineEvent(
-      story.id, 'approved-for-release', 'published',
+      story.id, 'approved-for-release', 'release-attempted',
       String(req.session.userEmail || req.session.userId || 'system'),
-      'Release event recorded after version-bound human approval validation',
+      'Approval consumed after version-bound validation; conditional publication transition follows',
     );
 
     const publishedAt = new Date().toISOString();
@@ -813,6 +813,17 @@ app.post('/api/stories/:id/publish', requireAuth, async (req, res) => {
     if (updateError) throw updateError;
     if (!updated) {
       return res.status(409).json({ error: 'Story status changed during release; approval has been consumed and fresh review is required' });
+    }
+
+    try {
+      await insertPipelineEvent(
+        story.id, 'approved-for-release', 'published',
+        String(req.session.userEmail || req.session.userId || 'system'),
+        'Published after version-bound human approval and successful conditional status transition',
+      );
+    } catch (auditError) {
+      console.error('[publication-gate] Story is published but final release audit could not be recorded:', auditError);
+      return res.status(500).json({ error: 'Story is published but final release audit logging failed; investigate before retrying' });
     }
 
     // Secondary publish telemetry is written after the primary, durable pipeline
