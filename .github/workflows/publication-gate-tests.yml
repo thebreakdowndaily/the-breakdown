@@ -7,8 +7,18 @@ on:
   pull_request:
     paths:
       - 'frontend/functions/api/publication-gate.*'
-      - 'frontend/scripts/test-publication-gate.mjs'
+      - 'frontend/functions/api/[[path]].ts'
+      - 'frontend/functions/api/db-supabase.ts'
+      - 'frontend/scripts/test-*.mjs'
+      - 'frontend/scripts/content-publication-policy.mjs'
+      - 'frontend/scripts/build-content.mjs'
+      - 'frontend/publication-registry.json'
       - 'frontend/package.json'
+      - 'frontend/package-lock.json'
+      - 'backend/src/routes/pipeline.ts'
+      - 'backend/src/routes/stories.ts'
+      - 'backend/src/auth.ts'
+      - 'deploy/netlify/functions/api.js'
       - '.github/workflows/publication-gate-tests.yml'
   workflow_dispatch:
 
@@ -29,5 +39,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Run publication gate tests
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Run approval and content policy tests
         run: npm run test:publication-gate
+      - name: Check JavaScript syntax
+        run: |
+          node --check scripts/build-content.mjs
+          node --check scripts/content-publication-policy.mjs
+          node --check ../scripts/ai/generate-story.mjs
+          node --check ../scripts/pipeline.mjs
+          node --check ../deploy/netlify/functions/api.js
+      - name: Build and validate the static story corpus
+        run: node scripts/build-content.mjs
