@@ -22,6 +22,13 @@ on:
       - 'backend/package-lock.json'
       - '.env.example'
       - 'deploy/netlify/functions/api.js'
+      - 'deploy/server.js'
+      - 'deploy/admin/index.html'
+      - 'cloudflare-deploy/admin/index.html'
+      - 'backend/admin/index.html'
+      - 'frontend/public/admin/index.html'
+      - 'scripts/ai/publish.mjs'
+      - 'scripts/pipeline.mjs'
       - '.github/workflows/publication-gate-tests.yml'
   workflow_dispatch:
 
@@ -55,6 +62,8 @@ jobs:
           node --check ../scripts/ai/generate-story.mjs
           node --check ../scripts/pipeline.mjs
           node --check ../deploy/netlify/functions/api.js
+          node --check ../deploy/server.js
+          node --check ../scripts/ai/publish.mjs
       - name: Build and validate the static story corpus
         run: node scripts/build-content.mjs
       - name: Install backend dependencies
