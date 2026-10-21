@@ -107,3 +107,26 @@ test('legacy CMS bulk UI cannot publish or approve in unsupported workflow state
   assert.match(cfAdmin, /\['draft','ready','scheduled'\]\.includes\(s\.status\)/);
   assert.match(deployAdmin, /\['draft','ready','scheduled'\]\.includes\(s\.status\)/);
 });
+
+test('material edits and source mutations reopen live stories and await rebuild acknowledgement', () => {
+  const expressServer = readRepositoryFile('deploy/server.js');
+  const netlifyApi = readRepositoryFile('deploy/netlify/functions/api.js');
+  const pagesApi = readRepositoryFile('frontend/functions/api/[[path]].ts');
+
+  assert.match(expressServer, /approvalInvalidated && existing\.status === 'published'[\s\S]{0,1800}await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(expressServer, /async function reopenStoryForSourceMutation[\s\S]{0,2600}await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(netlifyApi, /invalidatedApproval && existing\.status === 'published'[\s\S]{0,1800}await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(netlifyApi, /async function reopenStoryForSourceMutation[\s\S]{0,2800}await triggerDeploymentHook\(deploymentHookUrl\)/);
+  assert.match(pagesApi, /approvalInvalidated && existing\.status === 'published'[\s\S]{0,1300}await triggerDeploymentHook\(deploymentHookUrl/);
+});
+
+test('direct trash APIs cannot bypass the workflow for non-draft stories', () => {
+  const expressServer = readRepositoryFile('deploy/server.js');
+  const netlifyApi = readRepositoryFile('deploy/netlify/functions/api.js');
+  const pagesApi = readRepositoryFile('frontend/functions/api/[[path]].ts');
+
+  assert.match(expressServer, /app\.delete\('\/api\/stories\/:id'[\s\S]{0,700}existing\.status !== 'draft'/);
+  assert.match(netlifyApi, /Direct trash is available only for drafts/);
+  assert.match(pagesApi, /Direct delete is available only for drafts/);
+  assert.match(expressServer, /\['status', 'delete', 'category'\]\.includes\(action\)[\s\S]{0,700}published', 'approved-for-release'/);
+});
