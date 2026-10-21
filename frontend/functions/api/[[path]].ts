@@ -461,6 +461,9 @@ export async function onRequest(context: { request: Request; env: Record<string,
     return error('Not found', 404)
   } catch (err: any) {
     console.error('[api] Error:', err)
+    if (err?.code === 'SUPABASE_CMS_SCHEMA_MISMATCH') {
+      return error('CMS database schema is incompatible. Service is unavailable; no content writes were attempted.', 503)
+    }
     return error(err.message || 'Internal error', 500)
   }
 }
