@@ -3,43 +3,74 @@
 
 import { getDb } from './db'
 import { type Story, type DbBackend } from './types'
+import { createApprovalNote, hashStoryVersion, validatePublicationApproval } from './publication-gate.mjs'
 
 // ---------------------------------------------------------------------------
-// Simple JWT (no native HMAC in Pages Functions — OK for demo; replace with
-// Web Crypto API for production with non-trivial secrets).
+// JWT HS256 — Web Crypto HMAC signature verification (fail closed).
+// Required env: JWT_SECRET (32+ chars). Never issue or accept unsigned tokens.
 // ---------------------------------------------------------------------------
 
-function base64UrlEncode(str: string): string {
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+function encodeBytes(bytes: Uint8Array): string {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function base64UrlDecode(str: string): string {
-  str = str.replace(/-/g, '+').replace(/_/g, '/')
-  while (str.length % 4) str += '='
-  return atob(str)
+function base64UrlEncode(value: string): string {
+  return encodeBytes(new TextEncoder().encode(value));
 }
 
-function createToken(username: string, secret: string): string {
-  const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }))
-  const payload = base64UrlEncode(JSON.stringify({
-    sub: username,
-    username,
-    role: 'admin',
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 86400,
-  }))
-  return header + '.' + payload + '.' + base64UrlEncode(header + '.' + payload)
+function base64UrlDecode(value: string): string {
+  value = value.replace(/-/g, '+').replace(/_/g, '/');
+  while (value.length % 4) value += '=';
+  const binary = atob(value);
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
 }
 
-function verifyToken(token: string, _secret: string): any {
+function secretIsConfigured(secret: string): boolean {
+  return typeof secret === 'string' && secret.length >= 32;
+}
+
+async function hmacKey(secret: string, usages: KeyUsage[]): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, usages
+  );
+}
+
+async function createToken(username: string, secret: string): Promise<string> {
+  if (!secretIsConfigured(secret)) throw new Error('JWT_SECRET must be configured with at least 32 characters');
+  const now = Math.floor(Date.now() / 1000);
+  const head = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const body = base64UrlEncode(JSON.stringify({
+    sub: username, username, role: 'admin', iat: now, exp: now + 3600,
+  }));
+  const signingInput = head + '.' + body;
+  const key = await hmacKey(secret, ['sign']);
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signingInput));
+  return signingInput + '.' + encodeBytes(new Uint8Array(signature));
+}
+
+async function verifyToken(token: string, secret: string): Promise<any> {
   try {
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
-    const payload = JSON.parse(base64UrlDecode(parts[1]))
-    if (payload.exp < Math.floor(Date.now() / 1000)) return null
-    return payload
+    if (!secretIsConfigured(secret)) return null;
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const header = JSON.parse(base64UrlDecode(parts[0]));
+    if (header.alg !== 'HS256' || header.typ !== 'JWT') return null;
+    const key = await hmacKey(secret, ['verify']);
+    const signature = Uint8Array.from(atob(parts[2].replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - parts[2].length % 4) % 4)), c => c.charCodeAt(0));
+    const valid = await crypto.subtle.verify('HMAC', key, signature, new TextEncoder().encode(parts[0] + '.' + parts[1]));
+    if (!valid) return null;
+    const payload = JSON.parse(base64UrlDecode(parts[1]));
+    const now = Math.floor(Date.now() / 1000);
+    if (!Number.isInteger(payload.exp) || payload.exp <= now) return null;
+    if (!Number.isInteger(payload.iat) || payload.iat > now + 60) return null;
+    if (typeof payload.username !== 'string' || typeof payload.role !== 'string') return null;
+    return payload;
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -63,24 +94,37 @@ function error(message: string, status = 400): Response {
   return json({ error: message }, status)
 }
 
-function getAuthUser(request: Request, _secret: string): any {
+async function getAuthUser(request: Request, secret: string): Promise<any> {
   const header = request.headers.get('Authorization')
   if (!header || !header.startsWith('Bearer ')) return null
-  return verifyToken(header.slice(7), _secret)
+  return verifyToken(header.slice(7), secret)
 }
 
 // ---------------------------------------------------------------------------
 // Route handlers (all async to support Turso backend)
 // ---------------------------------------------------------------------------
 
+function constantTimeEqual(a: string, b: string): boolean {
+  const encoder = new TextEncoder()
+  const aa = encoder.encode(a)
+  const bb = encoder.encode(b)
+  let diff = aa.length ^ bb.length
+  const n = Math.max(aa.length, bb.length)
+  for (let i = 0; i < n; i++) diff |= (aa[i] || 0) ^ (bb[i] || 0)
+  return diff === 0
+}
+
 async function handleAuth(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
-  const adminPass = env.ADMIN_PASSWORD || 'breakdown2026'
+  const jwtSecret = env.JWT_SECRET || ''
+  const adminPass = env.ADMIN_PASSWORD || ''
 
   if (path === '/api/auth/login' && request.method === 'POST') {
+    if (jwtSecret.length < 32 || !adminPass) {
+      return error('Authentication is not configured. Set JWT_SECRET (32+ characters) and ADMIN_PASSWORD.', 503)
+    }
     const { username, password } = await request.json()
-    if (username === 'admin' && password === adminPass) {
-      const token = createToken(username, jwtSecret)
+    if (username === 'admin' && constantTimeEqual(String(password || ''), adminPass)) {
+      const token = await createToken(username, jwtSecret)
       return json({
         token,
         user: { id: 1, username: 'admin', displayName: 'Admin', role: 'admin' },
@@ -90,7 +134,7 @@ async function handleAuth(request: Request, db: DbBackend, env: Record<string, s
   }
 
   if (path === '/api/auth/me' && request.method === 'GET') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     return json({ user })
   }
@@ -99,13 +143,17 @@ async function handleAuth(request: Request, db: DbBackend, env: Record<string, s
 }
 
 async function handleStories(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
+  const jwtSecret = env.JWT_SECRET || ''
 
   // GET /api/stories
   if (path === '/api/stories' && request.method === 'GET') {
     const url = new URL(request.url)
     const includeAll = url.searchParams.get('all') === 'true'
     const statusFilter = url.searchParams.get('status') || undefined
+    if (includeAll || (statusFilter && statusFilter !== 'published')) {
+      const user = await getAuthUser(request, jwtSecret)
+      if (!user) return error('Unauthorized', 401)
+    }
     const category = url.searchParams.get('category') || undefined
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100)
     const offset = parseInt(url.searchParams.get('offset') || '0')
@@ -121,7 +169,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const story = await db.getStory(slug)
     if (!story) return error('Story not found', 404)
     if (story.status !== 'published') {
-      const user = getAuthUser(request, jwtSecret)
+      const user = await getAuthUser(request, jwtSecret)
       if (!user) return error('Story not found', 404)
     }
     return json({ story })
@@ -129,7 +177,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
 
   // POST /api/stories
   if (path === '/api/stories' && request.method === 'POST') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const data = await request.json()
     if (!data.slug) return error('Slug is required')
@@ -142,7 +190,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
   // PUT /api/stories/:slug
   const putMatch = path.match(/^\/api\/stories\/([^/]+)$/)
   if (putMatch && request.method === 'PUT') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = putMatch[1]
     const data = await request.json()
@@ -153,7 +201,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
 
   // DELETE /api/stories/:slug
   if (singleMatch && request.method === 'DELETE') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = singleMatch[1]
     await db.deleteStory(slug)
@@ -164,7 +212,7 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
 }
 
 async function handlePipeline(request: Request, db: DbBackend, env: Record<string, string>, path: string): Promise<Response> {
-  const jwtSecret = env.JWT_SECRET || 'breakdown-dev-secret'
+  const jwtSecret = env.JWT_SECRET || ''
 
   const ACTION_MAP: Record<string, string> = {
     submit: 'in-review',
@@ -187,7 +235,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
 
   // GET /api/pipeline/stats
   if (path === '/api/pipeline/stats' && request.method === 'GET') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const stats = await db.getPipelineStats()
     const total = stats.reduce((sum, s) => sum + s.count, 0)
@@ -197,7 +245,7 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
   // POST /api/pipeline/:slug/:action
   const actionMatch = path.match(/^\/api\/pipeline\/([^/]+)\/([^/]+)$/)
   if (actionMatch && request.method === 'POST') {
-    const user = getAuthUser(request, jwtSecret)
+    const user = await getAuthUser(request, jwtSecret)
     if (!user) return error('Unauthorized', 401)
     const slug = actionMatch[1]
     const action = actionMatch[2]
