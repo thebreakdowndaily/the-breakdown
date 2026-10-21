@@ -19,6 +19,15 @@ function story() {
     hero: 'https://cdn.example.test/hero.jpg', caption: 'Caption',
     author: 'The Breakdown Desk', readTime: 5, status: 'ready',
     updatedAt: '2026-10-21T09:00:00.000Z',
+    fact_check_url: 'https://example.test/source',
+    fact_check_video: '',
+    source_verification: 'Verified against the original report',
+    meta_title: 'Example | The Breakdown',
+    meta_description: 'A short, accurate description',
+    og_image: 'https://cdn.example.test/og.jpg',
+    publish_at: '',
+    related_story_ids: [],
+    story_template: 'analysis',
   };
 }
 async function approvalLog(value, override = {}) {
@@ -45,6 +54,22 @@ test('rejects a story whose content changed after approval', async () => {
   const result = await validatePublicationApproval({ logs: [log], story: value, destination, now });
   assert.equal(result.ok, false);
   assert.match(result.reason, /changed after approval/i);
+});
+
+test('rejects a story whose public metadata changes after approval', async () => {
+  const value = story();
+  const log = await approvalLog(value);
+  value.meta_description = 'A materially different description';
+  const result = await validatePublicationApproval({ logs: [log], story: value, destination, now });
+  assert.equal(result.ok, false);
+  assert.match(result.reason, /changed after approval/i);
+});
+
+test('normalises array and JSON-string tag representations to the same version hash', async () => {
+  const value = story();
+  const hashArray = await hashStoryVersion(value);
+  const hashString = await hashStoryVersion({ ...value, tags: JSON.stringify(value.tags) });
+  assert.equal(hashArray, hashString);
 });
 
 test('rejects an approval for a different destination', async () => {
