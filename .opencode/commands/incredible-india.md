@@ -1,5 +1,5 @@
 ---
-description: '🇮🇳 Incredible India Series — Automated Pipeline: research recent Indian innovation, science, environment, startups, rural development → score → write → brand → publish to hub'
+description: '🇮🇳 Incredible India Series — Automated Pipeline: research recent Indian innovation, science, environment, startups, rural development → score → write → brand → prepare a draft for newsroom review'
 argument-hint: '[optional specific topic or angle]'
 ---
 
@@ -157,26 +157,9 @@ Requirements:
 
 ---
 
-## PHASE 6 — ASSEMBLE PUBLISH ENTRY
+## PHASE 6 — ASSEMBLE DRAFT PACKAGE
 
-Create the entry for `publish-all-beats.js`:
-
-```javascript
-{
-  title: 'Story Title',
-  slug: 'story-slug',
-  category: 'Incredible India',
-  summary: '2-3 sentence summary (no single quotes)',
-  content: readFile('stories/slug/slug.html'),
-  tags: ['incredible-india', 'india', 'innovation', '...'],
-  hero: 'SUPABASE_URL/storage/v1/object/public/story-images/slug-hero.jpg',
-  caption: 'Image caption with credit. (Photo: Agency Name)',
-  read_time: X,
-  published_at: new Date().toISOString()
-}
-```
-
----
+Prepare the story package for newsroom review. Do not create or update a direct-publishing script entry. Include the title, unique slug, category, summary, HTML body, tags, verified hero-image URL/caption/rights, reading time, source ledger, SEO metadata, and current status `draft`. Preserve all provenance and verification notes.
 
 ## PHASE 7 — DEPLOYMENT CHECKLIST
 
@@ -194,15 +177,14 @@ Before publishing, verify:
 
 ---
 
-## PHASE 8 — PUBLISH
+## PHASE 8 — NEWSROOM RELEASE GATE
 
-1. Run the publish script: `node scripts/publish-all-beats.js` from `fact-check-cms/`
-2. Deploy Cloudflare: `npx wrangler pages deploy "cloudflare-deploy" --project-name thebreakdown --branch main` from project root
-3. Verify:
-   - `curl -s https://thebreakdown.in/story/{slug}` returns 200
-   - `curl -s https://thebreakdown.in/incredible-india` shows the story
-   - `curl -s https://thebreakdown.in/api/stories/by-tag/incredible-india` returns 1+ stories
-4. Commit and push both repos
+1. Save the story and its source/visual/SEO files under `stories/[slug]/`; leave it as a draft.
+2. Run `/newsroom <slug>` for independent verification, standards review, right-of-reply checks where needed, copy editing, rights/accessibility checks, and technical QA.
+3. Resolve every BLOCKER and obtain explicit human Editor-in-Chief approval for the exact saved version and destination.
+4. Release only through the authenticated CMS approval-gated endpoint. If the pipeline log, approval record, configuration or authenticated approver is missing, stop and report BLOCKED.
+5. Verify the actual CMS release state, deployment response, public story page and hub output. Record the resulting URL and timestamp only when observed.
+6. Never run `publish-all-beats.js`, manually set `status: published`, or deploy a content change to bypass the release gate.
 
 ---
 
