@@ -364,8 +364,8 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
       // following update fails, this approval cannot be replayed accidentally.
       try {
         await db.createPipelineLog(
-          story.id!, story.status, 'published', String(user.username || 'system'),
-          'Release event recorded after validating version-bound human approval',
+          story.id!, story.status, 'release-attempted', String(user.username || 'system'),
+          'Approval consumed after validating the exact story version and destination; conditional publish transition follows',
         )
       } catch (err) {
         console.error('[publication-gate] Could not persist release event:', err)
@@ -378,8 +378,20 @@ async function handlePipeline(request: Request, db: DbBackend, env: Record<strin
     if (toStatus === 'published') updateData.publishedAt = new Date().toISOString()
     if (toStatus === 'draft') updateData.publishedAt = null
 
-    const updated = await db.updateStory(slug, updateData)
+    const updated = await db.updateStoryIfStatus(slug, story.status, updateData)
     if (!updated) return error('Story update failed; no state transition recorded', 500)
+
+    if (publicationAuditWritten) {
+      try {
+        await db.createPipelineLog(
+          story.id!, 'approved-for-release', 'published', String(user.username || 'system'),
+          'Published after version-bound human approval and successful conditional status transition',
+        )
+      } catch (err) {
+        console.error('[publication-gate] Story is published but the final release audit could not be recorded:', err)
+        return error('Story status changed to published but final audit logging failed; investigate before retrying', 500)
+      }
+    }
 
     if (!approvalLogRecorded && !publicationAuditWritten) {
       try {
