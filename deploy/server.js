@@ -12,6 +12,10 @@ const multer = require('multer');
 const app = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
+const sessionSecret = process.env.SESSION_SECRET || '';
+if (sessionSecret.length < 32) {
+  throw new Error('SESSION_SECRET must be configured with at least 32 characters; refusing insecure startup.');
+}
 
 // Multer config: memory storage for direct upload to Supabase
 const upload = multer({
@@ -25,7 +29,10 @@ const upload = multer({
 
 // ==================== SUPABASE CLIENT ====================
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('SUPABASE_URL and SUPABASE_SERVICE_KEY are required for the newsroom CMS; refusing to use an anonymous fallback.');
+}
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: { persistSession: false },
   realtime: { transport: WebSocket }
@@ -45,7 +52,7 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret-change-me',
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   proxy: true,
@@ -61,6 +68,90 @@ function hashPassword(password) {
 function requireAuth(req, res, next) {
   if (req.session && req.session.authenticated) return next();
   res.status(401).json({ error: 'Unauthorized' });
+}
+
+const PUBLICATION_APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:';
+const PUBLICATION_APPROVAL_TTL_MS = 60 * 60 * 1000;
+
+function publicationDestination() {
+  const raw = process.env.PUBLICATION_DESTINATION || '';
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') return null;
+    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return null;
+    return parsed.origin;
+  } catch { return null; }
+}
+
+function isEditorInChief(req) {
+  const allowed = String(process.env.EDITOR_IN_CHIEF_EMAILS || '')
+    .split(',').map(value => value.trim().toLowerCase()).filter(Boolean);
+  const email = String(req.session?.userEmail || '').trim().toLowerCase();
+  return Boolean(email && allowed.includes(email));
+}
+
+function normalisePublicationList(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch { /* malformed lists are not considered verified data */ }
+  }
+  return [];
+}
+
+// Keep this ordered schema aligned with the other approval validators.
+function storyVersionPayload(story) {
+  return {
+    slug: String(story.slug || ''),
+    title: String(story.title || ''),
+    summary: String(story.summary || ''),
+    body: String(story.body ?? story.content ?? ''),
+    category: String(story.category || 'Uncategorised'),
+    tags: normalisePublicationList(story.tags),
+    hero: String(story.hero ?? story.fact_check_image ?? ''),
+    caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
+    author: String(story.author || 'The Breakdown Desk'),
+    readTime: Number(story.readTime ?? story.read_time ?? 5),
+    sourceUrl: String(story.fact_check_url ?? story.source_url ?? ''),
+    video: String(story.fact_check_video ?? story.video ?? ''),
+    sourceVerification: String(story.source_verification ?? ''),
+    metaTitle: String(story.meta_title ?? story.metaTitle ?? ''),
+    metaDescription: String(story.meta_description ?? story.metaDescription ?? ''),
+    ogImage: String(story.og_image ?? story.ogImage ?? ''),
+    publishAt: String(story.publish_at ?? story.publishAt ?? ''),
+    relatedStoryIds: normalisePublicationList(story.related_story_ids ?? story.relatedStoryIds),
+    storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
+  };
+}
+
+function storyVersionHash(story) {
+  return crypto.createHash('sha256').update(JSON.stringify(storyVersionPayload(story))).digest('hex');
+}
+
+function parsePublicationApproval(note) {
+  if (typeof note !== 'string' || !note.startsWith(PUBLICATION_APPROVAL_PREFIX)) return null;
+  try {
+    const value = JSON.parse(note.slice(PUBLICATION_APPROVAL_PREFIX.length));
+    if (value?.schema !== 1 || typeof value.contentHash !== 'string' ||
+        typeof value.destination !== 'string' || typeof value.approvedBy !== 'string' ||
+        typeof value.approvedAt !== 'string') return null;
+    return value;
+  } catch { return null; }
+}
+
+async function insertPipelineEvent(storyId, fromStatus, toStatus, actor, note) {
+  const { data, error } = await supabase.from('pipeline_log').insert({
+    story_id: storyId,
+    from_status: fromStatus,
+    to_status: toStatus,
+    changed_by: actor,
+    note,
+  }).select('id, story_id, from_status, to_status, changed_by, note, created_at').single();
+  if (error) throw new Error(`Pipeline audit event could not be persisted: ${error.message || error}`);
+  if (!data || data.id == null) throw new Error('Pipeline audit event was not returned by storage');
+  return data;
 }
 
 // ==================== AUTH ROUTES ====================
@@ -85,6 +176,7 @@ app.post('/api/auth/login', async (req, res) => {
     req.session.authenticated = true;
     req.session.userId = user.id;
     req.session.userName = user.name;
+    req.session.userEmail = String(user.email || '').toLowerCase().trim();
     res.json({ success: true, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
     console.error('Login error:', err);
