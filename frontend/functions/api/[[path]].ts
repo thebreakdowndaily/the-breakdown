@@ -7,7 +7,7 @@ import { createApprovalNote, hashStoryVersion, validatePublicationApproval } fro
 
 // ---------------------------------------------------------------------------
 // JWT HS256 — Web Crypto HMAC signature verification (fail closed).
-// Required env: JWT_SECRET (32+ chars). Never issue or accept unsigned tokens.
+// Required env: PAGES_JWT_SECRET (32+ chars). Never issue or accept unsigned tokens.
 // ---------------------------------------------------------------------------
 
 function encodeBytes(bytes: Uint8Array): string {
