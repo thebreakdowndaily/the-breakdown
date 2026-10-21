@@ -728,7 +728,7 @@ async function renderEditor(storyId) {
     if (s.status!=='archived' && s.status!=='trash') actionBtns += '<button class="btn btn-ghost btn-sm" onclick="archiveStory()">📦 Archive</button>';
     if (s.status==='trash') actionBtns += '<button class="btn btn-green btn-sm" onclick="restoreFromEditor()">♻ Restore</button>';
     actionBtns += '<button class="btn btn-ghost btn-sm" onclick="saveStory()">💾 Save</button>';
-    if (s.status!=='trash') actionBtns += '<button class="btn btn-red btn-sm" onclick="deleteStory()">🗑 Trash</button>';
+    if (s.status==='draft') actionBtns += '<button class="btn btn-red btn-sm" onclick="deleteStory()">🗑 Trash</button>';
   } else {
     actionBtns += '<button class="btn btn-ghost btn-sm" onclick="saveStory()">💾 Save</button>';
   }
