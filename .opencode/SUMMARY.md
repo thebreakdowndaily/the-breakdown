@@ -6,9 +6,9 @@ Build and maintain the Breakdown OS — a visual intelligence platform with Supa
 ## Constraints & Preferences
 - Cloudflare API token has **Pages:Write only** — cannot manage DNS zones, D1, KV, or Workers from CLI
 - Render free plan: only 1 web service slot occupied by CMS — no second backend possible
-- Admin credentials: `admin` + production `ADMIN_PASSWORD` secret (set in Cloudflare)
+- Authentication: Pages admin and Editor-in-Chief require independent credentials. Never copy passwords, signing secrets, or deploy-hook URLs into repository notes.
 - Instagram: `@thebreakdowndaily` (unique); X, YouTube, LinkedIn: `@thebreakdownin`
-- Supabase project: `lvfovvidtowadmnggzzf.supabase.co` — has `stories` (48), `admin_users`, `story_sources`, `publish_log`, `pipeline_log` tables
+- Supabase: multiple projects are connected. The fact-check project is not schema-compatible with the legacy CMS adapter: canonical `stories` uses `blocks`/`hero_image`/`reading_time` and an enum that excludes legacy workflow states. Verify the actual runtime target before writes.
 - GitHub repo: `github.com/thebreakdowndaily/the-breakdown` (public, master branch)
 - Cloudflare Pages connected to GitHub with root dir `frontend`, build cmd `npm run build`, output `out`
 - Build: 361 static pages, 35 stories, TypeScript clean, Pagefind indexed (5,809 words, 43 pages)
@@ -20,16 +20,16 @@ Build and maintain the Breakdown OS — a visual intelligence platform with Supa
 - **Supabase adapter built** — pure REST fetch, reuses existing `stories` table, maps CMS column names
 - **Shared types extracted** to `functions/api/types.ts` — Story, User, PipelineLog, DbBackend
 - **Factory updated** (`functions/api/db.ts`) — priority: Supabase → Turso → In-Memory
-- **Supabase env vars set** as Cloudflare Pages production secrets: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`
-- **Production secrets set**: `JWT_SECRET` (64-char random), `ADMIN_PASSWORD` (24-char random), `DEPLOY_HOOK_URL`
+- **Environment configuration is not independently verified in this session**: inspect variable names and targets in the deployment dashboard without exposing values; never assume a configured secret points to the intended database.
+- **Expected runtime settings** include independent signing/session secrets, passwords, an explicitly selected CMS database URL, publication destination, EIC allowlists/credentials, and `DEPLOY_HOOK_URL`. Do not claim they are configured without checking the deployed environment.
 - **Custom domain `thebreakdown.in`** CNAME → `the-breakdown.pages.dev` — site live, API health returns 200
 - **Open Graph + Twitter Card metadata** in `layout.tsx` with `@thebreakdownin` handles
 - **JSON-LD Schema.org** in `layout.tsx` — `WebSite` + `Organization` with `logo` (PNG), `image` (PNG), `sameAs` updated to 4 profiles
 - **Logo + OG images** — `public/logo.png` (512×512), `public/og-image.png` (1200×630)
 - **Google Search Console** verified at domain level
 - **GitHub repo + Cloudflare Pages** connected — root dir `frontend`, build cmd `npm run build`, output dir `out`, branch `master`
-- **Deploy hook created** — `https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/d6183b30-6c65-43eb-b41f-641ac634e763`
-- **Deploy hook auto-trigger integrated** — `[[path]].ts` now POSTs to `DEPLOY_HOOK_URL` when a CMS story is published (fire-and-forget)
+- **Deploy hook URL handling** — `DEPLOY_HOOK_URL` is a credential; never print, commit, or log its value. A prior URL appeared in this tracked file and must be rotated because removing it does not revoke it.
+- **Deploy hook integration** — the publication path awaits an HTTP acknowledgement and reports when a rebuild request is not acknowledged. Acknowledgement means requested, not completed.
 - **Supabase CMS build integration** — `build-content.mjs` fetches published stories from Supabase during Cloudflare builds, merges with static stories (slug dedup, static wins); graceful skip when env vars absent
 - **Broken `fact-check-cms` submodule removed** — added to `.gitignore`
 - **Node v22 set** as build env var on Cloudflare Pages
@@ -82,7 +82,7 @@ Build and maintain the Breakdown OS — a visual intelligence platform with Supa
 - User provides updated engine content as `# THE BREAKDOWN\n## [Engine Name] v[X.0]\n\n[full body]` — file replaced wholesale
 - Story files live as `stories/<slug>/<slug>.md` with companion `images.md`, `charts.md`, `seo.md`, `carousel-post.md` files — auto-discovered by `build-content.mjs`
 - Confidence scoring: 0-100 scale, labelled by type (Verified Fact, Official Statement, Independent Verification, Expert Opinion, Political Claim, Allegation, Unknown)
-- CMS publish pipeline now auto-triggers Cloudflare deploy via `DEPLOY_HOOK_URL` — closes the loop between admin panel and static site
+- CMS publish/takedown paths await the deployment-hook acknowledgement; a failed acknowledgement requires manual recovery and must not be reported as a successful site rebuild.
 - `build-content.mjs` fetches CMS-published stories from Supabase during Cloudflare builds and merges them into static output — static stories take priority on slug collision
 - Inline SVG charts preferred over external image dependencies — renders reliably in dark theme, no network fetch, no image CDN needed
 - Instagram carousel posts saved inside story directories as `carousel-post.md` for version-controlled reference alongside editorial content
@@ -95,10 +95,10 @@ Build and maintain the Breakdown OS — a visual intelligence platform with Supa
 
 ## Critical Context
 - Supabase URL: `https://lvfovvidtowadmnggzzf.supabase.co`
-- Service role key saved in Cloudflare Pages secrets (not in code)
+- Supabase service-role keys must remain only in server-side platform secrets; schema preflight must fail closed before writes if the CMS database is incompatible.
 - Custom domain CNAME: `thebreakdown.in` → `the-breakdown.pages.dev` (proxied)
 - GitHub: `github.com/thebreakdowndaily/the-breakdown` (public, master branch)
-- Deploy hook URL: `https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/d6183b30-6c65-43eb-b41f-641ac634e763`
+- Deploy-hook URL is held only in platform secret `DEPLOY_HOOK_URL`; its value is intentionally excluded from docs and logs. Rotate the previously exposed hook.
 - Build: 361 static pages, 35 stories, TypeScript clean, Pagefind re-indexed (5,809 words, 43 pages)
 - Brand: `--primary: oklch(0.75 0.15 77)` (#e4a11d gold), `--saffron: oklch(0.72 0.16 60)`
 - Fonts: Bebas Neue (headings) + Source Sans 3 (body) + Geist Mono (code)
@@ -106,7 +106,7 @@ Build and maintain the Breakdown OS — a visual intelligence platform with Supa
 - Content pipeline: `stories/<slug>/<slug>.md` → `build-content.mjs` (also fetches Supabase CMS stories) → `src/lib/content/generated/stories.ts`
 - `.opencode/templates/` is the canonical editorial engine library — 9 files
 - `.opencode/commands/` is the publishing command library — `instagram.md` created; more to follow
-- Deploy hooks: API `[[path]].ts` auto-POSTs to `DEPLOY_HOOK_URL` on publish action
+- Deploy hooks: the Pages API awaits the hook for publish and live takedown; the hook URL is a credential and its acknowledgement does not confirm build completion.
 - 14 stories with editorial pipeline deployed: European Heatwave (34 sources), E20 SC (19 sources, rewritten with inline SVGs + compact timeline), Monsoon Crisis (42 sources), Transparency Paradox (17 sources, 7 evidence sections + 8 data tables), VB-G RAM G (17 sources, 3 inline SVG charts + 7 data tables), plus 9 others
 - State-wise wage data verified: Sikkim ₹450 (high-altitude), Haryana ₹409, Goa ₹406, Kerala ₹401, Karnataka ₹382, Punjab ₹360, TN ₹345, Maharashtra ₹317, AP ₹312, Telangana ₹308, 21 states at ₹300 floor
 - VB-G RAM G: Act passed Dec 2025 amid protests, presidential assent Dec 21, 2025, effective July 1, 2026; budget ₹95,692 Cr FY27 (highest ever BE); 5 opposition states passed resolutions; 25 states allocated funds
