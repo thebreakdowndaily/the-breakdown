@@ -387,10 +387,12 @@ exports.handler = async (event) => {
         if (!['draft', 'ready', 'scheduled'].includes(String(story.status))) {
           return json(409, { error: 'Only a draft, ready, or due scheduled story can be approved for public release' });
         }
-        if (story.status === 'scheduled') {
-          const dueAt = Date.parse(story.publish_at || '');
-          if (!Number.isFinite(dueAt)) return json(409, { error: 'Scheduled story has no valid publish_at time' });
-          if (dueAt > Date.now()) return json(409, { error: 'Scheduled time has not arrived; approval is not yet available' });
+        const scheduledAt = story.publish_at ? Date.parse(story.publish_at) : NaN;
+        if (story.status === 'scheduled' && !Number.isFinite(scheduledAt)) {
+          return json(409, { error: 'Scheduled story has no valid publish_at time' });
+        }
+        if (Number.isFinite(scheduledAt) && scheduledAt > Date.now()) {
+          return json(409, { error: 'Scheduled time has not arrived; approval is not yet available' });
         }
 
         const approvalFromStatus = story.status;
