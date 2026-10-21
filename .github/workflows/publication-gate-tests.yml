@@ -55,6 +55,8 @@ jobs:
         run: npm ci
       - name: Run approval and content policy tests
         run: npm run test:publication-gate
+      - name: Type-check Cloudflare Pages API
+        run: npx --yes --package typescript@5.9.3 tsc --noEmit --skipLibCheck --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM functions/api/types.ts functions/api/db.ts functions/api/db-supabase.ts 'functions/api/[[path]].ts'
       - name: Check JavaScript syntax
         run: |
           node --check scripts/build-content.mjs
