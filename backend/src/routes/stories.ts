@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express'
 import { getDb, queryAll, queryOne, execute } from '../db.js'
-import { authMiddleware } from '../auth.js'
+import { authMiddleware, verifyToken } from '../auth.js'
 
 const router = Router()
 
@@ -29,6 +29,14 @@ router.get('/', (req: Request, res: Response) => {
   const db = getDb()
   const includeAll = req.query.all === 'true'
   const status = req.query.status as string | undefined
+  if (includeAll || (status && status !== 'published')) {
+    const header = req.headers.authorization
+    const user = header?.startsWith('Bearer ') ? verifyToken(header.slice(7)) : null
+    if (!user) {
+      res.status(401).json({ error: 'Unauthorized' })
+      return
+    }
+  }
   const category = req.query.category as string | undefined
   const limit = Math.min(parseInt(req.query.limit as string) || 50, 100)
   const offset = parseInt(req.query.offset as string) || 0
@@ -84,7 +92,8 @@ router.get('/:slug', (req: Request, res: Response) => {
 
   if (row.status !== 'published') {
     const authHeader = req.headers.authorization
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const user = authHeader?.startsWith('Bearer ') ? verifyToken(authHeader.slice(7)) : null
+    if (!user) {
       res.status(404).json({ error: 'Story not found' })
       return
     }
