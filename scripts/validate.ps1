@@ -121,8 +121,11 @@ try {
   if (Test-Path $envFile) {
     $envVars = Get-Content $envFile
     foreach ($line in $envVars) {
-      if ($line -match '^SUPABASE_URL=(.+)
-        $serviceKey = $matches[1].Trim().Trim('"', "'")
+      if ($line.StartsWith('SUPABASE_URL=')) {
+        $supabaseUrl = $line.Substring('SUPABASE_URL='.Length).Trim().Trim('"', "'")
+      }
+      if ($line.StartsWith('SUPABASE_SERVICE_KEY=')) {
+        $serviceKey = $line.Substring('SUPABASE_SERVICE_KEY='.Length).Trim().Trim('"', "'")
       }
     }
   }
