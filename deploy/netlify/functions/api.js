@@ -236,7 +236,7 @@ exports.handler = async (event) => {
 
       const { data, error } = await supabase
         .from('stories')
-        .insert({ title, slug, category: category || 'Uncategorized', summary: summary || '', content: content || '', author: user.name || 'The Breakdown' })
+        .insert({ title, slug, category: category || 'Uncategorized', summary: summary || '', content: content || '', author: user.name || 'The Breakdown', status: 'draft', published_at: null })
         .select().single();
 
       if (error) return json(500, { error: 'Failed to create story' });
@@ -336,8 +336,13 @@ exports.handler = async (event) => {
         // This CMS has its own draft-based lifecycle. The explicit, allowlisted
         // Editor-in-Chief action is the final human release approval for the saved
         // draft; the UI must not publish as part of this action.
-        if (!['draft', 'ready'].includes(String(story.status))) {
-          return json(409, { error: 'Only a draft or ready story can be approved for public release' });
+        if (!['draft', 'ready', 'scheduled'].includes(String(story.status))) {
+          return json(409, { error: 'Only a draft, ready, or due scheduled story can be approved for public release' });
+        }
+        if (story.status === 'scheduled') {
+          const dueAt = Date.parse(story.publish_at || '');
+          if (!Number.isFinite(dueAt)) return json(409, { error: 'Scheduled story has no valid publish_at time' });
+          if (dueAt > Date.now()) return json(409, { error: 'Scheduled time has not arrived; approval is not yet available' });
         }
 
         const approvalFromStatus = story.status;
