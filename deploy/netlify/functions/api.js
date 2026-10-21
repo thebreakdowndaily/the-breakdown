@@ -351,6 +351,25 @@ exports.handler = async (event) => {
         return json(201, { source: data });
       }
 
+      // POST /api/stories/:id/return-to-draft
+      if (segments.length === 3 && segments[2] === 'return-to-draft' && method === 'POST') {
+        const { data: story, error } = await supabase.from('stories').select('id, status').eq('id', storyId).single();
+        if (error || !story) return json(404, { error: 'Story not found' });
+        if (!['approved-for-release', 'ready', 'in-review', 'fact-checking', 'scheduled'].includes(String(story.status))) {
+          return json(409, { error: 'Only a pending-release or in-review story can be returned to draft; use Unpublish for live stories.' });
+        }
+        const actor = String(user.email || user.name || user.id || 'cms-user');
+        const { error: logError } = await supabase.from('pipeline_log').insert({
+          story_id: story.id, from_status: story.status, to_status: 'draft',
+          changed_by: actor, note: 'Human returned story to draft; previous release approval revoked',
+        });
+        if (logError) return json(503, { error: 'Could not persist approval-revocation audit; operation is blocked' });
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'draft', published_at: null }).eq('id', storyId).eq('status', story.status).select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story changed concurrently; reload and retry' });
+        return json(200, { success: true, story: updated });
+      }
+
       // ===== VERSION-BOUND EDITORIAL APPROVAL =====
       // POST /api/stories/:id/approve-release
       if (segments.length === 3 && segments[2] === 'approve-release' && method === 'POST') {
