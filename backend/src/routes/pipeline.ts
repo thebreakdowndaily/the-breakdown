@@ -59,7 +59,7 @@ function parseApproval(note: unknown): any | null {
   } catch { return null }
 }
 
-function latestApprovalIsValid(db: ReturnType<typeof getDb>, story: any, username: string): { ok: true } | { ok: false; reason: string } {
+function latestApprovalIsValid(db: ReturnType<typeof getDb>, story: any): { ok: true } | { ok: false; reason: string } {
   const destination = getPublicationDestination()
   if (!destination) return { ok: false, reason: 'PUBLICATION_DESTINATION is not configured as a valid HTTPS origin' }
   const log = queryOne(db,
@@ -68,7 +68,7 @@ function latestApprovalIsValid(db: ReturnType<typeof getDb>, story: any, usernam
   if (!log || log.to_status !== 'approved-for-release') return { ok: false, reason: 'No current release approval exists' }
   const approval = parseApproval(log.note)
   if (!approval) return { ok: false, reason: 'Release approval record is malformed or missing' }
-  if (String(log.changed_by) !== approval.approvedBy || approval.approvedBy !== username) {
+  if (String(log.changed_by) !== approval.approvedBy) {
     return { ok: false, reason: 'Approval identity does not match the latest authorised decision' }
   }
   if (approval.destination !== destination) return { ok: false, reason: 'Approval destination does not match this release' }
@@ -162,7 +162,11 @@ router.post('/:slug/:action', authMiddleware, (req: Request, res: Response) => {
   }
 
   if (action === 'publish') {
-    const validation = latestApprovalIsValid(db, story, username)
+    if (!['admin', 'editor-in-chief', 'publisher'].includes(String(currentUser.role))) {
+      res.status(403).json({ error: 'Not authorised to execute publication' })
+      return
+    }
+    const validation = latestApprovalIsValid(db, story)
     if (!validation.ok) {
       res.status(409).json({ error: `Publication blocked: ${validation.reason}` })
       return
