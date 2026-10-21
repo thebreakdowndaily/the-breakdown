@@ -11,3 +11,7 @@ export function assertSupabaseCmsSchema(options: {
   serviceKey: string;
   fetchImpl?: typeof fetch;
 }): Promise<{ checkedTables: number; checkedStatuses: number }>;
+
+export interface SupabaseCmsSchemaError extends Error {
+  code: 'SUPABASE_CMS_SCHEMA_MISMATCH';
+}
