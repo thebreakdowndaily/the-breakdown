@@ -661,6 +661,29 @@ app.post('/api/generate/x-thread', requireAuth, async (req, res) => {
   }
 });
 
+// Revoke pending approval and return the story to draft for re-review.
+app.post('/api/stories/:id/return-to-draft', requireAuth, async (req, res) => {
+  try {
+    const { data: story, error } = await supabase.from('stories').select('id, status')
+      .eq('id', req.params.id).single();
+    if (error || !story) return res.status(404).json({ error: 'Story not found' });
+    if (!['approved-for-release', 'ready', 'in-review', 'fact-checking', 'scheduled'].includes(String(story.status))) {
+      return res.status(409).json({ error: 'Only a pending-release or in-review story can be returned to draft; use Unpublish for live stories.' });
+    }
+    const actor = String(req.session.userEmail || req.session.userId || 'cms-user');
+    await insertPipelineEvent(story.id, story.status, 'draft', actor, 'Human returned story to draft; previous release approval revoked');
+    const { data: updated, error: updateError } = await supabase.from('stories')
+      .update({ status: 'draft', published_at: null })
+      .eq('id', story.id).eq('status', story.status).select().maybeSingle();
+    if (updateError) throw updateError;
+    if (!updated) return res.status(409).json({ error: 'Story status changed concurrently; reload and retry' });
+    return res.json({ success: true, story: updated });
+  } catch (err) {
+    console.error('[publication-gate] Failed to revoke approval:', err);
+    return res.status(503).json({ error: 'Could not revoke approval safely; inspect the audit log' });
+  }
+});
+
 // ==================== VERSION-BOUND HUMAN APPROVAL + PUBLISH ====================
 app.post('/api/stories/:id/approve-release', requireAuth, async (req, res) => {
   try {
