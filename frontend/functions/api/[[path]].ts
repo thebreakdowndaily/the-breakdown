@@ -197,7 +197,10 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const slug = putMatch[1]
     const incoming = await request.json()
     // Status is controlled only by the pipeline endpoint, never by a generic edit.
-    const { status: _ignoredStatus, publishedAt: _ignoredPublishedAt, published_at: _ignoredPublishedAtSnake, createdAt: _ignoredCreatedAt, created_at: _ignoredCreatedAtSnake, updatedAt: _ignoredUpdatedAt, updated_at: _ignoredUpdatedAtSnake, id: _ignoredId, ...data } = incoming || {}
+    const data: Record<string, any> = { ...(incoming || {}) }
+    for (const systemField of ['status', 'publishedAt', 'published_at', 'createdAt', 'created_at', 'updatedAt', 'updated_at', 'id']) {
+      delete data[systemField]
+    }
     const existing = await db.getStory(slug)
     if (!existing) return error('Story not found', 404)
 
