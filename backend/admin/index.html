@@ -91,6 +91,7 @@
   .status-in-review { background: #1c1917; color: #fbbf24; }
   .status-fact-checking { background: #1c1917; color: #fb923c; }
   .status-ready { background: #052e16; color: #4ade80; }
+  .status-approved-for-release { background: #312e81; color: #c4b5fd; }
   .status-published { background: #1e3a5f; color: #60a5fa; }
   .status-archived { background: #1f1f1f; color: #71717a; }
 
@@ -475,6 +476,10 @@ function renderDashboard() {
           <div class="value">${statusCounts['ready'] || 0}</div>
           <div class="label">Ready</div>
         </div>
+        <div class="stat-card">
+          <div class="value">${statusCounts['approved-for-release'] || 0}</div>
+          <div class="label">Approved for Release</div>
+        </div>
       </div>
 
       <div class="search-bar">
@@ -486,6 +491,7 @@ function renderDashboard() {
           <option value="in-review" ${state.statusFilter==='in-review'?'selected':''}>In Review</option>
           <option value="fact-checking" ${state.statusFilter==='fact-checking'?'selected':''}>Fact-Checking</option>
           <option value="ready" ${state.statusFilter==='ready'?'selected':''}>Ready</option>
+          <option value="approved-for-release" ${state.statusFilter==='approved-for-release'?'selected':''}>Approved for Release</option>
           <option value="published" ${state.statusFilter==='published'?'selected':''}>Published</option>
           <option value="archived" ${state.statusFilter==='archived'?'selected':''}>Archived</option>
         </select>
@@ -536,8 +542,12 @@ function renderPipelineButtons(s) {
     btns.push(`<button class="btn btn-sm btn-danger" onclick="views.pipelineAction('${s.slug}','reject')">Reject</button>`)
   }
   if (s.status === 'ready') {
-    btns.push(`<button class="btn btn-sm btn-primary" onclick="views.pipelineAction('${s.slug}','publish')">Publish</button>`)
+    btns.push(`<button class="btn btn-sm btn-primary" onclick="views.pipelineAction('${s.slug}','approve-release')">Approve for Release</button>`)
     btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Draft</button>`)
+  }
+  if (s.status === 'approved-for-release') {
+    btns.push(`<button class="btn btn-sm btn-primary" onclick="views.pipelineAction('${s.slug}','publish')">Publish Approved Version</button>`)
+    btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','draft')">Return to Draft</button>`)
   }
   if (s.status === 'published') {
     btns.push(`<button class="btn btn-sm btn-outline" onclick="views.pipelineAction('${s.slug}','archive')">Archive</button>`)
