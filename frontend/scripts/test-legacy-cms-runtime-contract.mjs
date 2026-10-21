@@ -83,6 +83,11 @@ test('every legacy CMS runtime fails closed on schema mismatch and awaits deploy
   assert.match(pagesApi, /validateDeploymentHookUrl\(env\.DEPLOY_HOOK_URL/);
   assert.match(pagesApi, /await triggerDeploymentHook\(deploymentHookUrl/);
   assert.match(pagesApi, /public rebuild was not acknowledged/i);
+  assert.match(pagesApi, /PAGES_EDITOR_IN_CHIEF_USERNAME/);
+  assert.match(pagesApi, /PAGES_EDITOR_IN_CHIEF_PASSWORD/);
+  assert.match(pagesApi, /createToken\(eicUsername, 'editor-in-chief', jwtSecret\)/);
+  assert.match(pagesApi, /user\.role !== 'editor-in-chief'/);
+  assert.match(pagesApi, /payload\.role\)\)/);
 });
 
 test('standalone SQLite workflow cannot claim publication to the public site', () => {
