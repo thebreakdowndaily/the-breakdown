@@ -75,7 +75,7 @@ test('every legacy CMS runtime fails closed on schema mismatch and awaits deploy
   const netlifyApi = readRepositoryFile('deploy/netlify/functions/api.js');
   const pagesApi = readRepositoryFile('frontend/functions/api/[[path]].ts');
 
-  assert.match(expressServer, /await assertLegacyCmsSchema/);
+  assert.match(expressServer, /await ensureCmsSchemaPreflight\(\)/);
   assert.match(expressServer, /await triggerDeploymentHook\(deploymentHookUrl\)/);
   assert.match(expressServer, /CMS API blocked because the configured database does not match/i);
   assert.match(netlifyApi, /await ensureSchemaPreflight\(\)/);
