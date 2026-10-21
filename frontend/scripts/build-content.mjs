@@ -12,14 +12,74 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import matter from 'gray-matter'
 import { marked } from 'marked'
+import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
+import { decideStaticStoryEligibility } from './content-publication-policy.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const STORIES_DIR = path.resolve(ROOT, '..', 'stories')
 const CONTENT_DIR = path.resolve(ROOT, '..', 'content')
 const OUTPUT_DIR = path.resolve(ROOT, 'src', 'lib', 'content', 'generated')
+const REPO_ROOT = path.resolve(ROOT, '..')
+const PUBLICATION_REGISTRY_PATH = path.resolve(ROOT, 'publication-registry.json')
+
+let LEGACY_STATIC_STORIES = {}
+try {
+  const registry = JSON.parse(fs.readFileSync(PUBLICATION_REGISTRY_PATH, 'utf-8'))
+  if (registry?.schema === 1 && registry.legacyStaticStories && typeof registry.legacyStaticStories === 'object') {
+    LEGACY_STATIC_STORIES = registry.legacyStaticStories
+  } else {
+    console.error('[publication-gate] Static publication registry has an invalid schema; filesystem-backed stories will be excluded.')
+  }
+} catch (err) {
+  console.error(`[publication-gate] Static publication registry is unavailable; filesystem-backed stories will be excluded: ${err.message || err}`)
+}
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
+
+function gitBlobHash(filePath) {
+  const bytes = fs.readFileSync(filePath)
+  const repoRelative = path.relative(REPO_ROOT, filePath).split(path.sep).join('/')
+  // Use Git's clean filter when available; fallback to the canonical Git blob hash
+  // of exact bytes for build environments without the git executable.
+  try {
+    const hash = execFileSync('git', ['hash-object', `--path=${repoRelative}`, filePath], {
+      cwd: REPO_ROOT, encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim()
+    if (/^[a-f0-9]{40}$/.test(hash)) return hash
+  } catch { /* use raw Git blob hash below */ }
+  return createHash('sha1').update(`blob ${bytes.length}\\0`).update(bytes).digest('hex')
+}
+
+/**
+ * Legacy filesystem-backed stories are retained only if their source and relevant
+ * metadata exactly match the pinned pre-gate registry. New stories and modified
+ * legacy sources must enter the public corpus through the approval-gated CMS path.
+ */
+function checkStaticStorySource(slug, storyDir, fileNames, selectedFile) {
+  const entry = LEGACY_STATIC_STORIES[slug]
+  if (!entry || !entry.files || !selectedFile) return { registered: false, hashMatches: false }
+
+  const relevantFiles = new Set([selectedFile])
+  if (fileNames.includes('references.md')) relevantFiles.add('references.md')
+  if (fileNames.includes('meta.json')) relevantFiles.add('meta.json')
+
+  const actualNames = [...relevantFiles].sort()
+  const expectedNames = Object.keys(entry.files).sort()
+  if (JSON.stringify(actualNames) !== JSON.stringify(expectedNames)) {
+    return { registered: true, hashMatches: false }
+  }
+
+  const hashMatches = actualNames.every(name => {
+    try {
+      return gitBlobHash(path.join(storyDir, name)) === entry.files[name]
+    } catch {
+      return false
+    }
+  })
+  return { registered: true, hashMatches }
+}
 
 // ============================================================
 // 1. Site config
@@ -571,16 +631,20 @@ function parseStory(dir) {
   
   let raw = ''
   let isHtml = false
-  
+  let selectedFile = null
+
   if (mdFile) {
+    selectedFile = mdFile
     raw = fs.readFileSync(path.join(storyDir, mdFile), 'utf-8')
   } else if (htmlFile) {
+    selectedFile = htmlFile
     raw = fs.readFileSync(path.join(storyDir, htmlFile), 'utf-8')
     isHtml = true
   } else {
     // Try any md file
     const anyMd = files.find(f => f.endsWith('.md'))
     if (anyMd) {
+      selectedFile = anyMd
       raw = fs.readFileSync(path.join(storyDir, anyMd), 'utf-8')
     } else {
       return null
@@ -609,6 +673,21 @@ function parseStory(dir) {
     }
   }
   
+  // Gate filesystem-backed publication before generating public HTML/data.
+  // An explicit non-published state always blocks static inclusion. A new slug or
+  // edited legacy source also blocks; those versions must be released via CMS.
+  const editorialStatus = frontmatter.status ?? frontmatter.story?.status
+  const sourceCheck = checkStaticStorySource(slug, storyDir, files, selectedFile)
+  const sourceDecision = decideStaticStoryEligibility({
+    status: editorialStatus,
+    isLegacyRegistered: sourceCheck.registered,
+    sourceHashMatches: sourceCheck.hashMatches,
+  })
+  if (!sourceDecision.include) {
+    console.warn(`  ↷ Excluding ${slug} from static build: ${sourceDecision.reason}`)
+    return null
+  }
+
   // Read extras
   const extras = {}
   for (const file of files) {
