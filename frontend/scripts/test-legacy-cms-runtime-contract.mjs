@@ -98,3 +98,12 @@ test('standalone SQLite workflow cannot claim publication to the public site', (
   assert.doesNotMatch(localAdmin, /Publish Approved Version/);
   assert.match(localAdmin, /Public release unavailable here/);
 });
+
+test('legacy CMS bulk UI cannot publish or approve in unsupported workflow states', () => {
+  const cfAdmin = readRepositoryFile('cloudflare-deploy/admin/index.html');
+  const deployAdmin = readRepositoryFile('deploy/admin/index.html');
+  assert.doesNotMatch(cfAdmin, /<option value="publish">Publish<\/option>/);
+  assert.doesNotMatch(deployAdmin, /<option value="publish">Publish<\/option>/);
+  assert.match(cfAdmin, /\['draft','ready','scheduled'\]\.includes\(s\.status\)/);
+  assert.match(deployAdmin, /\['draft','ready','scheduled'\]\.includes\(s\.status\)/);
+});
