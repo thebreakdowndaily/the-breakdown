@@ -23,13 +23,20 @@ export function verifyPassword(password: string, hash: string): boolean {
 
 export function generateToken(user: AuthUser): string {
   if (JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured with at least 32 characters')
-  return jwt.sign(user, JWT_SECRET, { expiresIn: JWT_EXPIRY })
+  return jwt.sign(user, JWT_SECRET, {
+    expiresIn: JWT_EXPIRY,
+    issuer: 'the-breakdown-backend',
+    audience: 'the-breakdown-backend-admin',
+  })
 }
 
 export function verifyToken(token: string): AuthUser | null {
   try {
     if (JWT_SECRET.length < 32) return null
-    return jwt.verify(token, JWT_SECRET) as AuthUser
+    return jwt.verify(token, JWT_SECRET, {
+      issuer: 'the-breakdown-backend',
+      audience: 'the-breakdown-backend-admin',
+    }) as AuthUser
   } catch {
     return null
   }
