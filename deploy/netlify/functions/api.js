@@ -1,11 +1,76 @@
 const { supabase } = require('./lib/supabase');
 const crypto = require('crypto');
 
-const COOKIE_SECRET = process.env.SESSION_SECRET || 'the-breakdown-fact-check-cms-secret-key-change-me';
+const COOKIE_SECRET = process.env.SESSION_SECRET || '';
 const COOKIE_MAX_AGE = 24 * 60 * 60; // 24 hours
 
 // ==================== COOKIE AUTH HELPERS ====================
+function sessionSecretIsConfigured() {
+  return typeof COOKIE_SECRET === 'string' && COOKIE_SECRET.length >= 32;
+}
+
+function isEditorInChief(user) {
+  const allowed = String(process.env.EDITOR_IN_CHIEF_EMAILS || '')
+    .split(',').map(value => value.trim().toLowerCase()).filter(Boolean);
+  return Boolean(user && user.email && allowed.includes(String(user.email).toLowerCase()));
+}
+
+function publicationDestination() {
+  const raw = process.env.PUBLICATION_DESTINATION || '';
+  try {
+    const parsed = new URL(raw);
+    if (parsed.protocol !== 'https:' && parsed.hostname !== 'localhost') return null;
+    if (parsed.pathname !== '/' || parsed.search || parsed.hash) return null;
+    return parsed.origin;
+  } catch { return null; }
+}
+
+const APPROVAL_PREFIX = 'PUBLICATION_APPROVAL_V1:';
+const APPROVAL_TTL_MS = 60 * 60 * 1000;
+
+function normaliseTags(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch {}
+  }
+  return [];
+}
+
+function storyVersionPayload(story) {
+  return {
+    slug: String(story.slug || ''),
+    title: String(story.title || ''),
+    summary: String(story.summary || ''),
+    body: String(story.body ?? story.content ?? ''),
+    category: String(story.category || 'Uncategorised'),
+    tags: normaliseTags(story.tags),
+    hero: String(story.hero ?? story.fact_check_image ?? ''),
+    caption: String(story.caption ?? story.fact_check_image_caption ?? ''),
+    author: String(story.author || 'The Breakdown Desk'),
+    readTime: Number(story.readTime ?? story.read_time ?? 5),
+  };
+}
+
+function storyVersionHash(story) {
+  return crypto.createHash('sha256').update(JSON.stringify(storyVersionPayload(story))).digest('hex');
+}
+
+function parseApproval(note) {
+  if (typeof note !== 'string' || !note.startsWith(APPROVAL_PREFIX)) return null;
+  try {
+    const value = JSON.parse(note.slice(APPROVAL_PREFIX.length));
+    if (value?.schema !== 1 || typeof value.contentHash !== 'string' ||
+        typeof value.destination !== 'string' || typeof value.approvedBy !== 'string' ||
+        typeof value.approvedAt !== 'string') return null;
+    return value;
+  } catch { return null; }
+}
+
 function signToken(payload) {
+  if (!sessionSecretIsConfigured()) throw new Error('SESSION_SECRET must be configured with at least 32 characters');
   const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const sig = crypto.createHmac('sha256', COOKIE_SECRET).update(data).digest('base64url');
   return data + '.' + sig;
@@ -13,6 +78,7 @@ function signToken(payload) {
 
 function verifyToken(token) {
   try {
+    if (!sessionSecretIsConfigured()) return null;
     const parts = token.split('.');
     if (parts.length !== 2) return null;
     const [data, sig] = parts;
@@ -80,6 +146,7 @@ exports.handler = async (event) => {
     if (route === '/auth/login' && method === 'POST') {
       const { email, password } = body;
       if (!email || !password) return json(400, { error: 'Email and password required' });
+      if (!sessionSecretIsConfigured()) return json(503, { error: 'SESSION_SECRET must be configured with at least 32 characters' });
 
       const { data: users, error } = await supabase
         .from('admin_users')
@@ -93,7 +160,7 @@ exports.handler = async (event) => {
       const user = users[0];
       if (hashPassword(password) !== user.password_hash) return json(401, { error: 'Invalid credentials' });
 
-      const token = signToken({ id: user.id, email: user.email, name: user.name, exp: Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE });
+      const token = signToken({ id: user.id, email: user.email, name: user.name, role: 'cms-admin', iat: Math.floor(Date.now() / 1000), exp: Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE });
       return json(200, { success: true, user: { id: user.id, name: user.name, email: user.email } }, { 'Set-Cookie': setCookie(token) });
     }
 
@@ -181,14 +248,37 @@ exports.handler = async (event) => {
         return json(200, { story: data[0] });
       }
 
-      // PUT /api/stories/:id
+      // PUT /api/stories/:id — generic edits cannot set workflow status.
       if (segments.length === 2 && method === 'PUT') {
+        const { data: existing, error: fetchError } = await supabase.from('stories').select('*').eq('id', storyId).single();
+        if (fetchError || !existing) return json(404, { error: 'Story not found' });
+
         const updates = { ...body };
-        delete updates.id; delete updates.created_at; delete updates.updated_at; delete updates.story_sources;
+        delete updates.id; delete updates.created_at; delete updates.updated_at;
+        delete updates.story_sources; delete updates.status; delete updates.published_at;
+
+        const beforeHash = storyVersionHash(existing);
+        const afterHash = storyVersionHash({ ...existing, ...updates });
+        const materialChanged = beforeHash !== afterHash;
+        const invalidatedApproval = materialChanged && existing.status !== 'draft';
+        if (invalidatedApproval) {
+          updates.status = 'draft';
+          updates.published_at = null;
+        }
+
         const { data, error } = await supabase.from('stories').update(updates).eq('id', storyId).select().single();
         if (error) return json(500, { error: 'Failed to update story' });
         if (!data) return json(404, { error: 'Story not found' });
-        return json(200, { story: data });
+
+        if (invalidatedApproval) {
+          const { error: logError } = await supabase.from('pipeline_log').insert({
+            story_id: storyId, from_status: existing.status, to_status: 'draft',
+            changed_by: user.email || String(user.id),
+            note: 'Material story edit invalidated prior review/publication approval',
+          });
+          if (logError) return json(500, { error: 'Story was moved to draft but audit logging failed; investigate before release' });
+        }
+        return json(200, { story: data, approvalInvalidated: invalidatedApproval });
       }
 
       // DELETE /api/stories/:id
@@ -223,18 +313,78 @@ exports.handler = async (event) => {
         return json(201, { source: data });
       }
 
-      // ===== PUBLISH =====
-      // POST /api/stories/:id/publish
-      if (segments.length === 3 && segments[2] === 'publish' && method === 'POST') {
-        const { data: story, error } = await supabase
-          .from('stories').select('*').eq('id', storyId).single();
+      // ===== VERSION-BOUND EDITORIAL APPROVAL =====
+      // POST /api/stories/:id/approve-release
+      if (segments.length === 3 && segments[2] === 'approve-release' && method === 'POST') {
+        if (!isEditorInChief(user)) {
+          return json(403, { error: 'Only an email listed in EDITOR_IN_CHIEF_EMAILS can approve public release' });
+        }
+        const destination = publicationDestination();
+        if (!destination) return json(503, { error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+
+        const { data: story, error } = await supabase.from('stories').select('*').eq('id', storyId).single();
         if (error || !story) return json(404, { error: 'Story not found' });
+        if (story.status !== 'ready') return json(409, { error: 'Only a ready story can be approved for public release' });
 
-        const { data: updated, error: updateError } = await supabase
-          .from('stories').update({ status: 'published', published_at: new Date().toISOString() }).eq('id', storyId).select().single();
-        if (updateError) return json(500, { error: 'Failed to publish story' });
+        const approvedAt = new Date().toISOString();
+        const approvedBy = String(user.email).toLowerCase();
+        const approval = {
+          schema: 1, contentHash: storyVersionHash(story), destination, approvedBy, approvedAt,
+        };
+        const { error: logError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: story.status, to_status: 'approved-for-release',
+          changed_by: approvedBy, note: APPROVAL_PREFIX + JSON.stringify(approval),
+        });
+        if (logError) return json(503, { error: 'Could not persist approval record; release is blocked' });
 
-        await supabase.from('publish_log').insert({ story_id: storyId, published_by: user.id, deploy_status: 'success' });
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'approved-for-release' }).eq('id', storyId).eq('status', 'ready').select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story changed during approval; reload and review again' });
+        return json(200, { success: true, story: updated, approval: { approvedBy, approvedAt, destination, contentHash: approval.contentHash } });
+      }
+
+      // POST /api/stories/:id/publish — approval is necessary but not sufficient.
+      if (segments.length === 3 && segments[2] === 'publish' && method === 'POST') {
+        const destination = publicationDestination();
+        if (!destination) return json(503, { error: 'PUBLICATION_DESTINATION must be configured as a valid HTTPS origin' });
+
+        const { data: story, error } = await supabase.from('stories').select('*').eq('id', storyId).single();
+        if (error || !story) return json(404, { error: 'Story not found' });
+        if (story.status !== 'approved-for-release') return json(409, { error: 'Story has no current release approval' });
+
+        const { data: logs, error: logsError } = await supabase.from('pipeline_log')
+          .select('*').eq('story_id', storyId)
+          .order('created_at', { ascending: false }).order('id', { ascending: false }).limit(1);
+        if (logsError) return json(503, { error: 'Approval history unavailable; release is blocked' });
+        const latest = Array.isArray(logs) ? logs[0] : null;
+        if (!latest || latest.to_status !== 'approved-for-release') return json(409, { error: 'Latest story event is not a release approval' });
+
+        const approval = parseApproval(latest.note);
+        if (!approval) return json(409, { error: 'Release approval record is malformed or missing' });
+        if (String(latest.changed_by).toLowerCase() !== approval.approvedBy) return json(409, { error: 'Approval identity does not match its audit event' });
+        if (approval.destination !== destination) return json(409, { error: 'Approval was recorded for a different destination' });
+        const approvedAt = Date.parse(approval.approvedAt);
+        const now = Date.now();
+        if (!Number.isFinite(approvedAt) || approvedAt > now + 60000 || now - approvedAt > APPROVAL_TTL_MS) {
+          return json(409, { error: 'Release approval expired or has an invalid timestamp' });
+        }
+        if (approval.contentHash !== storyVersionHash(story)) return json(409, { error: 'Story changed after approval; release is blocked' });
+
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'published', published_at: new Date().toISOString() })
+          .eq('id', storyId).eq('status', 'approved-for-release').select().maybeSingle();
+        if (updateError || !updated) return json(409, { error: 'Story status changed during publication; reload before retrying' });
+
+        const { error: eventError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'approved-for-release', to_status: 'published',
+          changed_by: user.email || String(user.id), note: 'Published after version-bound human approval',
+        });
+        if (eventError) return json(500, { error: 'Story status changed to published but audit logging failed; investigate immediately' });
+
+        const { error: publishLogError } = await supabase.from('publish_log').insert({
+          story_id: storyId, published_by: user.id, deploy_status: 'success',
+        });
+        if (publishLogError) return json(500, { error: 'Story published but publish logging failed; investigate immediately' });
 
         return json(200, { success: true, story: updated });
       }
