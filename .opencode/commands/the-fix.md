@@ -303,10 +303,12 @@ Primary Sources
 
 ---
 
-## PUBLISH
+## RELEASE WORKFLOW
 
-1. Add entry to `fact-check-cms/scripts/publish-all-beats.js` with `tags: ['the-fix', ...]`
-2. Run: `node scripts/publish-all-beats.js` from fact-check-cms/
-3. Deploy: `npx wrangler pages deploy "cloudflare-deploy" --project-name thebreakdown --branch main`
-4. Verify: hub `/the-fix`, API `/api/stories/by-tag/the-fix`, story page all return 200
-5. Commit both repos
+1. Save the completed story package locally; keep it in draft state.
+2. Run `/newsroom <story-slug>` to ensure independent verification, standards review, copy editing, rights checks and technical QA are recorded.
+3. Route the exact reviewed version to the human Editor-in-Chief for approval.
+4. Publish only via the authenticated approval-gated CMS endpoint after the approval record matches the current content hash and destination.
+5. Verify the actual release response and public story URL. If the CMS gate or audit history is unavailable, stop and report BLOCKED.
+6. Never edit the public story table directly, run `publish-all-beats.js`, or deploy a content change as a substitute for editorial approval.
+
