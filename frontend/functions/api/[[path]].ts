@@ -296,11 +296,24 @@ async function handleStories(request: Request, db: DbBackend, env: Record<string
     const slug = singleMatch[1]
     const existing = await db.getStory(slug)
     if (!existing) return error('Story not found', 404)
-    if (['published', 'approved-for-release'].includes(existing.status)) {
-      return error('Direct delete is blocked for published or approval-pending stories. Use the audited pipeline takedown action.', 409)
+    if (existing.status !== 'draft') {
+      return error('Direct delete is available only for drafts. Move workflow items to draft and use the audited pipeline for takedown.', 409)
     }
-    await db.deleteStory(slug)
-    return json({ message: 'Story archived' })
+    try {
+      await db.createPipelineLog(existing.id!, 'draft', 'trash-attempted', user.username || 'system', 'Human requested trash of draft story')
+    } catch (auditError) {
+      console.error('[pipeline] Could not persist trash attempt:', auditError)
+      return error('Trash audit could not be persisted; story was not changed', 503)
+    }
+    const trashed = await db.updateStoryIfStatus(slug, 'draft', { status: 'archived', publishedAt: null })
+    if (!trashed) return error('Story state changed during trash; reload and retry', 409)
+    try {
+      await db.createPipelineLog(existing.id!, 'draft', 'archived', user.username || 'system', 'Draft archived after conditional state transition')
+    } catch (auditError) {
+      console.error('[pipeline] Story was archived but final trash audit failed:', auditError)
+      return error('Story was archived but final audit logging failed; inspect before retrying', 503)
+    }
+    return json({ message: 'Story archived', story: trashed })
   }
 
   return error('Not found', 404)
