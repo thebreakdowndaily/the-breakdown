@@ -39,26 +39,6 @@ function normaliseList(value) {
   return [];
 }
 
-function stableValue(value) {
-  if (Array.isArray(value)) return value.map(stableValue);
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.keys(value).sort().map(key => [key, stableValue(value[key])]));
-  }
-  return value;
-}
-
-function normaliseRichField(value) {
-  if (value === null || value === undefined || value === '') return '';
-  if (typeof value === 'string') {
-    try {
-      const parsed = JSON.parse(value);
-      if (parsed && typeof parsed === 'object') return stableValue(parsed);
-    } catch {}
-    return value;
-  }
-  return stableValue(value);
-}
-
 function storyVersionPayload(story) {
   return {
     slug: String(story.slug || ''),
@@ -80,10 +60,6 @@ function storyVersionPayload(story) {
     publishAt: String(story.publish_at ?? story.publishAt ?? ''),
     relatedStoryIds: normaliseList(story.related_story_ids ?? story.relatedStoryIds),
     storyTemplate: String(story.story_template ?? story.storyTemplate ?? ''),
-    instagramCaption: String(story.instagram_caption ?? story.instagramCaption ?? ''),
-    instagramCarousel: normaliseRichField(story.instagram_carousel ?? story.instagramCarousel),
-    youtubeScript: String(story.youtube_script ?? story.youtubeScript ?? ''),
-    xThread: String(story.x_thread ?? story.xThread ?? ''),
   };
 }
 
