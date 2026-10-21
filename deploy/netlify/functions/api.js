@@ -389,11 +389,35 @@ exports.handler = async (event) => {
         return json(200, { story: data, approvalInvalidated: invalidatedApproval });
       }
 
-      // DELETE /api/stories/:id
+      // DELETE /api/stories/:id — only drafts may be trashed directly.
+      // Live stories must go through an audited takedown and acknowledged rebuild.
       if (segments.length === 2 && method === 'DELETE') {
-        const { error } = await supabase.from('stories').delete().eq('id', storyId);
-        if (error) return json(500, { error: 'Failed to delete story' });
-        return json(200, { success: true });
+        const { data: existing, error: fetchError } = await supabase.from('stories')
+          .select('id, status').eq('id', storyId).single();
+        if (fetchError || !existing) return json(404, { error: 'Story not found' });
+        if (existing.status !== 'draft') {
+          return json(409, { error: 'Direct trash is available only for drafts. Move workflow items to draft and use the audited takedown path for live stories.' });
+        }
+
+        const actor = String(user.email || user.id || 'cms-user');
+        const { error: attemptError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'draft', to_status: 'trash-attempted',
+          changed_by: actor, note: 'Human requested trash of draft story',
+        });
+        if (attemptError) return json(503, { error: 'Trash audit could not be persisted; story was not changed' });
+
+        const { data: updated, error: updateError } = await supabase.from('stories')
+          .update({ status: 'trash', deleted_at: new Date().toISOString(), published_at: null })
+          .eq('id', storyId).eq('status', 'draft').select().maybeSingle();
+        if (updateError) return json(500, { error: 'Failed to trash story' });
+        if (!updated) return json(409, { error: 'Story state changed during trash; reload and retry' });
+
+        const { error: finalAuditError } = await supabase.from('pipeline_log').insert({
+          story_id: storyId, from_status: 'draft', to_status: 'trash',
+          changed_by: actor, note: 'Draft moved to trash after conditional state transition',
+        });
+        if (finalAuditError) return json(503, { error: 'Story was moved to trash but the final audit event failed; inspect before retrying' });
+        return json(200, { success: true, story: updated });
       }
 
       // ===== SOURCES (nested under stories) =====
