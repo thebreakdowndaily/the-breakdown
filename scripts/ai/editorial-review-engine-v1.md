@@ -77,9 +77,27 @@ STAGE 7 — WRITING REVIEW
 
 Evaluate: Sentence variety, Paragraph length, Transitions, Readability, Professional tone, Editorial consistency.
 
-Remove: Generic AI phrases, Repetitive wording, Filler, Buzzwords, Unnecessary adjectives, Weak transitions.
+Remove: Generic AI phrases, Repetitive wording, Filler, Buzzwords, Unnecessary adjectives, Weak transitions, imitated outlet voice and unsupported scene-setting.
 
 Replace with concise, evidence-based language.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STAGE 7A — NARRATIVE & SCENE INTEGRITY
+
+Check:
+- Does the chosen structure fit the format and evidence rather than forcing a dramatic opening?
+- Does each section answer a real reader question and add verified information?
+- Are scenes built only from directly observed, attributable or authenticated details?
+- Are recalled events distinguished from scenes the reporter personally witnessed?
+- Are dialogue, action, chronology, motives, sensory detail and inner thoughts supported rather than invented?
+- Is a human case used as an entry point without being misrepresented as proof of a system-wide pattern?
+- Does the story explain the mechanism connecting events to outcomes and test alternative explanations?
+- Are data, denominators, source independence and uncertainty transparent?
+- Does the ending clarify what the evidence establishes and what remains unresolved?
+- Does the draft imitate a named journalist/outlet, manufacture drama, or use a quote/statistic only for emotional effect?
+
+A fabricated material scene detail, quote, citation, statistic, source or response is a BLOCKER regardless of score. Mark unsupported material SOURCE NEEDED / DATA REQUIRED and return it for reporting. Use scripts/ai/editorial-storytelling-playbook-v1.md as the craft reference.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
