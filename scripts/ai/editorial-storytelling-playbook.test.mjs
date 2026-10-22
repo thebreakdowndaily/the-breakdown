@@ -25,7 +25,14 @@ test('chart generation cannot fill missing evidence with invented data', () => {
   const generator = read('generate-story.mjs');
   assert.match(generator, /DATA REQUIRED/);
   assert.match(generator, /do not invent example values/);
-  assert.doesNotMatch(generator, /realistic data tables/i);
+  assert.doesNotMatch(generator, /realistic data tables|realistic data/i);
+  assert.match(generator, /never invent values/i);
+  assert.match(generator, /Use data points, statistics, dates and direct quotations only when the supplied, checked sources explicitly support them/);
+  assert.doesNotMatch(generator, /status: "published"/);
+  assert.match(generator, /status: "draft"/);
+  assert.doesNotMatch(generator, /Math\.floor\(Math\.random\(\) \* 8\)/);
+  assert.match(generator, /Do not invent URLs, channel names, durations/);
+  assert.match(generator, /do not invent quotes or fill a quota/i);
 });
 
 test('reference generation rejects plausible but unverified citations', () => {
