@@ -354,7 +354,7 @@ Topic: ${topic}
 Category: ${category}
 Slug: ${slug}${sources ? `\nSources to reference: ${sources}` : ''}
 
-Include 3-4 inline SVG data visualizations with realistic data.
+Include inline SVG data visualizations only where the prompt supplies verified numeric values from sources whose contents have been checked. Otherwise add a clearly labelled schematic or placeholder marked DATA REQUIRED that specifies the intended variables and data source; never invent values.
 Include 2-3 pull-quote blockquotes.
 Include proper attribution and sourced data points.`,
     12288);
