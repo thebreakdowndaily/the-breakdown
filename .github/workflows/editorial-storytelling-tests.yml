@@ -1,0 +1,39 @@
+name: Editorial Storytelling Tests
+
+on:
+  push:
+    branches:
+      - feat/evidence-led-storytelling-playbook
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "scripts/ai/**"
+      - ".opencode/agents/reporter.md"
+      - ".opencode/agents/investigations-reporter.md"
+      - ".opencode/templates/story-architecture.md"
+      - ".github/workflows/editorial-storytelling-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  editorial-storytelling:
+    name: Editorial prompt and integrity tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check story generator syntax
+        run: node --check scripts/ai/generate-story.mjs
+
+      - name: Test storytelling integration and source integrity
+        run: node --test scripts/ai/editorial-storytelling-playbook.test.mjs
