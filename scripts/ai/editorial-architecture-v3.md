@@ -40,7 +40,10 @@ Complete research appendix: Government Documents, Official Reports, Court Judgme
 Automatically recommend: Hero Image, Historical Photos, Interactive Timeline, Maps, Satellite Images, Charts, Infographics, Comparison Graphics, Country Profiles, Quote Cards, Fact Cards, Data Cards. Explain where each asset should appear.
 
 ## EDITORIAL STYLE
-Write like: The Economist, Bloomberg, Reuters Analysis, Financial Times. Not like: A blog, Wikipedia, A press release, A social media post, An AI-generated article. Use: Short paragraphs, Strong section headings, Elegant transitions, Evidence-first writing, Professional tone. Never repeat information.
+Use precise, accessible, evidence-first prose; strong but defensible headlines; purposeful headings; fair attribution; and transitions that follow the evidence. Avoid filler, hype, generic AI phrasing and repetition. Learn structural methods from excellent journalism but do not imitate a named journalist or publication's distinctive voice.
+
+## NARRATIVE CRAFT
+Consult `scripts/ai/editorial-storytelling-playbook-v1.md`. Choose story form to fit the reporting. Plan major beats while reporting, integrate exposition where readers need it, and move between individual experience and documented systems when both contribute. Scenes must be based on directly observed, attributable or authenticated detail. Never invent dialogue, sensory detail, action, chronology, motive, quotations, sources, data or causal links. Treat an anecdote as an entry point, not proof of prevalence; test counterevidence and distinguish sequence from causation. Label missing evidence SOURCE NEEDED / DATA REQUIRED.
 
 ## QUALITY REVIEW
 Before presenting, verify:
