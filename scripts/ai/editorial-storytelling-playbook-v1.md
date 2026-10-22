@@ -85,6 +85,17 @@ Do not treat “the world's best journalists” as an objective ranking. The jou
 
 **Use at The Breakdown:** For stories outside major metros or elite institutions, plan for local voices, geographic context and the everyday system around the headline.
 
+### Rukmini S. — make public data legible without flattening its meaning
+**Source:** [Rukmini S., Data for India](https://www.dataforindia.com/author/rukmini/)
+
+**Transferable method**
+- Begin with a concrete question about population, gender, household economics or living conditions rather than starting with a chart.
+- Explain the denominator, time period, relevant subgroup and geographic context so a statistic has a meaningful comparison.
+- Translate patterns into plain-language implications while preserving definitions, uncertainty and data limitations.
+- Use the data to identify questions and patterns; do not treat a dataset alone as proof of causation or a substitute for on-the-ground reporting.
+
+**Use at The Breakdown:** For an India data story, identify the original dataset and its definitions, show the comparison baseline, document calculations, and explain how the pattern matters in people's lives. Where source definitions differ across years or jurisdictions, disclose that before comparing values.
+
 ### Reuters standards — the non-negotiable floor
 **Source:** [Reuters Standards and Values](https://reutersagency.com/about/standards-values/)
 
@@ -240,12 +251,14 @@ Writer and reviewer must record any blocker as **FAIL** or **NOT VERIFIED**. Do 
 
 - Patrick Radden Keefe craft interview, ProPublica (2022): https://www.propublica.org/article/patrick-radden-keefe-interview
 - Nieman Storyboard, “From index cards to interviews: Eight journalists on reporting and writing scenes” (2025): https://niemanstoryboard.org/2025/10/03/journalists-on-reporting-and-writing-scenes/
-- Hannah Dreier, Pulitzer investigative reporting category (2024): https://www.pulitzer.org/prize-winners-by-category/206
+- Hannah Dreier, Pulitzer Prize-winning investigation (2024): https://www.pulitzer.org/winners/hannah-dreier-new-york-times
 - Azmat Khan and New York Times team, Pulitzer International Reporting (2022): https://www.pulitzer.org/winners/staff-new-york-times-notably-azmat-khan-contributing-writer
-- Declan Walsh and New York Times team, Pulitzer winners by year (2025): https://www.pulitzer.org/prize-winners-by-year/2025
+- Declan Walsh and New York Times team, Pulitzer Prize-winning Sudan investigation (2025): https://www.pulitzer.org/node/declan-walsh-and-staff-new-york-times
 - John Hersey, “Hiroshima,” The New Yorker archive (1946): https://www.newyorker.com/magazine/1946/08/31/hiroshima
 - Neha Dixit, Committee to Protect Journalists profile: https://cpj.org/awards/neha-dixit-india/
 - People's Archive of Rural India: https://ruralindiaonline.org/
+- Rukmini S., Data for India: https://www.dataforindia.com/author/rukmini/
+- GIJN, Introduction to Investigative Journalism: Data Journalism (2024): https://gijn.org/resource/introduction-investigative-journalism-data-journalism/
 - Reuters, Standards and Values: https://reutersagency.com/about/standards-values/
 
 The Breakdown's standard: **make the reader care by showing what the evidence means—not by making the evidence more dramatic than it is.**
