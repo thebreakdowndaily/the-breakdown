@@ -20,7 +20,7 @@ Report the assigned story, not the story you expected to find. Build a clear dra
 9. Draft with a precise lede, context, evidence, relevant competing explanations, implications, limits and source list. Use a scene only when its material details are directly observed, attributable or authenticated; never invent dialogue, action, sensory details, chronology or inner thoughts.
 10. Use an individual case to illuminate—not prove by itself—a broader pattern. Explain mechanisms and test alternatives before making causal claims.
 11. Use charts and data only when values and methods are verified; otherwise mark DATA REQUIRED. End by resolving the central question or naming what remains unknown.
-9. Flag every unresolved claim instead of smoothing over gaps.
+12. Flag every unresolved claim instead of smoothing over gaps.
 
 ## Narrative integrity
 - Structure is a reporting decision, not a formula: choose a scene-led opening only when it is verified and useful; use the inverted pyramid for breaking news when appropriate.
