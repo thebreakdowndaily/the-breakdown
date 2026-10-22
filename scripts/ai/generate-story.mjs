@@ -160,8 +160,11 @@ Return ONLY the complete frontmatter block (between --- markers) with populated 
 
 async function generateMainMarkdown(topic, slug, category, sources) {
   const editorialEngine = readFileSync(join(__dirname, 'editorial-engine.md'), 'utf-8');
+  const storytellingPlaybook = readFileSync(join(__dirname, 'editorial-storytelling-playbook-v1.md'), 'utf-8');
 
   const sysPrompt = `${editorialEngine}
+
+${storytellingPlaybook}
 
 Output a complete news article in markdown.
 
@@ -191,14 +194,15 @@ Use this EXACT format:
 
 ## Hero Image
 **File:** \`filename.jpg\`
-**Source:** Attribution source
-**Caption:** Description...
-**Why:** Why this image...
+**Source:** Exact verified URL or SOURCE NEEDED
+**Caption:** Describe only what the asset actually shows; label illustrative/generated imagery clearly
+**Why:** Explain the editorial purpose and placement
+**Verification:** Verified / Not yet verified
 
 ### Image {N} — Title
 ...repeat...
 
-Generate 4-7 images including:
+Recommend only useful assets. Do not invent image URLs, source credits, events shown or captions. If no verified asset is supplied, produce a clearly labelled search/commissioning brief with SOURCE NEEDED, not an asset represented as already found. Include:
 - Hero image (required)
 - Supporting images with useful explanatory visuals
 - If charts are referenced, note them as "Type: Generated SVG data visualization (see charts.md)"`;
@@ -223,7 +227,7 @@ Use this EXACT format:
 | Value | Value |
 **Source:** Source attribution
 
-Generate 3-6 charts with realistic data tables. Include the data points as markdown tables.
+Recommend charts only when they answer a real reporting question. Use numeric values only when they are explicitly present in verified source material or a documented dataset supplied in the prompt. A URL alone is not evidence that its contents have been checked. If data has not been supplied and verified, output a chart plan labelled DATA REQUIRED and specify the needed dataset, variables, units, denominator, time period and source to obtain; do not invent example values or present illustrative data as real.
 Types: grouped bar chart, line chart, stat card, comparison table, horizontal bar chart, timeline.`;
 
   return callOpenAI(sysPrompt,
@@ -315,14 +319,7 @@ Use this EXACT format:
 1. **Article Title** — Publisher (Month Day, Year)
    https://example.com/article
 
-Generate 10-20 realistic-sounding references with proper publisher names and plausible URLs. Include:
-- Primary sources / official announcements
-- News reports from major outlets
-- Expert analyses
-- Data sources
-
-Use real publishers (Reuters, BBC, Indian Express, Economic Times, Bloomberg, etc.).
-Add dates that are recent (within the past 60 days).`;
+List only sources explicitly supplied by the researcher or individually verified during research. Never invent titles, authors, publishers, dates, URLs, publication events or citations; never infer a plausible URL. Provide exact metadata and claim support only when verifiable. If the prompt provides only a URL and not the page contents, mark title/date/claim support NOT VERIFIED rather than guessing. If there are insufficient verified sources, return SOURCE GAPS — RESEARCH REQUIRED instead of filling a quota.`;
 
   return callOpenAI(sysPrompt,
     `Generate references for this story: ${topic}${sources ? `\nUser-provided sources to incorporate: ${sources}` : ''}`,
@@ -331,8 +328,11 @@ Add dates that are recent (within the past 60 days).`;
 
 async function generateBodyHTML(topic, slug, category, sources) {
   const editorialEngine = readFileSync(join(__dirname, 'editorial-engine.md'), 'utf-8');
+  const storytellingPlaybook = readFileSync(join(__dirname, 'editorial-storytelling-playbook-v1.md'), 'utf-8');
 
   const sysPrompt = `${editorialEngine}
+
+${storytellingPlaybook}
 
 Generate a complete HTML body for a news article. Output ONLY valid HTML for inside a <div class="story-body">.
 
