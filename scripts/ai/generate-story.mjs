@@ -128,7 +128,7 @@ Topic: ${topic}`;
 
 // ---- File generators ----
 async function generateFrontmatter(topic, slug, category, summary) {
-  const prompt = `Generate YAML frontmatter for a story with the following details. Use the EXACT format below and fill in realistic values:
+  const prompt = `Generate YAML frontmatter for a draft story. Use only supplied, verified metadata. Do not invent publication dates, publication status or editorial approval. Use status draft; leave publication timestamps blank until the authorised publishing workflow assigns them. Calculate reading time from the final article text when available; otherwise mark it as requiring calculation.
 
 ---
 layout: story
@@ -140,17 +140,17 @@ story:
   meta_title: "${topic} | The Breakdown"
   meta_description: "${summary}"
   author: "The Breakdown Team"
-  read_time: ${Math.floor(Math.random() * 8) + 8}
+  read_time: 0
   tags:
     - "tag1"
     - "tag2"
-  published_at: "${new Date().toISOString()}"
-  updated_at: "${new Date().toISOString()}"
-  status: "published"
+  published_at: ""
+  updated_at: ""
+  status: "draft"
   og_image: "https://thebreakdown.in/og-image.png"
 ---
 
-Return ONLY the complete frontmatter block (between --- markers) with populated values. Use realistic tags (3-8 tags). read_time should be 8-15 minutes based on topic complexity.`;
+Return ONLY the complete frontmatter block between the --- markers. Use topic-relevant tags only when supported by the story. Keep status as draft and timestamps blank. Leave read_time as 0 until it is calculated from the final article.`;
 
   return callOpenAI(
     'You generate YAML frontmatter for news articles. Output ONLY the frontmatter block.',
@@ -171,7 +171,8 @@ Output a complete news article in markdown.
 Format:
 - Start with YAML frontmatter (layout, title, slug, category, summary, meta_title, meta_description, tags, author, read_time, published_at, updated_at, status, og_image)
 - Use ## headings for sections matching the 10-part structure
-- Include data points, statistics, dates, sourced quotes
+- Use data points, statistics, dates and direct quotations only when the supplied, checked sources explicitly support them. Never invent details to satisfy a format. Mark gaps SOURCE NEEDED or DATA REQUIRED.
+- Set status to draft. Do not imply publication, fact-check completion, or human approval. Leave publication timestamps empty unless supplied by the authorised publishing workflow.
 - Write 1500-2500 words
 - British Indian English spelling`;
 
@@ -249,8 +250,7 @@ Use this EXACT format:
 **Relevance:** Why this video matters
 **Embed:** Yes / Link only
 
-Generate 3-5 relevant video suggestions. Use SEARCH_KEYWORD placeholders for actual URLs.
-For each video, indicate if it should be embedded (Yes) or linked only (Link only).`;
+Provide search briefs for up to 3 potentially relevant videos using SEARCH_KEYWORD placeholders. Do not invent URLs, channel names, durations, publication dates, quotes or claims about what a video contains. Mark every recommendation NOT VERIFIED until a human checks the actual video and source. Prefer fewer verified candidates to filling a quota.`;
 
   return callOpenAI(sysPrompt,
     `Recommend relevant videos for this story: ${topic}`,
@@ -355,8 +355,7 @@ Category: ${category}
 Slug: ${slug}${sources ? `\nSources to reference: ${sources}` : ''}
 
 Include inline SVG data visualizations only where the prompt supplies verified numeric values from sources whose contents have been checked. Otherwise add a clearly labelled schematic or placeholder marked DATA REQUIRED that specifies the intended variables and data source; never invent values.
-Include 2-3 pull-quote blockquotes.
-Include proper attribution and sourced data points.`,
+Include blockquotes only for verbatim quotes supplied from verified sources, preserving context and attribution; do not invent quotes or fill a quota. Include sourced data points only when verified values and their supporting sources are available; otherwise use DATA REQUIRED placeholders.`,
     12288);
 }
 
