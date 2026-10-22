@@ -128,7 +128,7 @@ Topic: ${topic}`;
 
 // ---- File generators ----
 async function generateFrontmatter(topic, slug, category, summary) {
-  const prompt = `Generate YAML frontmatter for a story with the following details. Use the EXACT format below and fill in realistic values:
+  const prompt = `Generate YAML frontmatter for a draft story. Use only supplied, verified metadata. Do not invent publication dates, publication status or editorial approval. Use status draft; leave publication timestamps blank until the authorised publishing workflow assigns them. Calculate reading time from the final article text when available; otherwise mark it as requiring calculation.
 
 ---
 layout: story
@@ -140,17 +140,17 @@ story:
   meta_title: "${topic} | The Breakdown"
   meta_description: "${summary}"
   author: "The Breakdown Team"
-  read_time: ${Math.floor(Math.random() * 8) + 8}
+  read_time: 0
   tags:
     - "tag1"
     - "tag2"
-  published_at: "${new Date().toISOString()}"
-  updated_at: "${new Date().toISOString()}"
-  status: "published"
+  published_at: ""
+  updated_at: ""
+  status: "draft"
   og_image: "https://thebreakdown.in/og-image.png"
 ---
 
-Return ONLY the complete frontmatter block (between --- markers) with populated values. Use realistic tags (3-8 tags). read_time should be 8-15 minutes based on topic complexity.`;
+Return ONLY the complete frontmatter block between the --- markers. Use topic-relevant tags only when supported by the story. Keep status as draft and timestamps blank. Leave read_time as 0 until it is calculated from the final article.`;
 
   return callOpenAI(
     'You generate YAML frontmatter for news articles. Output ONLY the frontmatter block.',
@@ -160,15 +160,19 @@ Return ONLY the complete frontmatter block (between --- markers) with populated 
 
 async function generateMainMarkdown(topic, slug, category, sources) {
   const editorialEngine = readFileSync(join(__dirname, 'editorial-engine.md'), 'utf-8');
+  const storytellingPlaybook = readFileSync(join(__dirname, 'editorial-storytelling-playbook-v1.md'), 'utf-8');
 
   const sysPrompt = `${editorialEngine}
+
+${storytellingPlaybook}
 
 Output a complete news article in markdown.
 
 Format:
 - Start with YAML frontmatter (layout, title, slug, category, summary, meta_title, meta_description, tags, author, read_time, published_at, updated_at, status, og_image)
 - Use ## headings for sections matching the 10-part structure
-- Include data points, statistics, dates, sourced quotes
+- Use data points, statistics, dates and direct quotations only when the supplied, checked sources explicitly support them. Never invent details to satisfy a format. Mark gaps SOURCE NEEDED or DATA REQUIRED.
+- Set status to draft. Do not imply publication, fact-check completion, or human approval. Leave publication timestamps empty unless supplied by the authorised publishing workflow.
 - Write 1500-2500 words
 - British Indian English spelling`;
 
@@ -191,14 +195,15 @@ Use this EXACT format:
 
 ## Hero Image
 **File:** \`filename.jpg\`
-**Source:** Attribution source
-**Caption:** Description...
-**Why:** Why this image...
+**Source:** Exact verified URL or SOURCE NEEDED
+**Caption:** Describe only what the asset actually shows; label illustrative/generated imagery clearly
+**Why:** Explain the editorial purpose and placement
+**Verification:** Verified / Not yet verified
 
 ### Image {N} — Title
 ...repeat...
 
-Generate 4-7 images including:
+Recommend only useful assets. Do not invent image URLs, source credits, events shown or captions. If no verified asset is supplied, produce a clearly labelled search/commissioning brief with SOURCE NEEDED, not an asset represented as already found. Include:
 - Hero image (required)
 - Supporting images with useful explanatory visuals
 - If charts are referenced, note them as "Type: Generated SVG data visualization (see charts.md)"`;
@@ -223,7 +228,7 @@ Use this EXACT format:
 | Value | Value |
 **Source:** Source attribution
 
-Generate 3-6 charts with realistic data tables. Include the data points as markdown tables.
+Recommend charts only when they answer a real reporting question. Use numeric values only when they are explicitly present in verified source material or a documented dataset supplied in the prompt. A URL alone is not evidence that its contents have been checked. If data has not been supplied and verified, output a chart plan labelled DATA REQUIRED and specify the needed dataset, variables, units, denominator, time period and source to obtain; do not invent example values or present illustrative data as real.
 Types: grouped bar chart, line chart, stat card, comparison table, horizontal bar chart, timeline.`;
 
   return callOpenAI(sysPrompt,
@@ -245,8 +250,7 @@ Use this EXACT format:
 **Relevance:** Why this video matters
 **Embed:** Yes / Link only
 
-Generate 3-5 relevant video suggestions. Use SEARCH_KEYWORD placeholders for actual URLs.
-For each video, indicate if it should be embedded (Yes) or linked only (Link only).`;
+Provide search briefs for up to 3 potentially relevant videos using SEARCH_KEYWORD placeholders. Do not invent URLs, channel names, durations, publication dates, quotes or claims about what a video contains. Mark every recommendation NOT VERIFIED until a human checks the actual video and source. Prefer fewer verified candidates to filling a quota.`;
 
   return callOpenAI(sysPrompt,
     `Recommend relevant videos for this story: ${topic}`,
@@ -315,14 +319,7 @@ Use this EXACT format:
 1. **Article Title** — Publisher (Month Day, Year)
    https://example.com/article
 
-Generate 10-20 realistic-sounding references with proper publisher names and plausible URLs. Include:
-- Primary sources / official announcements
-- News reports from major outlets
-- Expert analyses
-- Data sources
-
-Use real publishers (Reuters, BBC, Indian Express, Economic Times, Bloomberg, etc.).
-Add dates that are recent (within the past 60 days).`;
+List only sources explicitly supplied by the researcher or individually verified during research. Never invent titles, authors, publishers, dates, URLs, publication events or citations; never infer a plausible URL. Provide exact metadata and claim support only when verifiable. If the prompt provides only a URL and not the page contents, mark title/date/claim support NOT VERIFIED rather than guessing. If there are insufficient verified sources, return SOURCE GAPS — RESEARCH REQUIRED instead of filling a quota.`;
 
   return callOpenAI(sysPrompt,
     `Generate references for this story: ${topic}${sources ? `\nUser-provided sources to incorporate: ${sources}` : ''}`,
@@ -331,8 +328,11 @@ Add dates that are recent (within the past 60 days).`;
 
 async function generateBodyHTML(topic, slug, category, sources) {
   const editorialEngine = readFileSync(join(__dirname, 'editorial-engine.md'), 'utf-8');
+  const storytellingPlaybook = readFileSync(join(__dirname, 'editorial-storytelling-playbook-v1.md'), 'utf-8');
 
   const sysPrompt = `${editorialEngine}
+
+${storytellingPlaybook}
 
 Generate a complete HTML body for a news article. Output ONLY valid HTML for inside a <div class="story-body">.
 
@@ -354,9 +354,8 @@ Topic: ${topic}
 Category: ${category}
 Slug: ${slug}${sources ? `\nSources to reference: ${sources}` : ''}
 
-Include 3-4 inline SVG data visualizations with realistic data.
-Include 2-3 pull-quote blockquotes.
-Include proper attribution and sourced data points.`,
+Include inline SVG data visualizations only where the prompt supplies verified numeric values from sources whose contents have been checked. Otherwise add a clearly labelled schematic or placeholder marked DATA REQUIRED that specifies the intended variables and data source; never invent values.
+Include blockquotes only for verbatim quotes supplied from verified sources, preserving context and attribution; do not invent quotes or fill a quota. Include sourced data points only when verified values and their supporting sources are available; otherwise use DATA REQUIRED placeholders.`,
     12288);
 }
 

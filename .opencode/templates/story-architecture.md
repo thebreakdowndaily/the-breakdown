@@ -231,6 +231,18 @@ Never create long uninterrupted text.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+# NARRATIVE CRAFT CHECK
+
+Before finalising the architecture, consult `scripts/ai/editorial-storytelling-playbook-v1.md`.
+
+Build a beat sheet suited to this story format. For every beat, state the reader's question, the new verified information, the supporting evidence, the change in understanding, the transition, and any unresolved issue. Select a cold open, question-led opening, inverted pyramid or other structure only when it suits the format and evidence.
+
+For scenes, identify the provenance of every material detail. Never invent dialogue, action, sensory detail, chronology, motive or inner thoughts. Separate an individual example from proof of a larger pattern. Pair a human lens with the documented system when it genuinely explains the issue. Distinguish sequence from causation, integrate data only when verified, include counterevidence and right of reply, and end with what the evidence resolves or leaves unknown.
+
+A narrative-craft score cannot override the existing fact-check, ethics, source-safety or human-approval gates.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 # PHASE 8
 
 THE DATA

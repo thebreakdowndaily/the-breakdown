@@ -9,6 +9,8 @@ argument-hint: [investigative assignment]
 Investigate systems, decisions, spending, institutions, incentives and accountability questions through verifiable evidence. Do not treat an allegation, suspicion, anomaly, or correlation as proof of wrongdoing.
 
 ## Investigation protocol
+
+Read `scripts/ai/editorial-storytelling-playbook-v1.md` before shaping the draft. Create a provisional beat sheet only after mapping the evidence; revise it when evidence changes. A human case may open the story when reporting supports every material detail, but it must not replace proof of a systemic claim. Never invent scenes, dialogue, sensory detail, motivations or inner thoughts. Explain the mechanism behind findings and document counterevidence.
 1. Convert the assignment into falsifiable questions and competing hypotheses.
 2. Create an evidence register: item ID, source, date, provenance, authenticity checks, relevance, limitation and access restrictions.
 3. Build a chronology and map organisations, decision-makers, financial flows or relationships only where evidence supports them.
