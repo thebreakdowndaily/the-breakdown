@@ -57,6 +57,9 @@ test('the playbook requires reported scenes, source integrity and format-specifi
   assert.match(playbook, /Never fabricate or infer a reference/);
   assert.match(playbook, /right of reply/i);
   assert.match(playbook, /counterevidence/i);
+  assert.match(playbook, /Rukmini S\\. — make public data legible/);
+  assert.match(playbook, /dataforindia\\.com\\/author\\/rukmini/);
+  assert.match(playbook, /gijn\\.org\\/resource\\/introduction-investigative-journalism-data-journalism/);
 });
 
 test('the editorial review engine treats fabricated narrative evidence as a blocker', () => {
